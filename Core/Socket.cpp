@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 20:16:35 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/08 20:26:21 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,16 @@ bool    Socket::bindSocket()
     }
     
     return (true);
+}
+
+// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
+bool    Socket::startListen()
+{
+    if (listen(_socketFd, MAX_CONN) < 0)
+    {
+        std::cerr << "FATAL: Erro ao comecar a ouvir conexoes" << std::endl;
+        close(_socketFd);
+        return false;
+    }
+    return true;
 }

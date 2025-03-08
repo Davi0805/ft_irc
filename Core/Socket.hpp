@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 
+#define MAX_CONN 10
+
 class Socket
 {
 private:
@@ -24,4 +26,5 @@ public:
     bool    setupSocketContext();
     bool    setNonBlock();
     bool    bindSocket();
+    bool    startListen();
 };
