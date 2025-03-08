@@ -1,0 +1,21 @@
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <sys/socket.h>
+#include <sys/epoll.h>
+#include <cerrno>
+#include <unistd.h>
+
+class Socket
+{
+private:
+    int _porta;
+    int _socketFd;
+    int _epollFd;
+public:
+    Socket(int porta);
+    ~Socket();
+
+    bool    setupSocketContext();
+};
