@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 19:49:03 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/08 19:55:47 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ bool Socket::setupSocketContext()
         close(_socketFd);
         return false;
     }
+
+    return true;
 }
 
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
@@ -63,4 +65,6 @@ bool Socket::setNonBlock()
         close(_socketFd);
         return (false);
     }
+
+    return true;
 }

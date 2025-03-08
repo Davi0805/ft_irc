@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 19:37:30 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/08 19:53:59 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int main(int ac, char **av)
 {
     if (ac == 3)
     {
-        Socket ioContext(std::atoi(av[1]));
+        Socket ioContext(atoi(av[1]));
     }
     else
         return (1);
