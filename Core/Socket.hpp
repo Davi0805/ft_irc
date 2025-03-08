@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <netinet/in.h>
 
 class Socket
 {
@@ -22,4 +23,5 @@ public:
     // SETUP
     bool    setupSocketContext();
     bool    setNonBlock();
+    bool    bindSocket();
 };
