@@ -6,6 +6,7 @@
 #include <sys/epoll.h>
 #include <cerrno>
 #include <unistd.h>
+#include <fcntl.h>
 
 class Socket
 {
@@ -17,5 +18,7 @@ public:
     Socket(int porta);
     ~Socket();
 
+    // SETUP
     bool    setupSocketContext();
+    bool    setNonBlock();
 };
