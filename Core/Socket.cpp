@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 20:49:40 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/08 22:45:43 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Socket::Socket(int porta) : _porta(porta)
     startListen();
 }
 
+// Provavelmente o close sera feito para alguma outra classe geral
 Socket::~Socket()
 {
 }

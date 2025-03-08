@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 20:51:14 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/08 22:46:02 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ private:
 public:
     Socket(int porta);
     ~Socket();
+
+
     
     // GETTER
     int     getSocketFd() const;
