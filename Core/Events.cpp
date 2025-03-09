@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 23:03:09 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/09 12:01:41 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ void Events::readAndPrintFd(int fd)
     char buffer[1024];
     ssize_t bytesRead;
 
-    bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
     if (bytesRead < 0)
     {
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;

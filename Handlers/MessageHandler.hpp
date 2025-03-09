@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:24:59 by davi             ###   ########.fr       */
+/*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
+/*   Updated: 2025/03/09 12:49:21 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Core/Socket.hpp"
-#include "Core/Events.hpp"
-#include "Handlers/MessageHandler.hpp"
+#pragma once
 
-int main(int ac, char **av)
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+
+class MessageHandler
 {
-    MessageHandler debug;
-    debug.ircTokenizer(std::string (av[1]));
-    if (ac == 3)
-    {
-        Socket ioContext(atoi(av[1]));
-        Events epollContext(ioContext.getSocketFd());
+private:
+    std::string getMessage(std::string& buffer, std::size_t it);
+    std::string getMessage(std::string& strBegin, std::istringstream& stream);
+public:
+    MessageHandler();
+    ~MessageHandler();
 
-        epollContext.runEpollLoop();
-    }
-    else
-        return (1);
-    return (0);
-}
+    std::vector<std::string> ircTokenizer(std::string buffer);
+};

@@ -6,7 +6,7 @@
 #    By: davi <davi@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 17:41:07 by davi              #+#    #+#              #
-#    Updated: 2025/03/08 22:53:15 by davi             ###   ########.fr        #
+#    Updated: 2025/03/09 12:24:04 by davi             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 # File names
-SRCS = main.cpp ./Core/Socket.cpp ./Core/Events.cpp
+SRCS = main.cpp ./Core/Socket.cpp ./Core/Events.cpp ./Handlers/MessageHandler.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = irc
 
