@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:01:41 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/09 12:57:32 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,4 +134,6 @@ void Events::readAndPrintFd(int fd)
     buffer[bytesRead] = '\0';
 
     std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
+
+    _msgHandler.ircTokenizer(std::string(buffer));
 }

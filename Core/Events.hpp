@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 21:52:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 22:52:19 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/09 12:57:10 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 
+#include "../Handlers/MessageHandler.hpp"
+
 class Events
 {
 private:
@@ -33,6 +35,8 @@ private:
     int _nfds; // Numero de eventos
     struct epoll_event ev; // TEMP para events - nova conexao
     struct epoll_event events[MAX_EVENTS];
+
+    MessageHandler _msgHandler;
     
 
     bool setupEpollContext();
