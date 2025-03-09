@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:51:31 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/09 13:36:49 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ std::vector<std::string> MessageHandler::ircTokenizer(std::string buffer)
             //message = getMessage(tempToken, stream);   
             break ;
         }
+        tokens.push_back(tempToken);
         std::cout << "TOKENS: " << tempToken << std::endl;
     }
 
