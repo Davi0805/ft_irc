@@ -3,16 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:57:57 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/10 17:52:50 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Core/Socket.hpp"
 #include "Core/Events.hpp"
 #include "Handlers/MessageHandler.hpp"
+
+
+//./irc port pass
+bool ParseInput(int ac, char **av)
+{
+    if (ac != 3)
+        return false;
+    
+    // port: unsigned short
+    {
+        std::string port(av[1]);
+        if (port.empty())
+        {
+            std::cerr << "Error: empty password" << std::endl;
+            return false;
+        }
+        
+        for (std::string::iterator it = port.begin(); it != port.end(); it++)
+        {
+            if (it == port.begin() && *it == '+')
+                continue;
+            if (!std::isdigit(*it))
+            {
+                std::cerr << "Error: non numeric port" << std::endl;
+                return false;
+            }
+        }        
+            port.compare
+    }
+
+    if (!av[2] || !av[2][0])
+    {
+        std::cerr << "Error: empty password" << std::endl;
+        return false;       
+    }
+    return true;
+}
 
 int main(int ac, char **av)
 {
