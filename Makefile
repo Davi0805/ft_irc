@@ -6,19 +6,9 @@
 #    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/10 17:11:17 by artuda-s         ###   ########.fr        #
+#    Updated: 2025/03/10 17:17:50 by artuda-s         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-# Color variables
-RED = \033[0;31m
-GRN = \033[0;32m
-YEL = \033[0;33m
-BLU = \033[0;34m
-MAG = \033[0;35m
-CYN = \033[0;36m
-WHT = \033[0;37m
-RES = \033[0m
 
 # Binary name
 NAME = ircserv
@@ -33,15 +23,8 @@ SRC = main.cpp \
 	Core/Events.cpp \
 	Handlers/MessageHandler.cpp
 	
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 OBJ_DIR = obj
-
-TOTAL_FILES := $(words $(SRC))
-COMPILED_FILES := $(shell if [ -d "$(OBJ_DIR)" ]; then find $(OBJ_DIR) -name "*.o" | wc -l;	 else echo 0; fi)
-
-# Phony targets
-.PHONY: all clean fclean re
-
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 
 # Rules
 all: $(NAME)
@@ -72,4 +55,20 @@ fclean: clean
 	fi
 
 re: fclean all
+
+TOTAL_FILES := $(words $(SRC))
+COMPILED_FILES := $(shell if [ -d "$(OBJ_DIR)" ]; then find $(OBJ_DIR) -name "*.o" | wc -l;	 else echo 0; fi)
+
+# Phony targets
+.PHONY: all clean fclean re
+
+# Color variables
+RED = \033[0;31m
+GRN = \033[0;32m
+YEL = \033[0;33m
+BLU = \033[0;34m
+MAG = \033[0;35m
+CYN = \033[0;36m
+WHT = \033[0;37m
+RES = \033[0m
 
