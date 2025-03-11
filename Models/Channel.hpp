@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 13:37:51 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:53:04 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ class Channel
 {
 private:
     // ! SUBSTITUIR POR UNORDEREDMAP ???
-    std::vector<User*> users;
+    std::vector<User*> _users;
     std::string topic;
     std::string _channelName;
     
@@ -39,4 +39,7 @@ private:
 public:
     Channel(std::string ChannelName);
     ~Channel();
+
+    void AddUser(std::string nickname);
+    void AddUser(User *user);
 };

@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 15:29:31 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:43:39 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "../Commands/PassCommand.hpp"
 #include "../Commands/NickCommand.hpp"
 #include "../Commands/UserCommand.hpp"
+#include "../Commands/JoinCommand.hpp"
 
 // TALVEZ DEPOIS SUBSTITUIR POR METHODOS ESTATICOS
 // JA QUE NAO POSSUI VARIAVEIS PROPRIAS
@@ -38,6 +39,8 @@ class MessageHandler
 private:
     std::string getMessage(std::string& buffer, std::size_t it);
     std::string getMessage(std::string& strBegin, std::istringstream& stream);
+
+    bool IsOnlyTab(std::string& buffer);
 
     UserService _userService;
     ChannelService _channelService;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 02:03:16 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 17:36:23 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,9 @@ std::string User::getNick()
 int User::getFd() const
 {
     return this->_fd;
+}
+
+std::string User::getUser() const
+{
+    return _username;
 }
