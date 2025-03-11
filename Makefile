@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
+#    By: davi <davi@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/11 18:06:00 by dmelo-ca         ###   ########.fr        #
+#    Updated: 2025/03/11 20:49:45 by davi             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC = main.cpp \
 	Commands/NickCommand.cpp \
 	Commands/UserCommand.cpp \
 	Commands/JoinCommand.cpp \
+	Commands/PrivMsgCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Services/UserService.cpp \
