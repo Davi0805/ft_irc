@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:54:55 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 13:56:49 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:32:43 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 class UserCommand : public Command
 {
 private:
-    /* data */
+    UserService* _userService;
+    ChannelService* _channelService;
 public:
-    UserCommand(/* args */);
+    UserCommand(UserService& userService, ChannelService& channelService);
     ~UserCommand();
 
-    void execute();
+    void execute(MessageContent messageContent, int fd);
 };

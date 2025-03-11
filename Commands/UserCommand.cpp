@@ -6,13 +6,14 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 13:56:39 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:38:50 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserCommand.hpp"
 
-UserCommand::UserCommand(/* args */)
+UserCommand::UserCommand(UserService& userService, ChannelService& channelService)
+                        :_userService(&userService), _channelService(&channelService)
 {
 }
 
@@ -20,7 +21,16 @@ UserCommand::~UserCommand()
 {
 }
 
-void UserCommand::execute()
+void UserCommand::execute(MessageContent messageContent, int fd)
 {
+    //(void)_userService;
+    (void)_channelService;
+    //(void)messageContent;
+    //(void)fd;
+    
     std::cout << "COMANDO USER SENDO CHAMADO" << std::endl;
+    _userService->SetUserByFd(messageContent.tokens[1], fd);
+
+    User* debug = _userService->findUserByFd(fd);
+    std::cout << "[DEBUG]: FD = " << debug->getFd() << " | Nick = " << debug->getNick() << std::endl;
 }

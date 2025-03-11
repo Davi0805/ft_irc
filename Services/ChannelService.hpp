@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:38:48 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 15:14:43 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#pragma once
 
 #include "../Models/Channel.hpp"
 
