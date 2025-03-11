@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
+#    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/10 17:17:50 by artuda-s         ###   ########.fr        #
+#    Updated: 2025/03/11 13:57:07 by dmelo-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,16 @@ CFLAGS = -Wall -Wextra -Werror -std=c++98
 SRC = main.cpp \
 	Core/Socket.cpp \
 	Core/Events.cpp \
-	Handlers/MessageHandler.cpp
+	Handlers/MessageHandler.cpp \
+	Commands/Command.cpp \
+	Commands/PassCommand.cpp \
+	Commands/NickCommand.cpp \
+	Commands/UserCommand.cpp \
+	Models/Channel.cpp \
+	Models/User.cpp \
+	Services/UserService.cpp \
+	Services/ChannelService.cpp
+
 	
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))

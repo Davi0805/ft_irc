@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 13:36:49 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 15:33:21 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,77 @@
 
 MessageHandler::MessageHandler()
 {
+    RegisterCommands();
 }
 
 MessageHandler::~MessageHandler()
 {
 }
 
-// TODO: DISCUTIR COM O GRUPO SE O TOKENIZER
-// TODO: RECEBERA O BUFFER INTEIRO OU O FD
-// TODO: POREM, IRRELEVANTE JA QUE N POSSUI
-// TODO: TESTE DE CARGA
-std::vector<std::string> MessageHandler::ircTokenizer(std::string buffer)
+void MessageHandler::CreateEvent(int fd)
+{
+    std::cout << "[DEBUG]: NOVO USUARIO CRIADO COM FD = " << fd << std::endl;
+    _userService.CreateUserByFd(fd);
+}
+
+// TODO: Fazer logica para handle de desconexao
+void MessageHandler::HandleEvent(int fd)
+{
+    char buffer[1024];
+    ssize_t bytesRead;
+
+    MessageContent messageContent;
+
+    bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
+    if (bytesRead <= 0)
+    {
+        std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
+        return;
+    }
+
+    buffer[bytesRead] = '\0';
+
+    //std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
+
+    // Joga Tokens e mensagens para struct
+    //std::cout << "[DEBUG]: Entrando no tokenizer" << std::endl;
+    messageContent = ircTokenizer(std::string(buffer));
+    
+    //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
+    ProcessCommand(messageContent, fd);
+}
+
+void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
+{
+    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN
+    if (messageContent.tokens[0] == "PASS")
+        _commands["PASS"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "NICK")
+        _commands["NICK"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "USER")
+        _commands["USER"]->execute(messageContent, clientFd);
+}
+
+void MessageHandler::RegisterCommands()
+{
+    _commands["PASS"] = new PassCommand(_userService, _channelService);
+    _commands["NICK"] = new NickCommand(_userService, _channelService);
+    _commands["USER"] = new UserCommand(_userService, _channelService);
+}
+
+MessageContent MessageHandler::ircTokenizer(std::string buffer)
 {
     std::istringstream stream(buffer);
     std::string tempToken;
     std::vector<std::string> tokens;
 
+    MessageContent messageContent;
+
     std::string message;
 
     while (stream >> tempToken)
     {
+        // ! NS SE ISSO PODE CRASHAR O PROGRAMA
         if (tempToken[0] == ':')
         {
             message = getMessage(buffer, buffer.find(tempToken));
@@ -50,12 +101,15 @@ std::vector<std::string> MessageHandler::ircTokenizer(std::string buffer)
             break ;
         }
         tokens.push_back(tempToken);
-        std::cout << "TOKENS: " << tempToken << std::endl;
+        //std::cout << "TOKENS: " << tempToken << std::endl;
     }
 
-    std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
+    //std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
 
-    return tokens;
+    messageContent.tokens = tokens;
+    messageContent.message = message;
+
+    return messageContent;
 }
 
 
@@ -70,21 +124,3 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
 }
 
 
-
-// ! DEPRECATED
-// ! ACREDITO QUE NAO SEJA A MELHOR PRATICA
-std::string MessageHandler::getMessage(std::string& strBegin, std::istringstream& stream)
-{
-    std::string fullMessage;
-    std::string tempToken;
-
-    // APPEND DA STR QUE ENCONTROU O DELIMITADOR DE MSG
-    fullMessage.append(strBegin);
-    
-    // APPEND DO RESTO
-    while (stream >> tempToken)
-    {
-        fullMessage.append(tempToken);
-    }
-    return fullMessage;
-}
