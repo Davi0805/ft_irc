@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/10 17:52:50 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:31:56 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,58 +14,76 @@
 #include "Core/Events.hpp"
 #include "Handlers/MessageHandler.hpp"
 
+// todo move this elsewhere
+#include <limits> // type limits
+#include <cstdlib> // strtol
+#include <cerrno> // errno
 
-//./irc port pass
-bool ParseInput(int ac, char **av)
-{
-    if (ac != 3)
-        return false;
-    
-    // port: unsigned short
-    {
-        std::string port(av[1]);
-        if (port.empty())
-        {
-            std::cerr << "Error: empty password" << std::endl;
-            return false;
-        }
-        
-        for (std::string::iterator it = port.begin(); it != port.end(); it++)
-        {
-            if (it == port.begin() && *it == '+')
-                continue;
-            if (!std::isdigit(*it))
-            {
-                std::cerr << "Error: non numeric port" << std::endl;
-                return false;
-            }
-        }        
-            port.compare
-    }
-
-    if (!av[2] || !av[2][0])
-    {
-        std::cerr << "Error: empty password" << std::endl;
-        return false;       
-    }
-    return true;
-}
+// checks if there are enough arguments, if port is a valid unsigned short greater than 1024 and there is a password
+// 1024 and below ports are priviligied and need root to be able to deal with them
+static bool ParseInput(int ac, char **av);
 
 int main(int ac, char **av)
 {
-    MessageHandler debug;
-    
-    if (ac == 3)
-    {
-        Socket ioContext(atoi(av[1]));
-        Events epollContext(ioContext.getSocketFd());
+    if (ParseInput(ac, av)) return 1;
 
-        epollContext.runEpollLoop();
-    }
-    else
+    MessageHandler debug;
+    Socket ioContext(atoi(av[1]));
+    Events epollContext(ioContext.getSocketFd());
+    epollContext.runEpollLoop();
+
+   return (0);
+}
+
+
+bool ParseInput(int ac, char **av)
+{
+    // ./irc port pass
+    if (ac != 3)
     {
-        debug.ircTokenizer(std::string (av[1]));
-        return (1);
+        std::cerr << "Error: bad arguments" << std::endl;
+        return true;
+    }   
+    
+    // port: unsigned short
+    if (!av[1] || !av[1][0])
+    {
+        std::cerr << "Error: bad port" << std::endl;
+        return true;
     }
-    return (0);
+    char *pos;
+    errno = 0;
+    
+    // strtol works like atoi but sets the pos pointer to the end 
+    //of the converted digits and sets errno if overflow occurs
+    long port = strtol(av[1], &pos, 10);
+
+    if (*pos != '\0')
+    {
+        std::cerr << "Error: bad port" << std::endl;
+        return true;
+    }
+
+    if (errno) // overflow
+    {
+        std::cerr << "Error: bad port" << std::endl;
+        return true;
+    }
+    
+    //  > than a short and under the reserved ports
+    // 1024 and below ports are priviligied and need root to be able to deal with them
+    if (port > std::numeric_limits<unsigned short>::max() || port <= 1024)
+    {
+        std::cerr << "Error: bad port" << std::endl;
+        return true;
+    }
+
+    // password
+    if (!av[2] || !av[2][0])
+    {
+        std::cerr << "Error: empty password" << std::endl;
+        return true;       
+    }
+        
+    return false;
 }
