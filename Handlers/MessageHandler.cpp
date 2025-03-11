@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 18:08:21 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:49:26 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
         _commands["USER"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "JOIN")
         _commands["JOIN"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "PRIVMSG")
+        _commands["PRIVMSG"]->execute(messageContent, clientFd);
 }
 
 void MessageHandler::RegisterCommands()
@@ -87,6 +89,7 @@ void MessageHandler::RegisterCommands()
     _commands["NICK"] = new NickCommand(_userService, _channelService);
     _commands["USER"] = new UserCommand(_userService, _channelService);
     _commands["JOIN"] = new JoinCommand(_userService, _channelService);
+    _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
 }
 
 MessageContent MessageHandler::ircTokenizer(std::string buffer)

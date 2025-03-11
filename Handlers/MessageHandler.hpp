@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:43:39 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:43:50 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include "../Commands/NickCommand.hpp"
 #include "../Commands/UserCommand.hpp"
 #include "../Commands/JoinCommand.hpp"
+#include "../Commands/PrivMsgCommand.hpp"
 
 // TALVEZ DEPOIS SUBSTITUIR POR METHODOS ESTATICOS
 // JA QUE NAO POSSUI VARIAVEIS PROPRIAS
