@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 01:14:06 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:19:21 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,14 @@
 class Channel
 {
 private:
-    std::vector<User> users;
-    std::string topic;
+    // ! SUBSTITUIR POR UNORDEREDMAP ???
+    std::vector<User*> users;
+    std::string topic = "Default topic";
+    std::string _channelName;
     
     //TODO: PENSAR EM UMA LOGICA DE OPERATOR/ADMIN
+    
+    //TODO: ADICIONAR METHODOS PARA GET E SET DE VARIAVEIS 
 
     
     enum mode
@@ -33,6 +37,6 @@ private:
         // POREM SEPARAR MODES COM O ENUM
     };
 public:
-    Channel(/* args */);
+    Channel(std::string ChannelName);
     ~Channel();
 };

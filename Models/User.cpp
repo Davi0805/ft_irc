@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 00:27:13 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 02:03:16 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,9 @@ User::Status User::getStatus() const
 std::string User::getNick()
 {
     return this->_nickname;
+}
+
+int User::getFd() const
+{
+    return this->_fd;
 }
