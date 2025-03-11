@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:30:44 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 23:06:37 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,8 @@ public:
 
     void AddUser(std::string nickname);
     void AddUser(User *user);
+
+    std::string getChannelName() const;
+    std::string getChannelTopic() const;
+    std::string getAllUserString() const;
 };
