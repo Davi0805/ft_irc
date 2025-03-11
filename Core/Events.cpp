@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 15:26:40 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:06:14 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 Events::Events(int socketFd)
 {
     this->_listensocket = socketFd;
-    setupEpollContext();
+    setupPollContext();
 }
 
 Events::~Events()
@@ -25,22 +25,24 @@ Events::~Events()
 }
 
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
+// TODO: ERROR CHECKING ?
+// bool Events::setupEpollContext()
+// {
+//     // CRIA EPOLL E RETORNA UM FD
+//     this->_epollfd = epoll_create1(0);
+//     if (_epollfd < 0)
+//     {
+//         std::cerr << "FATAL: Erro ao criar contexto epoll" << std::endl;
+//         return false;
+//     }
 bool Events::setupEpollContext()
 {
-    // CRIA EPOLL E RETORNA UM FD
-    this->_epollfd = epoll_create1(0);
-    if (_epollfd < 0)
-    {
-        std::cerr << "FATAL: Erro ao criar contexto epoll" << std::endl;
-        return false;
-    }
+    struct pollfd pfd;
+    pfd.fd = this->_listensocket; 
+    pfd.events = POLLIN;            // will monitor incoming data
+    pfd.revents = 0;                // no events initially
 
-    ev.events = EPOLLIN;
-    ev.data.fd = _listensocket;
-    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _listensocket, &ev) < 0) {
-        std::cerr << "FATAL: Erro ao tentar configurar epoll para escutar eventos" << std::endl;
-        return false;
-    }
+    this->_pfds.push_back(pfd);     // add this pollfd to the vector of pollfds
 
     return true;
 }
