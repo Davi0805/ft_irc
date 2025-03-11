@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:49:26 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 22:45:41 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,22 @@ void MessageHandler::HandleEvent(int fd)
 
     buffer[bytesRead] = '\0';
 
-    //std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
+    std::cout << "Recebido do fd " << fd << ": " << buffer << "EOF DO BUFFER"<< std::endl;
 
     // Joga Tokens e mensagens para struct
     //std::cout << "[DEBUG]: Entrando no tokenizer" << std::endl;
-    messageContent = ircTokenizer(std::string(buffer));
+    std::vector<std::string> splittedCommands = splitDeVariosComandos(buffer);
+
+    for (size_t i = 0; i < splittedCommands.size(); i++)
+    {
+        messageContent = ircTokenizer(splittedCommands[i]);
+        ProcessCommand(messageContent, fd);
+    }
+    
+    //messageContent = ircTokenizer(std::string(buffer));
     
     //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
-    ProcessCommand(messageContent, fd);
+    //ProcessCommand(messageContent, fd);
 }
 
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
@@ -145,6 +153,25 @@ bool MessageHandler::IsOnlyTab(std::string& buffer)
     if (buffer.find_first_not_of('\t') == std::string::npos)
         return true;
     return false;
+}
+
+// Faz split de quando o cliente manda varios commandos de uma vez
+// O hexchat quando vai se autenticar manda varios comandos de uma vez
+// em todas as vezes eles sao separados por \r\n
+std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string buffer)
+{
+    std::vector<std::string> result;
+    size_t it;
+    
+    it = buffer.find_first_of("\r\n");
+    while (it != std::string::npos)
+    {
+        result.push_back(buffer.substr(0, it + 2));
+        std::cout << "[TOKENS - QUANDO VARIOS CMANDOS JUNTOS]" << buffer.substr(0, it) << std::endl;
+        buffer.erase(0, it + 2);
+        it = buffer.find_first_of("\r\n");
+    }
+    return result;
 }
 
 

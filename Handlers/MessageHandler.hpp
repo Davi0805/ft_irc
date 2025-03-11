@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:43:50 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 22:27:04 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ private:
     UserService _userService;
     ChannelService _channelService;
     std::map<std::string, Command*> _commands;
+
+    std::vector<std::string> splitDeVariosComandos(std::string buffer);
 
     void RegisterCommands();
 public:
