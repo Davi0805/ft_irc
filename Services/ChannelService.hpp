@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   ChannelService.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:16:23 by davi             ###   ########.fr       */
+/*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
+/*   Updated: 2025/03/11 01:11:15 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "../Models/Channel.hpp"
 
-// TODO: Provavelmente depois adicionar como arg
-// TODO: O user que criou para ser automaticamente
-// TODO: atribuido para canal que ele criou
-Channel::Channel(std::string ChannelName)
-{
-    this->_channelName = ChannelName;
-}
+#include <unordered_map>
+#include <iostream>
 
-Channel::~Channel()
+class ChannelService
 {
-}
+private:
+    // channelName - Channel*
+    std::unordered_map<std::string, Channel*> _channels;
+public:
+    ChannelService(/* args */);
+    ~ChannelService();
+
+    Channel *get_or_createChannel(std::string channelName);
+};
