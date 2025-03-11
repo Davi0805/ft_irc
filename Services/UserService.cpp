@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:43:28 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:45:03 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,30 @@ void UserService::SetUserByFd(std::string username, int fd)
 }
 
 
+// TESTE UNITARIO
 
+/* int main(void)
+{
+
+    // TESTE - CRIAR E ATRIBUIR NICK
+    UserService service;
+
+    service.CreateUserByFd(1);
+
+    service.SetNickByFd("TIGRINHO", 1);
+
+    // TESTE FIND POR FD
+
+    std::cout << std::endl << "TESTE FIND POR FD" << std::endl;
+
+    User* teste1 = service.findUserByFd(1);
+
+    std::cout << "NICK DO USER: " << teste1->getNick() << std::endl;
+
+    std::cout << std::endl << "TESTE FIND POR NICK" << std::endl;
+
+    teste1 = service.findUserByNickname("TIGRINHO");
+
+    std::cout << "NICK DO USER: " << teste1->getNick() << std::endl;
+
+} */
