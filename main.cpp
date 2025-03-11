@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/10 21:35:25 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/11 10:19:19 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "Core/Events.hpp"
 #include "Handlers/MessageHandler.hpp"
 
+// todo move this elsewhere
 #include <limits> // type limits
 #include <cstdlib> // strtol
 #include <cerrno> // errno
@@ -24,27 +25,20 @@ static bool ParseInput(int ac, char **av);
 
 int main(int ac, char **av)
 {
-    
-    MessageHandler debug;
+    if (ParseInput(ac, av)) return 1;
 
-    if (ac == 3)
-    {
-        Socket ioContext(atoi(av[1]));
-        Events epollContext(ioContext.getSocketFd());
-        epollContext.runEpollLoop();
-    }
-    else
-    {
-        debug.ircTokenizer(std::string (av[1]));
-        return (1);
-    }
+    MessageHandler debug;
+    Socket ioContext(atoi(av[1]));
+    Events epollContext(ioContext.getSocketFd());
+    epollContext.runEpollLoop();
+
    return (0);
 }
 
 
-//./irc port pass
 bool ParseInput(int ac, char **av)
 {
+    // ./irc port pass
     if (ac != 3)
     {
         std::cerr << "Error: bad arguments" << std::endl;
