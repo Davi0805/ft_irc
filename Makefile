@@ -6,7 +6,7 @@
 #    By: davi <davi@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/11 20:49:45 by davi             ###   ########.fr        #
+#    Updated: 2025/03/11 21:59:23 by davi             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ SRC = main.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Services/UserService.cpp \
-	Services/ChannelService.cpp
+	Services/ChannelService.cpp \
+	Utils/ServerMessages.cpp \
 
 	
 OBJ_DIR = obj
