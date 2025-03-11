@@ -1,3 +1,6 @@
 *.o
-
-irc
+obj/
+irc*
+*vscode*
+*settings*
+*json
