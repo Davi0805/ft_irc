@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:15 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 13:52:54 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:32:19 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 class NickCommand : public Command
 {
 private:
-    /* data */
+    UserService* _userService;
+    ChannelService* _channelService;
 public:
-    NickCommand(/* args */);
+    NickCommand(UserService& userService, ChannelService& channelService);
     ~NickCommand();
 
-    void execute();
+    void execute(MessageContent messageContent, int fd);
 };
