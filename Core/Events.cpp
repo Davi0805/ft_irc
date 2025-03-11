@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:57:32 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 13:39:25 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ void Events::runEpollLoop()
                     }
                 } else {
                     // ! ADICIONAR AQUI LOGICA DE COMANDOS E MENSAGENS
-                    readAndPrintFd(events[n].data.fd);
+                    /* readAndPrintFd(events[n].data.fd); */
+                    _msgHandler.HandleEvent(events[n].data.fd);
                 }
             }
         }
