@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:17:45 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:55:42 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,15 @@ void MessageHandler::HandleEvent(int fd)
 
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
-    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN
+    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN POIS ESSE IF ELSE E DESNECESSARIO
     if (messageContent.tokens[0] == "PASS")
         _commands["PASS"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "NICK")
         _commands["NICK"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "USER")
         _commands["USER"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "JOIN")
+        _commands["JOIN"]->execute(messageContent, clientFd);
 }
 
 void MessageHandler::RegisterCommands()
@@ -84,6 +86,7 @@ void MessageHandler::RegisterCommands()
     _commands["PASS"] = new PassCommand(_userService, _channelService);
     _commands["NICK"] = new NickCommand(_userService, _channelService);
     _commands["USER"] = new UserCommand(_userService, _channelService);
+    _commands["JOIN"] = new JoinCommand(_userService, _channelService);
 }
 
 MessageContent MessageHandler::ircTokenizer(std::string buffer)
