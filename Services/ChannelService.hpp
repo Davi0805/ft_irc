@@ -6,20 +6,22 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:11:15 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:38:48 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../Models/Channel.hpp"
 
-#include <unordered_map>
+// unordered map faz parte do c++ 11
+// #include <unordered_map>
+#include <map>
 #include <iostream>
 
 class ChannelService
 {
 private:
     // channelName - Channel*
-    std::unordered_map<std::string, Channel*> _channels;
+    std::map<std::string, Channel*> _channels;
 public:
     ChannelService(/* args */);
     ~ChannelService();

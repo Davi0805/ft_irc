@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 00:03:18 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:40:08 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,17 @@
 #include "../Models/User.hpp"
 
 #include <iostream>
-#include <unordered_map>
+// unordered map faz parte do c++ 11
+// #include <unordered_map> 
+#include <map>
 
 class UserService
 {
 private:
     // Infelizmente redundante porem otimizado para buscas
-    std::unordered_map<int, User*> _usersByFd;
-    std::unordered_map<std::string, User*> _userByNick;
+    std::map<int, User*> _usersByFd;
+    std::map<std::string, User*> _userByNick;
+
 public:
     UserService();
     ~UserService();

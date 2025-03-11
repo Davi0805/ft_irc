@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:14:31 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:40:38 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ ChannelService::~ChannelService()
 
 Channel* ChannelService::get_or_createChannel(std::string channelName)
 {
-    std::unordered_map<std::string, Channel*>::iterator it;
+    std::map<std::string, Channel*>::iterator it;
     
     it = _channels.find(channelName);
 

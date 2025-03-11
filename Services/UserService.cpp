@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 00:30:32 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 01:43:28 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void UserService::CreateUserByFd(int fd)
 
 void UserService::RemoveUserByFd(int fd)
 {
-    std::unordered_map<int, User*>::iterator it;
-    std::unordered_map<std::string, User*>::iterator itNick;
+    std::map<int, User*>::iterator it;
+    std::map<std::string, User*>::iterator itNick;
     
     it = _usersByFd.find(fd);
     
@@ -55,7 +55,7 @@ void UserService::RemoveUserByFd(int fd)
 // Se nao, retorna NULL
 User* UserService::findUserByFd(int fd)
 {
-    std::unordered_map<int, User*>::iterator it;
+    std::map<int, User*>::iterator it;
     it = _usersByFd.find(fd);
 
     if (it != _usersByFd.end())
@@ -66,18 +66,18 @@ User* UserService::findUserByFd(int fd)
 
 User* UserService::findUserByNickname(std::string nickname)
 {
-    std::unordered_map<std::string, User*>::iterator it;
+    std::map<std::string, User*>::iterator it;
     it = _userByNick.find(nickname);
 
     if (it != _userByNick.end())
         return it->second;
     else
-        return ; // TODO: EXCEPTION
+        return NULL; // TODO: EXCEPTION
 }
 
 void UserService::SetNickByFd(std::string nickname, int fd)
 {
-    std::unordered_map<int, User*>::iterator it;
+    std::map<int, User*>::iterator it;
     it = _usersByFd.find(fd);
 
     // ! Nao sei se a norminette deixa
@@ -95,7 +95,7 @@ void UserService::SetNickByFd(std::string nickname, int fd)
 
 void UserService::SetUserByFd(std::string username, int fd)
 {
-    std::unordered_map<int, User*>::iterator it;
+    std::map<int, User*>::iterator it;
     it = _usersByFd.find(fd);
 
     // ! Nao sei se a norminette deixa
@@ -106,3 +106,6 @@ void UserService::SetUserByFd(std::string username, int fd)
     else
         return ; // TODO: EXCEPTION
 }
+
+
+
