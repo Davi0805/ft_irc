@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:53:17 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:31:29 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,9 @@ Channel::~Channel()
 void Channel::AddUser(User* user)
 {
     _users.push_back(user);
+}
+
+std::vector<User*> Channel::getUsers() const
+{
+    return this->_users;
 }
