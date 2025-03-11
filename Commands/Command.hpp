@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:42:39 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 21:57:36 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../Services/ChannelService.hpp"
 #include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
+#include "../Utils/ServerMessages.hpp"
 
 #include <sys/socket.h>
 class Command
