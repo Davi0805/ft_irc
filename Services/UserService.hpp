@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 02:00:18 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 17:16:37 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include "../Models/User.hpp"
 
+#include "unistd.h"
 #include <iostream>
 // unordered map faz parte do c++ 11
 // #include <unordered_map> 

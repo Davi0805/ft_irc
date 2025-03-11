@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 15:32:24 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:42:39 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
 
+#include <sys/socket.h>
 class Command
 {
 private:

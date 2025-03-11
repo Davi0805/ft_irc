@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 15:33:21 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 20:49:26 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,14 @@ void MessageHandler::HandleEvent(int fd)
     MessageContent messageContent;
 
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytesRead <= 0)
+    if (bytesRead < 0)
     {
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
+        return;
+    } else if (bytesRead == 0) 
+    {
+        std::cerr << "INFO: User disconected" << std::endl;
+        _userService.RemoveUserByFd(fd);
         return;
     }
 
@@ -65,13 +70,17 @@ void MessageHandler::HandleEvent(int fd)
 
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
-    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN
+    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN POIS ESSE IF ELSE E DESNECESSARIO
     if (messageContent.tokens[0] == "PASS")
         _commands["PASS"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "NICK")
         _commands["NICK"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "USER")
         _commands["USER"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "JOIN")
+        _commands["JOIN"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "PRIVMSG")
+        _commands["PRIVMSG"]->execute(messageContent, clientFd);
 }
 
 void MessageHandler::RegisterCommands()
@@ -79,6 +88,8 @@ void MessageHandler::RegisterCommands()
     _commands["PASS"] = new PassCommand(_userService, _channelService);
     _commands["NICK"] = new NickCommand(_userService, _channelService);
     _commands["USER"] = new UserCommand(_userService, _channelService);
+    _commands["JOIN"] = new JoinCommand(_userService, _channelService);
+    _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
 }
 
 MessageContent MessageHandler::ircTokenizer(std::string buffer)
@@ -90,14 +101,18 @@ MessageContent MessageHandler::ircTokenizer(std::string buffer)
     MessageContent messageContent;
 
     std::string message;
-
+    
+    //std::cout << "[DEBUG]: Antes do while de append stream" << std::endl;
+    // ! O PROGRAMA CRASHA NESSE WHILE QUANDO MANDA APENAS \t e enter
     while (stream >> tempToken)
     {
         // ! NS SE ISSO PODE CRASHAR O PROGRAMA
+        //std::cout << "[DEBUG]: Antes na condicao que encontra mensagem" << std::endl;
+
         if (tempToken[0] == ':')
         {
+            //std::cout << "[DEBUG]: Entra na condicao que encontra mensagem" << std::endl;
             message = getMessage(buffer, buffer.find(tempToken));
-            //message = getMessage(tempToken, stream);   
             break ;
         }
         tokens.push_back(tempToken);
@@ -106,6 +121,8 @@ MessageContent MessageHandler::ircTokenizer(std::string buffer)
 
     //std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
 
+    if (tokens.size() == 0)
+        tokens.push_back("");
     messageContent.tokens = tokens;
     messageContent.message = message;
 
@@ -121,6 +138,13 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
     result.append(buffer, it);
 
     return result;
+}
+
+bool MessageHandler::IsOnlyTab(std::string& buffer)
+{
+    if (buffer.find_first_not_of('\t') == std::string::npos)
+        return true;
+    return false;
 }
 
 
