@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 22:11:08 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 23:12:22 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,31 @@ void ServerMessages::MensagemAutenticado(int fd, std::string nickname)
     stream << ":" << SERVER_NAME << " 005 " << nickname << " :JESUS, ALGUEM TA AFIM DE LER O RFC INTEIRO?" << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
+}
+
+void ServerMessages::JoinedChannel(User* user, Channel* channel)
+{
+    std::ostringstream stream;
+
+    // RFC E SEUS CODIGOS DE RESPOSTA
+    // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
+    stream << ":" << user->getNick() << "!~user@host JOIN :" << channel->getChannelName() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 332 - CONTENDO O TOPICO DO CANAL
+    stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " :" << channel->getChannelTopic() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 353 - LISTA DE USUARIOS DO CANAL
+    stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " = " << channel->getAllUserString() << " :" << channel->getChannelTopic() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
+    stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "Fim da lista de usuarios" << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    
 }
