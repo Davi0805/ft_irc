@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 01:40:08 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 02:00:18 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ public:
      // Nickname etc setados posteriormente com o fd usando os metodos do service
     void CreateUserByFd(int fd);
     void RemoveUserByFd(int fd);
+    void RemoveUserByNick(std::string username);
 
     void SetNickByFd(std::string nickname, int fd);
     void SetUserByFd(std::string username, int fd);

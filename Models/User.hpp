@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 00:26:39 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 02:02:38 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ public:
     bool isAuthenticated() const;
     Status getStatus() const;
     std::string getNick();
+    int getFd() const;
 
 private:
     int _fd;
