@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 13:39:25 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:26:40 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void Events::runEpollLoop()
                         std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
                         // TODO: Adicionar logica exception para dar handle de erro
                     }
+                    _msgHandler.CreateEvent(_conn_sock);
                 } else {
                     // ! ADICIONAR AQUI LOGICA DE COMANDOS E MENSAGENS
                     /* readAndPrintFd(events[n].data.fd); */

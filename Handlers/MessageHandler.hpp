@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 13:57:30 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:29:31 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,9 @@ public:
     MessageContent ircTokenizer(std::string buffer);
 
     void HandleEvent(int fd);
+    void CreateEvent(int fd);
 
-    void ProcessCommand(MessageContent messageContent);
+    void ProcessCommand(MessageContent messageContent, int clientFd);
 
     enum CommandType {
         PASS,

@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 13:58:12 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:33:21 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@ MessageHandler::~MessageHandler()
 {
 }
 
+void MessageHandler::CreateEvent(int fd)
+{
+    std::cout << "[DEBUG]: NOVO USUARIO CRIADO COM FD = " << fd << std::endl;
+    _userService.CreateUserByFd(fd);
+}
+
+// TODO: Fazer logica para handle de desconexao
 void MessageHandler::HandleEvent(int fd)
 {
     char buffer[1024];
@@ -38,7 +45,7 @@ void MessageHandler::HandleEvent(int fd)
     MessageContent messageContent;
 
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytesRead < 0)
+    if (bytesRead <= 0)
     {
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
         return;
@@ -46,32 +53,32 @@ void MessageHandler::HandleEvent(int fd)
 
     buffer[bytesRead] = '\0';
 
-    std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
+    //std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
 
     // Joga Tokens e mensagens para struct
     //std::cout << "[DEBUG]: Entrando no tokenizer" << std::endl;
     messageContent = ircTokenizer(std::string(buffer));
     
     //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
-    ProcessCommand(messageContent);
+    ProcessCommand(messageContent, fd);
 }
 
-void MessageHandler::ProcessCommand(MessageContent messageContent)
+void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
     // TODO: IMPLEMENTAR LOGICA MAIS CLEAN
     if (messageContent.tokens[0] == "PASS")
-        _commands["PASS"]->execute();
+        _commands["PASS"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "NICK")
-        _commands["NICK"]->execute();
+        _commands["NICK"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "USER")
-        _commands["USER"]->execute();
+        _commands["USER"]->execute(messageContent, clientFd);
 }
 
 void MessageHandler::RegisterCommands()
 {
-    _commands["PASS"] = new PassCommand();
-    _commands["NICK"] = new NickCommand();
-    _commands["USER"] = new UserCommand();
+    _commands["PASS"] = new PassCommand(_userService, _channelService);
+    _commands["NICK"] = new NickCommand(_userService, _channelService);
+    _commands["USER"] = new UserCommand(_userService, _channelService);
 }
 
 MessageContent MessageHandler::ircTokenizer(std::string buffer)
@@ -94,10 +101,10 @@ MessageContent MessageHandler::ircTokenizer(std::string buffer)
             break ;
         }
         tokens.push_back(tempToken);
-        std::cout << "TOKENS: " << tempToken << std::endl;
+        //std::cout << "TOKENS: " << tempToken << std::endl;
     }
 
-    std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
+    //std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
 
     messageContent.tokens = tokens;
     messageContent.message = message;
