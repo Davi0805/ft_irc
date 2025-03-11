@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 15:33:40 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:37:51 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     (void)_channelService;
     (void)messageContent;
     (void)fd;
-    std::cout << "COMANDO PASS SENDO CHAMADO" << std::endl;
+    std::cout << "[DEBUG]: COMANDO PASS SENDO CHAMADO" << std::endl;
 }

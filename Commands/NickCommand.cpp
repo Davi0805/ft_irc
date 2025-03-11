@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 15:39:52 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 17:37:55 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     // TODO: CHECAGEM ANTES DE EXECUTAR
 
     _userService->SetNickByFd(messageContent.tokens[1], fd);    
-    std::cout << "COMANDO NICK CHAMADO" << std::endl;
+    std::cout << "[DEBUG]: COMANDO NICK CHAMADO" << std::endl;
 }
