@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 01:04:27 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 00:26:39 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,18 @@ public:
         CONNECTED,
         PASS_RECEIVED,
         NICK_RECEIVED,
-        USER_RECEIVED,
         AUTHENTICATED
     };
 
+    //SETTER
     void setPass();
-    void setNick();
-    void setUser();
+    void setNick(std::string nickname);
+    void setUser(std::string username);
     
+    // Getter
     bool isAuthenticated() const;
     Status getStatus() const;
+    std::string getNick();
 
 private:
     int _fd;

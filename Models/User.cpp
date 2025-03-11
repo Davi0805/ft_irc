@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 01:07:01 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 00:27:13 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,20 @@ void User::setPass()
     // this->_status = 
 }
 
-void User::setNick()
+void User::setNick(std::string nickname)
 {
-    // TODO
-    // this->_status = 
+    // TODO - CHECAR OU AQUI OU NO COMMAND NICK
+    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
+     this->_status = NICK_RECEIVED;
+     this->_nickname = nickname;
 }
 
-void User::setUser()
+void User::setUser(std::string username)
 {
-    // TODO
-    // this->_status = 
+    // TODO - CHECAR OU AQUI OU NO COMMAND USER
+    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
+    this->_status = AUTHENTICATED;
+    this->_username = username; 
 }
 
 bool User::isAuthenticated() const
@@ -50,4 +54,9 @@ bool User::isAuthenticated() const
 User::Status User::getStatus() const
 {
     return this->_status;
+}
+
+std::string User::getNick()
+{
+    return this->_nickname;
 }
