@@ -6,7 +6,7 @@
 #    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/11 17:56:14 by dmelo-ca         ###   ########.fr        #
+#    Updated: 2025/03/11 18:06:00 by dmelo-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = ircserv
 
 # Compiler
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
 
 # Files
 SRC = main.cpp \

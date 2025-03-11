@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:55:42 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 18:08:21 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,8 @@ MessageContent MessageHandler::ircTokenizer(std::string buffer)
 
     //std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
 
+    if (tokens.size() == 0)
+        tokens.push_back("");
     messageContent.tokens = tokens;
     messageContent.message = message;
 
