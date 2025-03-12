@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 00:41:07 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 02:28:13 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,12 @@
 // PRIVMSG Amigo123 :Oi, tudo bem?
 
 
-// ! PROV DEIXAR ESSSA CLASSE NA MAO DO ARTHUR, POR TER BOAS PRATICAS DE PARSE E TOKENIZER
+/* 
+    CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,
+    SEJA CRIAR UM EVENTO (CRIAR USER E ARMAZENAR FD E DADOS DO USUARIO),
+    HANDLE DE MENSAGENS CHAMANDO SERVICES E LOGICAS DE PARSING E TOKENIZACAO
+    E REGISTRO DE COMANDOS
+*/
 
 
 MessageHandler::MessageHandler()
@@ -30,13 +35,25 @@ MessageHandler::~MessageHandler()
 {
 }
 
+
+/* 
+    RECEBER FD APOS ACEITAR CONEXAO TCP E CRIAR USUARIO
+    REFERENCIANDO O FD QUE SERA UTILIZADO DURANTE TODO O
+    PROGRAMA PARA RECEBER E ENVIAR MENSAGENS
+*/
 void MessageHandler::CreateEvent(int fd)
 {
     std::cout << "[DEBUG]: NOVO USUARIO CRIADO COM FD = " << fd << std::endl;
     _userService.CreateUserByFd(fd);
 }
 
-// TODO: Fazer logica para handle de desconexao
+
+/* 
+   METODO PARA DAR HANDLE DE EVENTO, ONDE LE O FD
+   E ATRIBUI PARA UM BUFFER QUE SERA PROCESSADO E
+   EXECUTADO UTILIZANDO OS METODOS DE TOKENIZACAO
+   E PARSE
+*/
 void MessageHandler::HandleEvent(int fd)
 {
     char buffer[1024];
@@ -60,9 +77,12 @@ void MessageHandler::HandleEvent(int fd)
 
     std::cout << "Recebido do fd " << fd << ": " << buffer << "EOF DO BUFFER"<< std::endl;
 
-    // Joga Tokens e mensagens para struct
-    //std::cout << "[DEBUG]: Entrando no tokenizer" << std::endl;
-
+    /* 
+        IF/ELSE, POIS DIFERENTE DO NCAT, O HEXCHAT MANDA TODAS
+        AS CREDENCIAIS DE UMA VEZ, FAZENDO NECESSARIO OUTRO METODO
+        DE TOKENIZACAO, SENDO NECESSSARIO SEPARAR OS COMANDOS PARA 
+        EXECUCAO APROPRIADA
+    */
     if (std::string(buffer).find("\r\n") != std::string::npos)
     {
         std::vector<std::string> splittedCommands = splitDeVariosComandos(buffer);
@@ -75,13 +95,19 @@ void MessageHandler::HandleEvent(int fd)
     }
     else
     {
-       messageContent = ircTokenizer(std::string(buffer));
-    
-        //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
+        messageContent = ircTokenizer(std::string(buffer));    
         ProcessCommand(messageContent, fd); 
     }
 }
 
+
+/* 
+    METODO PARA EXECUTAR OS COMANDOS REGISTRADOS
+    TODO: ADICIONAR VERFICACOES ANTES, AO INVES DE
+    TODO: FAZER IF/ELSE PROCURANDO TAL COMANDO
+    ! TOMAR CUIDADO POIS EXECUTAR UM COMANDO QUE 
+    ! NAO EXISTE CRASHA O PROGRAMA
+*/
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
     // TODO: IMPLEMENTAR LOGICA MAIS CLEAN POIS ESSE IF ELSE E DESNECESSARIO
@@ -99,6 +125,14 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
         _commands["QUIT"]->execute(messageContent, clientFd);
 }
 
+
+/* 
+    METODO PARA REGISTRAR TODOS OS COMANDOS, ONDE SEMPRE SAO ALOCADOS
+    COM REFERENCIAS PARA OS SERVICES(USERSERVICE E CHANNELSERVICE)
+
+    ! AO CRIAR NOVOS COMANDOS, SEMPRE REGISTRA-LOS POIS PODE CAUSAR 
+    ! CRASHES SE TENTAR EXECUTAR ALGO QUE NAO EXISTE
+*/
 void MessageHandler::RegisterCommands()
 {
     _commands["PASS"] = new PassCommand(_userService, _channelService);
@@ -109,6 +143,14 @@ void MessageHandler::RegisterCommands()
     _commands["QUIT"] = new QuitCommand(_userService, _channelService);
 }
 
+
+/* 
+    TOKENIZER COM FUNCAO DE PEGAR A MENSAGEM/COMANDO INTEIRO
+    E SEPARAR EM TOKENS E MENSAGEM E ATRIBUIR NA STRUCT MESSAGECONTENT
+
+    MOTIVO: SIMPLIFICACAO DE LOGICA E PARA EVITAR DESFORMATACAO DE MENSAGEM
+    EM CASO DE ESPACOS OU TABS ALEATORIOS
+*/
 MessageContent MessageHandler::ircTokenizer(std::string buffer)
 {
     std::istringstream stream(buffer);
@@ -147,7 +189,11 @@ MessageContent MessageHandler::ircTokenizer(std::string buffer)
 }
 
 
-// METHODO PEQUENO MAS APENAS PARA DEIXAR MAIS CLEAN
+/* 
+    METODO PARA EXTRAIR MENSAGEM SEM TOKENIZACAO, ONDE RECEBE REFERENCIA
+    DIRETA PARA O BUFFER E ITERADOR DE ONDE A MENSAGEM COMECA, RETORNANDO
+    A MENSAGEM ISOLADA
+*/
 std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
 {
     std::string result;
@@ -155,13 +201,6 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
     result.append(buffer, it);
 
     return result;
-}
-
-bool MessageHandler::IsOnlyTab(std::string& buffer)
-{
-    if (buffer.find_first_not_of('\t') == std::string::npos)
-        return true;
-    return false;
 }
 
 // Faz split de quando o cliente manda varios commandos de uma vez
