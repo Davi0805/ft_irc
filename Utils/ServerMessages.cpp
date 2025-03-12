@@ -6,11 +6,18 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 00:01:16 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 01:50:39 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerMessages.hpp"
+
+
+/* 
+    CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
+    COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
+    SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
+*/
 
 ServerMessages::ServerMessages()
 {
@@ -20,6 +27,12 @@ ServerMessages::~ServerMessages()
 {
 }
 
+/* 
+    APOS AUTENTICAR, DE ACORDO COM MINHAS PESQUISAS O SERVIDOR
+    COSTUMA MANDAR AS RESPOSTAS COM CODIGO DE 001 A 005
+    CONTENDO INFORMCAOES PERTINENTES DO SERVIDOR, QUE CLARAMENTE
+    O NOSSO NAO TEM, POR SER UM SERVIDOR DESENVOLVIDO PARA APRENDIZAGEM    
+*/
 void ServerMessages::MensagemAutenticado(int fd, std::string nickname)
 {
     std::ostringstream stream;
@@ -54,6 +67,9 @@ void ServerMessages::MensagemAutenticado(int fd, std::string nickname)
     stream.str("");
 }
 
+/* 
+    O MESMO QUE FOI CITADO ACIMA, POREM PARA QUANDO SE JUNTA EM UM CANAL
+*/
 void ServerMessages::JoinedChannel(User* user, Channel* channel)
 {
     std::ostringstream stream;
@@ -80,6 +96,13 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
     stream.str("");   
 }
 
+
+/* 
+    DIFERENTE DOS METODOS ANTERIORES, ESSE METODO E PARA FORMATACAO.
+    OU SEJA, ELE NAO ENVIA NADA, POIS NESSE CASO ESSE METODO SERA UTILIZADO
+    MAJORITARIAMENTE EM BROADCAST DE MENSAGEM, SENDO MELHOR TER A LOGICA DE BROADCAST
+    SEPARADA DA CLASSE SERVER MESSAGE    
+*/
 std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::string message)
 {
     std::ostringstream stream;

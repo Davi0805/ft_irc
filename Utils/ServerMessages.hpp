@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 23:41:26 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 01:45:35 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,19 @@
 #include "../Models/Channel.hpp"
 #include "../Models/User.hpp"
 
+
+// SERVER_NAME CRIADO MERAMENTE ILUSTRATIVAMENTE
+// JA QUE O NOSSO SERVER RODA LOCALMENTE
+// POR SER EDUCACIONAL APENAS
+
 #define SERVER_NAME "ft_irc.42Network.local"
 
+
+/* 
+    CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
+    COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
+    SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
+*/
 class ServerMessages
 {
 private:
