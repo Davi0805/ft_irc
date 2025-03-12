@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 02:28:13 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 11:35:04 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void MessageHandler::CreateEvent(int fd)
    EXECUTADO UTILIZANDO OS METODOS DE TOKENIZACAO
    E PARSE
 */
-void MessageHandler::HandleEvent(int fd)
+// TODO: Fazer logica para handle de desconexao
+bool MessageHandler::HandleEvent(int fd)
 {
     char buffer[1024];
     ssize_t bytesRead;
@@ -65,12 +66,13 @@ void MessageHandler::HandleEvent(int fd)
     if (bytesRead < 0)
     {
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
-        return;
+        return false;
     } else if (bytesRead == 0) 
     {
         std::cerr << "INFO: User disconected" << std::endl;
         _userService.RemoveUserByFd(fd);
-        return;
+        
+        return false;
     }
 
     buffer[bytesRead] = '\0';
