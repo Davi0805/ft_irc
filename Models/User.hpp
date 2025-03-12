@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:36:02 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 01:33:15 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 #include <string> 
 
+
+/* 
+    CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
+    ONDE EXISTE MAIS COM O OBJETIVO DE GUARDAR DADOS
+    DO QUE PROPRIAMENTE EXECUTAR E/OU TER LOGICAS COMPLEXAS    
+*/
 class User
 {
 public:

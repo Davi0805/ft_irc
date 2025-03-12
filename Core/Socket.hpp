@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 22:46:02 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 12:44:01 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
-#include <sys/epoll.h>
+#include <poll.h>
 #include <cerrno>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+
+#include "../Utils/Colors.hpp"
+#include <stdexcept>
 
 // TODO: ALTERAR DEPOIS OU ADICONAR EM UM HEADER GERAL 
 // TODO:POIS SE N ME ENGANO SERA UTILIZADO NO EPOLL TBM
@@ -31,15 +34,17 @@ class Socket
 private:
     int _porta;
     int _socketFd;
+    std::string _password;
 
     // SETUP
-    bool    setupSocketContext();
-    bool    setNonBlock();
-    bool    bindSocket();
-    bool    startListen();
+    // TODO: Modificar para void pois estou a utilizar exceptions
+    void    setupSocketContext();
+    void    setNonBlock();
+    void    bindSocket();
+    void    startListen();
     
 public:
-    Socket(int porta);
+    Socket(int porta, std::string password);
     ~Socket();
 
 
