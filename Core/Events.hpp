@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 21:52:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/09 12:57:10 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 09:20:41 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
-#include <sys/epoll.h>
+// #include <sys/epoll.h> //! check if needed
+#include <poll.h> // poll
 #include <cerrno>
 #include <unistd.h>
 #include <fcntl.h>
@@ -29,22 +30,45 @@
 class Events
 {
 private:
-    int _epollfd;
     int _listensocket;
-    int _conn_sock;
-    int _nfds; // Numero de eventos
-    struct epoll_event ev; // TEMP para events - nova conexao
-    struct epoll_event events[MAX_EVENTS];
+    std::vector<struct pollfd> _pfds;
+    // int _conn_sock;
+    // int _nfds; // Numero de eventos
 
     MessageHandler _msgHandler;
     
 
-    bool setupEpollContext();
+    bool setupPollContext();
     bool setNonBlock(int targetFd);
     void readAndPrintFd(int fd);
+    void removeClient(int fd);
 public:
     Events(int socketFd);
     ~Events();
 
-    void runEpollLoop();
+    void runPollLoop();
 };
+
+
+// class Events
+// {
+// private:
+//     int _epollfd;
+//     int _listensocket;
+//     int _conn_sock;
+//     int _nfds; // Numero de eventos
+//     struct epoll_event ev; // TEMP para events - nova conexao
+//     struct epoll_event events[MAX_EVENTS];
+
+//     MessageHandler _msgHandler;
+    
+
+//     bool setupEpollContext();
+//     bool setNonBlock(int targetFd);
+//     void readAndPrintFd(int fd);
+// public:
+//     Events(int socketFd);
+//     ~Events();
+
+//     void runEpollLoop();
+// };

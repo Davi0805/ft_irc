@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:49:26 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 10:09:29 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void MessageHandler::CreateEvent(int fd)
 }
 
 // TODO: Fazer logica para handle de desconexao
-void MessageHandler::HandleEvent(int fd)
+bool MessageHandler::HandleEvent(int fd)
 {
     char buffer[1024];
     ssize_t bytesRead;
@@ -48,12 +48,13 @@ void MessageHandler::HandleEvent(int fd)
     if (bytesRead < 0)
     {
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
-        return;
+        return false;
     } else if (bytesRead == 0) 
     {
         std::cerr << "INFO: User disconected" << std::endl;
         _userService.RemoveUserByFd(fd);
-        return;
+        
+        return false;
     }
 
     buffer[bytesRead] = '\0';
@@ -66,6 +67,8 @@ void MessageHandler::HandleEvent(int fd)
     
     //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
     ProcessCommand(messageContent, fd);
+
+    return true;
 }
 
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)

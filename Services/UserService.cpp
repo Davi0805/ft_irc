@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:17:08 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:08:34 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void UserService::RemoveUserByFd(int fd)
         _usersByFd.erase(it);
     }
     close(fd); // fecha fd do user desconectado
+    
 
     // TODO: ADICONAR EXCEPTION SE EXISTIR ERRO NO RFC
 }

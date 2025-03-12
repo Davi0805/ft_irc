@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/08 22:46:02 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 09:01:56 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <iostream>
 #include <string>
 #include <sys/socket.h>
-#include <sys/epoll.h>
+#include <poll.h>
 #include <cerrno>
 #include <unistd.h>
 #include <fcntl.h>
@@ -31,6 +31,7 @@ class Socket
 private:
     int _porta;
     int _socketFd;
+    std::string _password;
 
     // SETUP
     bool    setupSocketContext();
@@ -39,7 +40,7 @@ private:
     bool    startListen();
     
 public:
-    Socket(int porta);
+    Socket(int porta, std::string password);
     ~Socket();
 
 

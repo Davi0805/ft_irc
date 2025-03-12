@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 15:12:08 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:16:05 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 
-Socket::Socket(int porta) : _porta(porta)
+Socket::Socket(int porta, std::string password) : _porta(porta), _password(password)
 {
     setupSocketContext();   // init socket
     setNonBlock();          // configure socket
