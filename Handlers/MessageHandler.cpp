@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 11:35:04 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:38:15 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ bool MessageHandler::HandleEvent(int fd)
         messageContent = ircTokenizer(std::string(buffer));    
         ProcessCommand(messageContent, fd); 
     }
+    return true;
 }
 
 
