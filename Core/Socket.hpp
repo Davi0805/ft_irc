@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 12:41:48 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:44:01 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ private:
 
     // SETUP
     // TODO: Modificar para void pois estou a utilizar exceptions
-    bool    setupSocketContext();
-    bool    setNonBlock();
-    bool    bindSocket();
-    bool    startListen();
+    void    setupSocketContext();
+    void    setNonBlock();
+    void    bindSocket();
+    void    startListen();
     
 public:
     Socket(int porta, std::string password);
