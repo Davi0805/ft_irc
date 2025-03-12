@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 21:25:01 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 00:01:32 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,15 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
         if (_channelService->isUserPartOfChannel(fd, messageContent.tokens[1]))
         {
             std::vector<User*> users = _channelService->findChannel(messageContent.tokens[1])->getUsers();
+            Channel* channel = _channelService->findChannel(messageContent.tokens[1]);
+            User* sender = _userService->findUserByFd(fd);
+
+            std::string msgFormatada = ServerMessages::PrivMsgFormatter(sender, channel, messageContent.message);
+
             for (size_t i = 0; i < users.size(); i++)
             {
-                if (users[i]->getFd() != fd)
-                    send(users[i]->getFd(), messageContent.message.c_str(), messageContent.message.size(), 0);
+                if (users[i]->getFd() != sender->getFd())
+                    send(users[i]->getFd(), msgFormatada.c_str(), msgFormatada.size(), 0);
             }
         }
     }
