@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 22:45:41 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 23:59:10 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,24 @@ void MessageHandler::HandleEvent(int fd)
 
     // Joga Tokens e mensagens para struct
     //std::cout << "[DEBUG]: Entrando no tokenizer" << std::endl;
-    std::vector<std::string> splittedCommands = splitDeVariosComandos(buffer);
 
-    for (size_t i = 0; i < splittedCommands.size(); i++)
+    if (std::string(buffer).find("\r\n") != std::string::npos)
     {
-        messageContent = ircTokenizer(splittedCommands[i]);
-        ProcessCommand(messageContent, fd);
+        std::vector<std::string> splittedCommands = splitDeVariosComandos(buffer);
+
+        for (size_t i = 0; i < splittedCommands.size(); i++)
+        {
+            messageContent = ircTokenizer(splittedCommands[i]);
+            ProcessCommand(messageContent, fd);
+        }
     }
+    else
+    {
+       messageContent = ircTokenizer(std::string(buffer));
     
-    //messageContent = ircTokenizer(std::string(buffer));
-    
-    //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
-    //ProcessCommand(messageContent, fd);
+        //std::cout << "[DEBUG]: Entrando no ProcessCommand" << std::endl;
+        ProcessCommand(messageContent, fd); 
+    }
 }
 
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
