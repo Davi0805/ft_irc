@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 22:51:17 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/11 23:41:26 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ public:
     // TODO: Substituir fd e nickname apenas por um User* para clean code
     static void MensagemAutenticado(int fd, std::string nickname);
 
-    
     static void JoinedChannel(User* user, Channel* channel);
+
+    static std::string PrivMsgFormatter(User* user, Channel* channel, std::string message);
 };

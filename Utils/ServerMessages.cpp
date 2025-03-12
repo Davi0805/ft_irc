@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 23:12:22 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 00:01:16 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,14 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
     // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
     stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "Fim da lista de usuarios" << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
-    stream.str("");
+    stream.str("");   
+}
+
+std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << user->getNick() << "!~user@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
     
+    return stream.str();   
 }
