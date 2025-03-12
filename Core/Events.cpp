@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 10:09:15 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:12:40 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void Events::runPollLoop()
                     std::cout << "New client connected: " << clientSock << std::endl;
                 } else {
                     if (!_msgHandler.HandleEvent(_pfds[i].fd)) { // Se a função retornar false, significa que o cliente desconectou
+                        // pensar se é melhor remover o cliente aqui ou no HandleEvent
                         removeClient(_pfds[i].fd);
                     }
                 }
