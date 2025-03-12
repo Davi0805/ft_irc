@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 11:31:38 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:50:22 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ private:
     std::vector<std::string> splitDeVariosComandos(std::string buffer);
 
     void RegisterCommands();
+
+    void FreeCommands();
 public:
     MessageHandler();
     ~MessageHandler();
