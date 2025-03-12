@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 09:01:56 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:44:01 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 
+#include "../Utils/Colors.hpp"
+#include <stdexcept>
+
 // TODO: ALTERAR DEPOIS OU ADICONAR EM UM HEADER GERAL 
 // TODO:POIS SE N ME ENGANO SERA UTILIZADO NO EPOLL TBM
 #define MAX_CONN 10
@@ -34,10 +37,11 @@ private:
     std::string _password;
 
     // SETUP
-    bool    setupSocketContext();
-    bool    setNonBlock();
-    bool    bindSocket();
-    bool    startListen();
+    // TODO: Modificar para void pois estou a utilizar exceptions
+    void    setupSocketContext();
+    void    setNonBlock();
+    void    bindSocket();
+    void    startListen();
     
 public:
     Socket(int porta, std::string password);

@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 11:38:15 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/12 13:03:13 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,12 @@ MessageHandler::MessageHandler()
     RegisterCommands();
 }
 
+// APARENTA IRRELEVANTE DE CERTA FORMA, POIS NUNCA CHEGA AQUI
+// POREM, ESTA FEITO CASO VOCES QUEIRAM TER UM COMANDO PARA 
+// FECHAR O SERVIDOR HAHAHA
 MessageHandler::~MessageHandler()
 {
+    FreeCommands();
 }
 
 
@@ -223,6 +227,18 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string buffe
         it = buffer.find_first_of("\r\n");
     }
     return result;
+}
+
+// APARENTA IRRELEVANTE DE CERTA FORMA, POIS NUNCA CHEGA AQUI
+// POREM, ESTA FEITO CASO VOCES QUEIRAM TER UM COMANDO PARA 
+// FECHAR O SERVIDOR HAHAHA
+void MessageHandler::FreeCommands()
+{
+    for(std::map<std::string, Command *>::iterator it = _commands.begin(); it != _commands.end(); it++)
+    {
+        delete (it->second);
+    }
+    _commands.clear();
 }
 
 

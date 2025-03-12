@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 21:57:36 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 13:00:47 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ private:
 public:
     Command();
     //Command(UserService& userService, ChannelService& channelService);
-    ~Command();
+    virtual ~Command();
 
     // Metodo abstrato para executar
     virtual void execute(MessageContent messageContent, int fd) = 0;
