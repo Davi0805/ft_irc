@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 10:12:40 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:32:39 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Events::runPollLoop()
         // espera por atividade
         int pollCount = poll(&_pfds[0], _pfds.size(), -1);
         if (pollCount == -1) {
-            std::cerr << "Poll error: " << strerror(errno) << std::endl;
+            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl;
             continue;
         }
 
@@ -122,6 +122,8 @@ void Events::runPollLoop()
                     clientPollFd.fd = clientSock;
                     clientPollFd.events = POLLIN;
                     _pfds.push_back(clientPollFd);
+                    
+                    _msgHandler.CreateEvent(clientSock);
 
                     std::cout << "New client connected: " << clientSock << std::endl;
                 } else {
