@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 09:16:05 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:42:22 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,20 @@
 
 Socket::Socket(int porta, std::string password) : _porta(porta), _password(password)
 {
-    setupSocketContext();   // init socket
-    setNonBlock();          // configure socket
-    bindSocket();           // bind
-    startListen();          // listen
+    try
+    {
+        setupSocketContext();   // init socket
+        setNonBlock();          // configure socket
+        bindSocket();           // bind
+        startListen();          // listen
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << RED << "[FATAL]" << RESET << ": " << e.what() << '\n';
+        if (_socketFd != -1)
+            close(_socketFd);
+        throw std::runtime_error("Saindo do programa!");
+    }
 }
 
 // Provavelmente o close sera feito para alguma outra classe geral
@@ -48,7 +58,7 @@ bool Socket::setupSocketContext()
     _socketFd = socket(AF_INET, SOCK_STREAM, 0);
     if (_socketFd < 0)
     {
-        std::cerr << "FATAL: Erro ao gerar o socket" << std::endl;
+        throw  std::runtime_error("Erro ao gerar o socket");
         return (false);
     }
 
@@ -62,8 +72,7 @@ bool Socket::setupSocketContext()
     int optFlag = 1; // set the option as true
     if (setsockopt(_socketFd, SOL_SOCKET, SO_REUSEADDR, &optFlag, sizeof(optFlag)))
     {
-        std::cerr << "FATAL: Erro ao configurar socket" << std::endl;
-        close(_socketFd);
+        throw  std::runtime_error("Erro ao configurar socket");
         return false;
     }
     return true;
@@ -80,8 +89,7 @@ bool Socket::setNonBlock()
     int flags = fcntl(_socketFd, F_GETFL);
     if (flags < 0)
     {
-        std::cerr << "FATAL: Deu merda federal ao tentar dar get das flags setadas no socket" << std::endl;
-        close(_socketFd); // todo destructor?
+        throw  std::runtime_error("Deu merda federal ao tentar dar get das flags setadas no socket");
         return false;
     }
 
@@ -93,8 +101,7 @@ bool Socket::setNonBlock()
     */
     if (fcntl(_socketFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
     {
-        std::cerr << "FATAL: Erro ao setar o NONBLOCK no socket" << std::endl;
-        close(_socketFd); // todo destructor?
+        throw  std::runtime_error("Erro ao setar o NONBLOCK no socket");
         return (false);
     }
 
@@ -129,8 +136,8 @@ bool    Socket::bindSocket()
 
     if (bind(_socketFd, (sockaddr *)&configs, sizeof(configs)) < 0)
     {
-        std::cerr << "FATAL: Erro ao redirecionar conexoes desse socket para porta " << _porta << std::endl;
-        close(_socketFd); // todo destructor
+        //std::cerr << "FATAL: Erro ao redirecionar conexoes desse socket para porta " << _porta << std::endl;
+        throw  std::runtime_error("Erro ao redirecionar conexoes desse socket para porta determinada");
         return false;
     }
     
@@ -148,8 +155,7 @@ bool    Socket::startListen()
 {
     if (listen(_socketFd, MAX_CONN) < 0)
     {
-        std::cerr << "FATAL: Erro ao comecar a ouvir conexoes" << std::endl;
-        close(_socketFd);
+        throw  std::runtime_error("Erro ao comecar a ouvir conexoes");
         return false;
     }
     return true;

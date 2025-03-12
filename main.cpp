@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 09:10:26 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:38:57 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,17 @@ int main(int ac, char **av)
 {
     if (ParseInput(ac, av)) return 1;
 
-    MessageHandler debug;
-    Socket ioContext(atoi(av[1]), av[2]);
-    Events pollContext(ioContext.getSocketFd());
-    pollContext.runPollLoop();
+    try
+    {
+        Socket ioContext(atoi(av[1]), av[2]);
+        Events pollContext(ioContext.getSocketFd());
+        pollContext.runPollLoop();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << RED << "[FATAL]" << RESET << ": " << e.what() << '\n';
+        return (1);
+    }
 
    return (0);
 }
