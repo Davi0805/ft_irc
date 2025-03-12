@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:59:41 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/11 23:12:54 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,6 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     
     Channel* channel = _channelService->get_or_createChannel(messageContent.tokens[1]);
     channel->AddUser(user);
+
+    ServerMessages::JoinedChannel(user, channel);
 }

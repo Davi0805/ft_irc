@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 10:07:42 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:31:38 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,25 @@
 #include "../Commands/UserCommand.hpp"
 #include "../Commands/JoinCommand.hpp"
 #include "../Commands/PrivMsgCommand.hpp"
+#include "../Commands/QuitCommand.hpp"
 
-// TALVEZ DEPOIS SUBSTITUIR POR METHODOS ESTATICOS
-// JA QUE NAO POSSUI VARIAVEIS PROPRIAS
-
+/* 
+    CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,
+    SEJA CRIAR UM EVENTO (CRIAR USER E ARMAZENAR FD E DADOS DO USUARIO),
+    HANDLE DE MENSAGENS CHAMANDO SERVICES E LOGICAS DE PARSING E TOKENIZACAO
+    E REGISTRO DE COMANDOS
+*/
 class MessageHandler
 {
 private:
     std::string getMessage(std::string& buffer, std::size_t it);
     std::string getMessage(std::string& strBegin, std::istringstream& stream);
 
-    bool IsOnlyTab(std::string& buffer);
-
     UserService _userService;
     ChannelService _channelService;
     std::map<std::string, Command*> _commands;
+
+    std::vector<std::string> splitDeVariosComandos(std::string buffer);
 
     void RegisterCommands();
 public:

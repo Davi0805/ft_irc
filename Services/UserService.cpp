@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 10:08:34 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:34:23 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserService.hpp"
+
+/* 
+    ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
+    TODAS OS USUARIOS DO PROGRAMA, ONDE TEM COMO OBJETIVO, SEPARAR E/OU
+    DESACOPLAR AS LOGICAS PARA MAIS ESCALABILIDADE, FACIL MANUTENCAO E 
+    VERSATILIDADE NA HORA DE CRIAR NOVOS COMANDOS OU IMPLEMENTAR NOVAS 
+    FEATURES
+
+    USE CASES: AO CRIAR UM COMANDO, TODOS COMANDOS POSSUEM PONTEIROS PARA
+    ESSA CLASSE, ONDE VOCE PODE SIMPLESMENTE REUTILIZAR OS METODOS E/OU 
+    IMPLEMENTAR NOVOS QUE IRAO FACILITAR/SIMPLICAR LOGICAS FUTURAS
+ */
 
 UserService::UserService()
 {
@@ -21,14 +33,21 @@ UserService::~UserService()
 }
 
 
-// Cria apenas a referencia no _userByFd
-// Pq nessa altura ainda nao possui nick
-// que sera definido com comandos
+/* 
+    QUANDO UM NOVO CLIENT CONECTA, ELE APENAS ALOCA UM NOVO USUARIO
+    E ATRIBUI NO MAP <FD, USER*>. ONDE SEU FD FICA REGISTRADO, POIS 
+    O NICKNAME SERA ATRIBUIDO SOMENTE AO UTILIZAR COMANDO NICK
+ */
 void UserService::CreateUserByFd(int fd)
 {
     _usersByFd[fd] = new User(fd);
 }
 
+
+/* 
+    METHODO PARA DELETAR INSTANCIA DO USUARIO, FECHAR O FD DA CONEXAO
+    E APAGAR REFERENCIA NO MAP DO FD E NO MAP DE NICKNAME, CASO EXISTA
+ */
 void UserService::RemoveUserByFd(int fd)
 {
     std::map<int, User*>::iterator it;
@@ -54,6 +73,11 @@ void UserService::RemoveUserByFd(int fd)
     // TODO: ADICONAR EXCEPTION SE EXISTIR ERRO NO RFC
 }
 
+/* 
+    METHODO PARA DELETAR INSTANCIA DO USUARIO, FECHAR O FD DA CONEXAO
+    E APAGAR REFERENCIA NO MAP DO NICK NAME E SUBSEQUENTEMENTE DO MAP
+    DO FD
+ */
 void UserService::RemoveUserByNick(std::string nickname)
 {
     std::map<std::string, User*>::iterator it;
@@ -64,6 +88,7 @@ void UserService::RemoveUserByNick(std::string nickname)
     if (it != _userByNick.end())
     {
         itFd = _usersByFd.find(it->second->getFd());
+        close(it->second->getFd()); // fecha o fd do user
         _userByNick.erase(it);
         delete itFd->second;
         _usersByFd.erase(itFd);
@@ -71,9 +96,11 @@ void UserService::RemoveUserByNick(std::string nickname)
     // TODO: ADICONAR EXCEPTION SE EXISTIR ERRO NO RFC
 }
 
-// Procura User pelo Fd
-// Se existir retorna ponteiro para User
-// Se nao, retorna NULL
+/* 
+    METHOD DE BUSCA DE USUARIO UTILIZANDO FD.
+    SE EXISTIR, RETORNA UM PONTEIRO PARA A INSTANCIA DO USUARIO
+    CASO NAO, RETORNA NULL
+ */
 User* UserService::findUserByFd(int fd)
 {
     std::map<int, User*>::iterator it;
@@ -85,6 +112,11 @@ User* UserService::findUserByFd(int fd)
         return NULL;
 }
 
+/* 
+    METHOD DE BUSCA DE USUARIO UTILIZANDO NICKNAME.
+    SE EXISTIR, RETORNA UM PONTEIRO PARA A INSTANCIA DO USUARIO
+    CASO NAO, RETORNA NULL
+ */
 User* UserService::findUserByNickname(std::string nickname)
 {
     std::map<std::string, User*>::iterator it;
@@ -96,6 +128,9 @@ User* UserService::findUserByNickname(std::string nickname)
         return NULL; // TODO: EXCEPTION
 }
 
+/* 
+    METODO PARA SETAR O NICKNAME DE ALGUM USUARIO APENAS PELO FD,
+ */
 void UserService::SetNickByFd(std::string nickname, int fd)
 {
     std::map<int, User*>::iterator it;
@@ -114,6 +149,9 @@ void UserService::SetNickByFd(std::string nickname, int fd)
         return ; // TODO: EXCEPTION
 }
 
+/* 
+    METODO PARA SETAR O NICKNAME DE ALGUM USUARIO APENAS PELO FD,
+ */
 void UserService::SetUserByFd(std::string username, int fd)
 {
     std::map<int, User*>::iterator it;
