@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 23:59:10 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 00:41:07 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
         _commands["JOIN"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "PRIVMSG")
         _commands["PRIVMSG"]->execute(messageContent, clientFd);
+    else if (messageContent.tokens[0] == "QUIT")
+        _commands["QUIT"]->execute(messageContent, clientFd);
 }
 
 void MessageHandler::RegisterCommands()
@@ -104,6 +106,7 @@ void MessageHandler::RegisterCommands()
     _commands["USER"] = new UserCommand(_userService, _channelService);
     _commands["JOIN"] = new JoinCommand(_userService, _channelService);
     _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
+    _commands["QUIT"] = new QuitCommand(_userService, _channelService);
 }
 
 MessageContent MessageHandler::ircTokenizer(std::string buffer)

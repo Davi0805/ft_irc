@@ -6,7 +6,7 @@
 /*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 22:27:04 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 00:39:52 by davi             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include "../Commands/UserCommand.hpp"
 #include "../Commands/JoinCommand.hpp"
 #include "../Commands/PrivMsgCommand.hpp"
+#include "../Commands/QuitCommand.hpp"
 
 // TALVEZ DEPOIS SUBSTITUIR POR METHODOS ESTATICOS
 // JA QUE NAO POSSUI VARIAVEIS PROPRIAS
