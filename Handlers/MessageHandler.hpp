@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 20:43:50 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/12 10:07:42 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ public:
 
     MessageContent ircTokenizer(std::string buffer);
 
-    void HandleEvent(int fd);
+    bool HandleEvent(int fd);
     void CreateEvent(int fd);
 
     void ProcessCommand(MessageContent messageContent, int clientFd);

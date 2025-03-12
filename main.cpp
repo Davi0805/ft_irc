@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 10:31:56 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:10:26 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int main(int ac, char **av)
     if (ParseInput(ac, av)) return 1;
 
     MessageHandler debug;
-    Socket ioContext(atoi(av[1]));
-    Events epollContext(ioContext.getSocketFd());
-    epollContext.runEpollLoop();
+    Socket ioContext(atoi(av[1]), av[2]);
+    Events pollContext(ioContext.getSocketFd());
+    pollContext.runPollLoop();
 
    return (0);
 }

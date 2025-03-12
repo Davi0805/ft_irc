@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:06:14 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/12 10:09:15 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ Events::~Events()
 //         std::cerr << "FATAL: Erro ao criar contexto epoll" << std::endl;
 //         return false;
 //     }
-bool Events::setupEpollContext()
+bool Events::setupPollContext()
 {
     struct pollfd pfd;
     pfd.fd = this->_listensocket; 
@@ -48,53 +48,90 @@ bool Events::setupEpollContext()
 }
 
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
-void Events::runEpollLoop()
+void Events::runPollLoop()
 {
-    // ! PEDACO DE CODIGO BASEADO NO MAN EPOLL
-    for (;;) 
-    {
-            _nfds = epoll_wait(_epollfd, events, MAX_EVENTS, -1);
-            if (_nfds == -1) {
-                std::cerr << "FATAL: Um erro ocorreu no epoll_wait" << std::endl;
-                // TODO: Adicionar logica exception para dar handle de erro
-            }
+    // // ! PEDACO DE CODIGO BASEADO NO MAN EPOLL
+    // for (;;) 
+    // {
+    //         _nfds = epoll_wait(_epollfd, events, MAX_EVENTS, -1);
+    //         if (_nfds == -1) {
+    //             std::cerr << "FATAL: Um erro ocorreu no epoll_wait" << std::endl;
+    //             // TODO: Adicionar logica exception para dar handle de erro
+    //         }
 
-            // LOOP QUE ITERA O NUMERO DE EVENTOS
-            for (int n = 0; n < _nfds; ++n) {
+    //         // LOOP QUE ITERA O NUMERO DE EVENTOS
+    //         for (int n = 0; n < _nfds; ++n) {
 
-                // CHECA SE O EVENTO ACONTECEU NO NOSSO FD DE ESCUTA
-                // RELACIONADO COM NOVA CONEXAO
-                if (events[n].data.fd == _listensocket)
-                {
+    //             // CHECA SE O EVENTO ACONTECEU NO NOSSO FD DE ESCUTA
+    //             // RELACIONADO COM NOVA CONEXAO
+    //             if (events[n].data.fd == _listensocket)
+    //             {
+    //                 struct sockaddr_in addr;
+    //                 socklen_t addrlen = sizeof(addr);
+                    
+                    
+    //                 // TODO: ATRIBUIR ESSE CONN_SOCK EM ALGUMA ESTRUTURA OU CLASSE DE USER/CLIENT
+    //                 _conn_sock = accept(_listensocket,
+    //                                    (struct sockaddr *) &addr, &addrlen);
+    //                 if (_conn_sock < 0)
+    //                 {
+    //                     std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
+    //                     // TODO: Adicionar logica exception para dar handle de erro
+    //                 }
+    //                 setNonBlock(_conn_sock);
+    //                 ev.events = EPOLLIN | EPOLLET;
+    //                 ev.data.fd = _conn_sock;
+    //                 if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _conn_sock,
+    //                             &ev) < 0)
+    //                 {
+    //                     std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
+    //                     // TODO: Adicionar logica exception para dar handle de erro
+    //                 }
+    //                 _msgHandler.CreateEvent(_conn_sock);
+    //             } else {
+    //                 // ! ADICIONAR AQUI LOGICA DE COMANDOS E MENSAGENS
+    //                 /* readAndPrintFd(events[n].data.fd); */
+    //                 _msgHandler.HandleEvent(events[n].data.fd);
+    //             }
+    //         }
+    //     }
+   for(;;) {
+        // espera por atividade
+        int pollCount = poll(&_pfds[0], _pfds.size(), -1);
+        if (pollCount == -1) {
+            std::cerr << "Poll error: " << strerror(errno) << std::endl;
+            continue;
+        }
+
+        for (size_t i = 0; i < _pfds.size() && pollCount > 0; i++) {
+            if (_pfds[i].revents & POLLIN) {
+                pollCount--;
+                if (_pfds[i].fd == _listensocket) {
+                    // ACEITAR CLIENTE (PODE SER UMA FUNCAO)
                     struct sockaddr_in addr;
                     socklen_t addrlen = sizeof(addr);
-                    
-                    
-                    // TODO: ATRIBUIR ESSE CONN_SOCK EM ALGUMA ESTRUTURA OU CLASSE DE USER/CLIENT
-                    _conn_sock = accept(_listensocket,
-                                       (struct sockaddr *) &addr, &addrlen);
-                    if (_conn_sock < 0)
-                    {
-                        std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
-                        // TODO: Adicionar logica exception para dar handle de erro
+                    int clientSock = accept(_listensocket, (struct sockaddr*)&addr, &addrlen);
+                    if (clientSock < 0) {
+                        std::cerr << "Error accepting connection" << std::endl;
+                        continue;
                     }
-                    setNonBlock(_conn_sock);
-                    ev.events = EPOLLIN | EPOLLET;
-                    ev.data.fd = _conn_sock;
-                    if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _conn_sock,
-                                &ev) < 0)
-                    {
-                        std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
-                        // TODO: Adicionar logica exception para dar handle de erro
-                    }
-                    _msgHandler.CreateEvent(_conn_sock);
+
+                    setNonBlock(clientSock);
+
+                    struct pollfd clientPollFd;
+                    clientPollFd.fd = clientSock;
+                    clientPollFd.events = POLLIN;
+                    _pfds.push_back(clientPollFd);
+
+                    std::cout << "New client connected: " << clientSock << std::endl;
                 } else {
-                    // ! ADICIONAR AQUI LOGICA DE COMANDOS E MENSAGENS
-                    /* readAndPrintFd(events[n].data.fd); */
-                    _msgHandler.HandleEvent(events[n].data.fd);
+                    if (!_msgHandler.HandleEvent(_pfds[i].fd)) { // Se a função retornar false, significa que o cliente desconectou
+                        removeClient(_pfds[i].fd);
+                    }
                 }
             }
         }
+    }
 }
 
 // TODO: RESOLVER REDUNDANCIA POIS UTILIZADO EM SOCKET E EVENTS
@@ -134,10 +171,30 @@ void Events::readAndPrintFd(int fd)
         std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
         return;
     }
+    
+    if (bytesRead <= 0) 
+    {
+        std::cerr << "Cliente desconectado: " << fd << std::endl;
+        removeClient(fd);
+        return;
+    }
 
     buffer[bytesRead] = '\0';
 
-    std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
+    // std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
 
-    _msgHandler.ircTokenizer(std::string(buffer));
+    // _msgHandler.ircTokenizer(std::string(buffer));
+}
+
+void Events::removeClient(int fd)
+{
+    // close(fd); // fecha o socket
+
+    for (size_t i = 0; i < _pfds.size(); i++) {
+        if (_pfds[i].fd == fd) {
+            _pfds.erase(_pfds.begin() + i); // remove cliente da lista
+            std::cout << "Cliente removido da poll" << std::endl;
+            break;
+        }
+    }
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 21:52:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/11 17:00:16 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/12 09:20:41 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,21 @@ class Events
 private:
     int _listensocket;
     std::vector<struct pollfd> _pfds;
-    int _conn_sock;
-    int _nfds; // Numero de eventos
+    // int _conn_sock;
+    // int _nfds; // Numero de eventos
 
     MessageHandler _msgHandler;
     
 
-    bool setupEpollContext();
+    bool setupPollContext();
     bool setNonBlock(int targetFd);
     void readAndPrintFd(int fd);
+    void removeClient(int fd);
 public:
     Events(int socketFd);
     ~Events();
 
-    void runEpollLoop();
+    void runPollLoop();
 };
 
 
