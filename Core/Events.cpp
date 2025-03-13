@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 10:32:39 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:10:30 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,6 @@ Events::~Events()
 
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 // TODO: ERROR CHECKING ?
-// bool Events::setupEpollContext()
-// {
-//     // CRIA EPOLL E RETORNA UM FD
-//     this->_epollfd = epoll_create1(0);
-//     if (_epollfd < 0)
-//     {
-//         std::cerr << "FATAL: Erro ao criar contexto epoll" << std::endl;
-//         return false;
-//     }
 bool Events::setupPollContext()
 {
     struct pollfd pfd;
@@ -50,88 +41,65 @@ bool Events::setupPollContext()
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 void Events::runPollLoop()
 {
-    // // ! PEDACO DE CODIGO BASEADO NO MAN EPOLL
-    // for (;;) 
-    // {
-    //         _nfds = epoll_wait(_epollfd, events, MAX_EVENTS, -1);
-    //         if (_nfds == -1) {
-    //             std::cerr << "FATAL: Um erro ocorreu no epoll_wait" << std::endl;
-    //             // TODO: Adicionar logica exception para dar handle de erro
-    //         }
-
-    //         // LOOP QUE ITERA O NUMERO DE EVENTOS
-    //         for (int n = 0; n < _nfds; ++n) {
-
-    //             // CHECA SE O EVENTO ACONTECEU NO NOSSO FD DE ESCUTA
-    //             // RELACIONADO COM NOVA CONEXAO
-    //             if (events[n].data.fd == _listensocket)
-    //             {
-    //                 struct sockaddr_in addr;
-    //                 socklen_t addrlen = sizeof(addr);
-                    
-                    
-    //                 // TODO: ATRIBUIR ESSE CONN_SOCK EM ALGUMA ESTRUTURA OU CLASSE DE USER/CLIENT
-    //                 _conn_sock = accept(_listensocket,
-    //                                    (struct sockaddr *) &addr, &addrlen);
-    //                 if (_conn_sock < 0)
-    //                 {
-    //                     std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
-    //                     // TODO: Adicionar logica exception para dar handle de erro
-    //                 }
-    //                 setNonBlock(_conn_sock);
-    //                 ev.events = EPOLLIN | EPOLLET;
-    //                 ev.data.fd = _conn_sock;
-    //                 if (epoll_ctl(_epollfd, EPOLL_CTL_ADD, _conn_sock,
-    //                             &ev) < 0)
-    //                 {
-    //                     std::cerr << "FATAL: Erro ao aceitar conexao TCP" << std::endl;
-    //                     // TODO: Adicionar logica exception para dar handle de erro
-    //                 }
-    //                 _msgHandler.CreateEvent(_conn_sock);
-    //             } else {
-    //                 // ! ADICIONAR AQUI LOGICA DE COMANDOS E MENSAGENS
-    //                 /* readAndPrintFd(events[n].data.fd); */
-    //                 _msgHandler.HandleEvent(events[n].data.fd);
-    //             }
-    //         }
-    //     }
-   for(;;) {
-        // espera por atividade
+    for(;;) 
+    {
+        /*
+         * poll will listen for events and notify with the return value how many fds had events
+         * the third parameter is set to -1 to avoid CPU usage when no events are present
+         * if we had to do anything else in between we could set to 0 so it imidiatly returns but at a CPU usage cost
+        */
         int pollCount = poll(&_pfds[0], _pfds.size(), -1);
         if (pollCount == -1) {
-            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl;
+            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; // todo exception
             continue;
         }
 
-        for (size_t i = 0; i < _pfds.size() && pollCount > 0; i++) {
-            if (_pfds[i].revents & POLLIN) {
-                pollCount--;
-                if (_pfds[i].fd == _listensocket) {
-                    // ACEITAR CLIENTE (PODE SER UMA FUNCAO)
-                    struct sockaddr_in addr;
-                    socklen_t addrlen = sizeof(addr);
-                    int clientSock = accept(_listensocket, (struct sockaddr*)&addr, &addrlen);
-                    if (clientSock < 0) {
-                        std::cerr << "Error accepting connection" << std::endl;
-                        continue;
-                    }
-
-                    setNonBlock(clientSock);
-
-                    struct pollfd clientPollFd;
-                    clientPollFd.fd = clientSock;
-                    clientPollFd.events = POLLIN;
-                    _pfds.push_back(clientPollFd);
-                    
-                    _msgHandler.CreateEvent(clientSock);
-
-                    std::cout << "New client connected: " << clientSock << std::endl;
-                } else {
-                    if (!_msgHandler.HandleEvent(_pfds[i].fd)) { // Se a função retornar false, significa que o cliente desconectou
-                        // pensar se é melhor remover o cliente aqui ou no HandleEvent
-                        removeClient(_pfds[i].fd);
-                    }
+        /*
+         * We should start by seeing if the first fd was notified (wich is the socket one)
+         * and since this is a special fd if it is notified with POLLIN it means it had a new connetion
+         * and we should accept new connections and then check for the fds we data toq be recved
+        */
+        if (_pfds[0].revents & POLLIN) // this will check the socketFd for new connections
+        {
+            for (;;)
+            {
+                pollCount--; // new connection
+                
+                struct sockaddr_in addr;
+                socklen_t addrlen = sizeof(addr);
+                int clientSock = accept(_listensocket, (struct sockaddr*)&addr, &addrlen);
+                if (clientSock < 0) // error on new connection
+                {
+                    if (errno == EAGAIN || errno == EWOULDBLOCK)
+                        break ; // no more connections queued
+                    std::cerr << "Error accepting connection" << std::endl; // todo DEBUG message or actually meaningful?
+                    continue;
                 }
+
+                setNonBlock(clientSock); // O_NONBLOCK everytime
+                
+                // new fd for poll to track
+                struct pollfd newClientPollfd;
+                newClientPollfd.fd = clientSock;
+                newClientPollfd.events = POLLIN;
+                _pfds.push_back(newClientPollfd); //todo error check?
+                
+                // create new user instance for this connection
+                _msgHandler.CreateEvent(clientSock);
+
+                std::cout << "New client connected: " << clientSock << std::endl;
+            }
+        }
+        
+        // Handleing data events now
+        for (size_t i = 0; i < _pfds.size() && pollCount > 0; i++) 
+        {
+            if (_pfds[i].revents & POLLIN) // this will check the fds and only handle those with events
+            {
+                // todo pensar se é melhor remover o cliente aqui ou no HandleEvent, passar pollfds* e dar pop?
+                // Se a função retornar false, significa que o cliente desconectou
+                if (!_msgHandler.HandleEvent(_pfds[i].fd))
+                    removeClient(_pfds[i].fd);
             }
         }
     }
