@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 12:50:22 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:26:45 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 #include "../Commands/JoinCommand.hpp"
 #include "../Commands/PrivMsgCommand.hpp"
 #include "../Commands/QuitCommand.hpp"
+#include "../Commands/WhoCommand.hpp"
 
 /* 
     CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,
