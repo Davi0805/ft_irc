@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 12:15:08 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:03:33 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::
 {
     std::ostringstream stream;
 
-    stream << ":" << user->getNick() << "!~user@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
     
     return stream.str();   
 }
@@ -116,7 +116,26 @@ std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::
 {
     std::ostringstream stream;
 
-    stream << ":" << sender->getNick() << "!~user@host PRIVMSG " << receiver->getNick() << " " << message << "\r\n";
+    stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " " << message << "\r\n";
     
     return stream.str();
+}
+
+std::string ServerMessages::ConvertMessageContentToA(MessageContent content)
+{
+    std::string result;
+
+    for (size_t i = 0; i < content.tokens.size(); i++)
+    {
+        result.append(content.tokens[i]);
+        result.append(" ");
+    }
+    result.append(content.message);
+    result.append("\r\n"); // indiferente, porem boa pratica
+                           // apararentemente n funciona ao fazer
+                           // por outros computadores pois o protocolo
+                           // precisa de acesso a port forwarding
+                           // via rede privada
+                           // e provavelmente o vitor deve ter bloqueado
+    return result;
 }

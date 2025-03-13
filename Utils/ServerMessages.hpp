@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 12:15:12 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:49:27 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 
 #include "../Models/Channel.hpp"
 #include "../Models/User.hpp"
+
+#include "../Models/MessageContent.hpp"
 
 
 // SERVER_NAME CRIADO MERAMENTE ILUSTRATIVAMENTE
@@ -44,6 +46,8 @@ public:
     static void MensagemAutenticado(int fd, std::string nickname);
 
     static void JoinedChannel(User* user, Channel* channel);
+
+    static std::string ConvertMessageContentToA(MessageContent content);
 
     static std::string PrivMsgFormatter(User* user, Channel* channel, std::string message);
 
