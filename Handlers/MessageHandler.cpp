@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 13:03:13 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:28:12 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ bool MessageHandler::HandleEvent(int fd)
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
     // TODO: IMPLEMENTAR LOGICA MAIS CLEAN POIS ESSE IF ELSE E DESNECESSARIO
+    // TODO: APENAS CRIAR UM METODOS IsAnCommand() e depois botar o o token no map
     if (messageContent.tokens[0] == "PASS")
         _commands["PASS"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "NICK")
@@ -130,6 +131,8 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
         _commands["PRIVMSG"]->execute(messageContent, clientFd);
     else if (messageContent.tokens[0] == "QUIT")
         _commands["QUIT"]->execute(messageContent, clientFd);
+    else if(messageContent.tokens[0] == "WHO")
+        _commands["WHO"]->execute(messageContent, clientFd);
 }
 
 
@@ -148,6 +151,7 @@ void MessageHandler::RegisterCommands()
     _commands["JOIN"] = new JoinCommand(_userService, _channelService);
     _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
     _commands["QUIT"] = new QuitCommand(_userService, _channelService);
+    _commands["WHO"] = new WhoCommand(_userService, _channelService);
 }
 
 
