@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 12:49:27 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:04:53 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,6 @@ public:
     static std::string PrivMsgFormatter(User* user, Channel* channel, std::string message);
 
     static std::string PrivMsgFormatter(User* sender, User* receiver, std::string message);
+
+    static std::string WhoReply(User* user, Channel* channel);
 };
