@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 12:44:01 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:15:17 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ private:
 public:
     Socket(int porta, std::string password);
     ~Socket();
-
-
     
     // GETTER
     int     getSocketFd() const;

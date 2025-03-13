@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 15:28:12 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:22:36 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,9 +239,7 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string buffe
 void MessageHandler::FreeCommands()
 {
     for(std::map<std::string, Command *>::iterator it = _commands.begin(); it != _commands.end(); it++)
-    {
         delete (it->second);
-    }
     _commands.clear();
 }
 
