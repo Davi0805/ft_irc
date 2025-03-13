@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:50:39 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/13 12:15:08 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,4 +110,13 @@ std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::
     stream << ":" << user->getNick() << "!~user@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
     
     return stream.str();   
+}
+
+std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << sender->getNick() << "!~user@host PRIVMSG " << receiver->getNick() << " " << message << "\r\n";
+    
+    return stream.str();
 }

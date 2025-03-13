@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:45:35 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/13 12:15:12 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,6 @@ public:
     static void JoinedChannel(User* user, Channel* channel);
 
     static std::string PrivMsgFormatter(User* user, Channel* channel, std::string message);
+
+    static std::string PrivMsgFormatter(User* sender, User* receiver, std::string message);
 };
