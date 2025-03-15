@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 12:38:57 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:29:52 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <cerrno> // errno
 
 // checks if there are enough arguments, if port is a valid unsigned short greater than 1024 and there is a password
-// 1024 and below ports are priviligied and need root to be able to deal with them
+// 1023 and below ports are priviligied and need root to be able to deal with them
 static bool ParseInput(int ac, char **av);
 
 int main(int ac, char **av)
@@ -78,8 +78,8 @@ bool ParseInput(int ac, char **av)
     }
     
     //  > than a short and under the reserved ports
-    // 1024 and below ports are priviligied and need root to be able to deal with them
-    if (port > std::numeric_limits<unsigned short>::max() || port <= 1024)
+    // 1023 and below ports are priviligied and need root to be able to deal with them
+    if (port > std::numeric_limits<unsigned short>::max() || port <= 1023)
     {
         std::cerr << "Error: bad port" << std::endl;
         return true;
