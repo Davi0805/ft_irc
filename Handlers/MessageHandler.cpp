@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 15:28:12 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/15 15:55:50 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,27 +61,37 @@ void MessageHandler::CreateEvent(int fd)
 // TODO: Fazer logica para handle de desconexao
 bool MessageHandler::HandleEvent(int fd)
 {
-    char buffer[1024];
-    ssize_t bytesRead;
-
     MessageContent messageContent;
+    char buffer[1024];
+    std::string buf;
 
-    bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytesRead < 0)
+    while (true)
     {
-        std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
-        return false;
-    } else if (bytesRead == 0) 
-    {
-        std::cerr << "INFO: User disconected" << std::endl;
-        _userService.RemoveUserByFd(fd);
+        ssize_t bytesRead = recv(fd, buffer, sizeof(buffer), 0);
         
+        if (bytesRead > 0)
+        {
+            buf.append(buffer, bytesRead);
+            continue;
+        }
+
+        if (bytesRead == 0) // Desconexão
+        {
+            std::cerr << "INFO: User disconnected" << std::endl;
+            _userService.RemoveUserByFd(fd);
+            return false;
+        }
+
+        if (errno == EAGAIN || errno == EWOULDBLOCK)
+            break; // Sem mais dados disponíveis, saída normal
+
+        std::cerr << "FATAL: Erro ao ler do descritor de arquivo: " << strerror(errno) << std::endl;
         return false;
     }
 
-    buffer[bytesRead] = '\0';
-
-    std::cout << "Recebido do fd " << fd << ": " << buffer << "EOF DO BUFFER"<< std::endl;
+    std::cout   << "[DEBUG]\n\
+                    Recebido do fd " << fd  << ": " << buf << " EOF DO BUFFER" 
+                << std::endl;
 
     /* 
         IF/ELSE, POIS DIFERENTE DO NCAT, O HEXCHAT MANDA TODAS
@@ -89,10 +99,9 @@ bool MessageHandler::HandleEvent(int fd)
         DE TOKENIZACAO, SENDO NECESSSARIO SEPARAR OS COMANDOS PARA 
         EXECUCAO APROPRIADA
     */
-    if (std::string(buffer).find("\r\n") != std::string::npos)
+    if (buf.find("\r\n") != std::string::npos) // hexchat ends in \r\n
     {
-        std::vector<std::string> splittedCommands = splitDeVariosComandos(buffer);
-
+        std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
         for (size_t i = 0; i < splittedCommands.size(); i++)
         {
             messageContent = ircTokenizer(splittedCommands[i]);
@@ -101,7 +110,7 @@ bool MessageHandler::HandleEvent(int fd)
     }
     else
     {
-        messageContent = ircTokenizer(std::string(buffer));    
+        messageContent = ircTokenizer(std::string(buf));    
         ProcessCommand(messageContent, fd); 
     }
     return true;
@@ -239,9 +248,7 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string buffe
 void MessageHandler::FreeCommands()
 {
     for(std::map<std::string, Command *>::iterator it = _commands.begin(); it != _commands.end(); it++)
-    {
         delete (it->second);
-    }
     _commands.clear();
 }
 
