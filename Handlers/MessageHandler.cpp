@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 15:55:50 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/15 18:13:13 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ bool MessageHandler::HandleEvent(int fd)
         DE TOKENIZACAO, SENDO NECESSSARIO SEPARAR OS COMANDOS PARA 
         EXECUCAO APROPRIADA
     */
-    if (buf.find("\r\n") != std::string::npos) // hexchat ends in \r\n
+    if (buf.find("\r\n") != std::string::npos) // hexchat ends it in \r\n
     {
         std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
         for (size_t i = 0; i < splittedCommands.size(); i++)
@@ -110,7 +110,7 @@ bool MessageHandler::HandleEvent(int fd)
     }
     else
     {
-        messageContent = ircTokenizer(std::string(buf));    
+        messageContent = ircTokenizer(buf);    
         ProcessCommand(messageContent, fd); 
     }
     return true;
@@ -126,22 +126,17 @@ bool MessageHandler::HandleEvent(int fd)
 */
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
-    // TODO: IMPLEMENTAR LOGICA MAIS CLEAN POIS ESSE IF ELSE E DESNECESSARIO
-    // TODO: APENAS CRIAR UM METODOS IsAnCommand() e depois botar o o token no map
-    if (messageContent.tokens[0] == "PASS")
-        _commands["PASS"]->execute(messageContent, clientFd);
-    else if (messageContent.tokens[0] == "NICK")
-        _commands["NICK"]->execute(messageContent, clientFd);
-    else if (messageContent.tokens[0] == "USER")
-        _commands["USER"]->execute(messageContent, clientFd);
-    else if (messageContent.tokens[0] == "JOIN")
-        _commands["JOIN"]->execute(messageContent, clientFd);
-    else if (messageContent.tokens[0] == "PRIVMSG")
-        _commands["PRIVMSG"]->execute(messageContent, clientFd);
-    else if (messageContent.tokens[0] == "QUIT")
-        _commands["QUIT"]->execute(messageContent, clientFd);
-    else if(messageContent.tokens[0] == "WHO")
-        _commands["WHO"]->execute(messageContent, clientFd);
+    // TODO: APENAS CRIAR UM METODOS IsACommand() e depois botar o o token no map
+    if (messageContent.tokens.empty())
+        return ;
+
+    cmdsMap::iterator it = _commands.find(messageContent.tokens[0]);
+    if (it == _commands.end())
+        return ;
+
+    it->second->execute(messageContent, clientFd);
+
+    return ;
 }
 
 
@@ -171,40 +166,27 @@ void MessageHandler::RegisterCommands()
     MOTIVO: SIMPLIFICACAO DE LOGICA E PARA EVITAR DESFORMATACAO DE MENSAGEM
     EM CASO DE ESPACOS OU TABS ALEATORIOS
 */
-MessageContent MessageHandler::ircTokenizer(std::string buffer)
+MessageContent MessageHandler::ircTokenizer(std::string &buffer)
 {
     std::istringstream stream(buffer);
     std::string tempToken;
+
     std::vector<std::string> tokens;
-
-    MessageContent messageContent;
-
     std::string message;
     
-    //std::cout << "[DEBUG]: Antes do while de append stream" << std::endl;
-    // ! O PROGRAMA CRASHA NESSE WHILE QUANDO MANDA APENAS \t e enter
     while (stream >> tempToken)
     {
-        // ! NS SE ISSO PODE CRASHAR O PROGRAMA
-        //std::cout << "[DEBUG]: Antes na condicao que encontra mensagem" << std::endl;
-
-        if (tempToken[0] == ':')
+        if (tempToken[0] == ':') // Everything after the : is the message
         {
-            //std::cout << "[DEBUG]: Entra na condicao que encontra mensagem" << std::endl;
             message = getMessage(buffer, buffer.find(tempToken));
             break ;
         }
-        tokens.push_back(tempToken);
-        //std::cout << "TOKENS: " << tempToken << std::endl;
+        tokens.push_back(tempToken); // Store command token
     }
-
-    //std::cout << "MENSAGEM ISOLADA: " << message << std::endl;
-
-    if (tokens.size() == 0)
-        tokens.push_back("");
+    
+    MessageContent messageContent;
     messageContent.tokens = tokens;
     messageContent.message = message;
-
     return messageContent;
 }
 
@@ -226,7 +208,7 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
 // Faz split de quando o cliente manda varios commandos de uma vez
 // O hexchat quando vai se autenticar manda varios comandos de uma vez
 // em todas as vezes eles sao separados por \r\n
-std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string buffer)
+std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string &buffer)
 {
     std::vector<std::string> result;
     size_t it;

@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 15:55:39 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/15 18:04:35 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,15 @@
 class MessageHandler
 {
 private:
+    typedef std::map<std::string, Command*> cmdsMap;
     std::string getMessage(std::string& buffer, std::size_t it);
     std::string getMessage(std::string& strBegin, std::istringstream& stream);
 
     UserService _userService;
     ChannelService _channelService;
-    std::map<std::string, Command*> _commands;
+    cmdsMap _commands;
 
-    std::vector<std::string> splitDeVariosComandos(std::string buffer);
+    std::vector<std::string> splitDeVariosComandos(std::string &buffer);
 
     void RegisterCommands();
 
@@ -62,14 +63,14 @@ public:
     MessageHandler();
     ~MessageHandler();
 
-    MessageContent ircTokenizer(std::string buffer);
+    MessageContent ircTokenizer(std::string &buffer);
 
     bool HandleEvent(int fd);
     void CreateEvent(int fd);
 
     void ProcessCommand(MessageContent messageContent, int clientFd);
 
-    enum CommandType {
+    enum CommandType { // todo check if used
         PASS,
         NICK,
         USER
