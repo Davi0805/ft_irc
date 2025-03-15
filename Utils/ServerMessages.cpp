@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:50:39 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/13 16:07:29 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ ServerMessages::~ServerMessages()
     CONTENDO INFORMCAOES PERTINENTES DO SERVIDOR, QUE CLARAMENTE
     O NOSSO NAO TEM, POR SER UM SERVIDOR DESENVOLVIDO PARA APRENDIZAGEM    
 */
+
+// TODO: ACREDITO QUE A LISTA DE USUARIOS SO VAI SER ENVIADA PELO COMANDO WHO
+// TODO: POIS O CLIENT AO ENTRAR NO CANAL, MANDA O COMANDO WHO
 void ServerMessages::MensagemAutenticado(int fd, std::string nickname)
 {
     std::ostringstream stream;
@@ -86,12 +89,12 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
     stream.str("");
 
     // 353 - LISTA DE USUARIOS DO CANAL
-    stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " = " << channel->getAllUserString() << " :" << channel->getChannelTopic() << "\r\n";
+    stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " @ " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
     // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
-    stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "Fim da lista de usuarios" << "\r\n";
+    stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     stream.str("");   
 }
@@ -107,7 +110,50 @@ std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::
 {
     std::ostringstream stream;
 
-    stream << ":" << user->getNick() << "!~user@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
     
     return stream.str();   
+}
+
+std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " " << message << "\r\n";
+    
+    return stream.str();
+}
+
+std::string ServerMessages::ConvertMessageContentToA(MessageContent content)
+{
+    std::string result;
+
+    for (size_t i = 0; i < content.tokens.size(); i++)
+    {
+        result.append(content.tokens[i]);
+        result.append(" ");
+    }
+    result.append(content.message);
+    result.append("\r\n"); // indiferente, porem boa pratica
+                           // apararentemente n funciona ao fazer
+                           // por outros computadores pois o protocolo
+                           // precisa de acesso a port forwarding
+                           // via rede privada
+                           // e provavelmente o vitor deve ter bloqueado
+    return result;
+}
+
+std::string ServerMessages::WhoReply(User* user, Channel* channel)
+{
+    std::ostringstream stream;
+
+    std::vector<User*> tempChannel = channel->getUsers();
+
+    for (size_t i = 0; i < tempChannel.size(); i++)
+    {
+        stream << ":" << SERVER_NAME << " 352 " << user->getNick() << " " << channel->getChannelName() << " host " << SERVER_NAME << tempChannel[i]->getNick() << " H :0 " << " COLOCAR AQUI O REAL NAME" << "\r\n";
+    }
+    stream << ":" << SERVER_NAME << " 315 " << user->getNick() << " " << channel->getChannelName() << " :End of /WHO list." << "\r\n";
+
+    return stream.str();
 }
