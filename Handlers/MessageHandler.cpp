@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 18:13:13 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/16 19:52:29 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void MessageHandler::CreateEvent(int fd)
    EXECUTADO UTILIZANDO OS METODOS DE TOKENIZACAO
    E PARSE
 */
-// TODO: Fazer logica para handle de desconexao
 bool MessageHandler::HandleEvent(int fd)
 {
     MessageContent messageContent;
@@ -85,13 +84,11 @@ bool MessageHandler::HandleEvent(int fd)
         if (errno == EAGAIN || errno == EWOULDBLOCK)
             break; // Sem mais dados disponíveis, saída normal
 
-        std::cerr << "FATAL: Erro ao ler do descritor de arquivo: " << strerror(errno) << std::endl;
+        std::cerr << "FATAL: " << strerror(errno) << std::endl;
         return false;
     }
 
-    std::cout   << "[DEBUG]\n\
-                    Recebido do fd " << fd  << ": " << buf << " EOF DO BUFFER" 
-                << std::endl;
+    // std::cout   << "[DEBUG] Recebido do fd " << fd  << ": " << buf << "[EOF]" << std::endl;
 
     /* 
         IF/ELSE, POIS DIFERENTE DO NCAT, O HEXCHAT MANDA TODAS
@@ -119,14 +116,10 @@ bool MessageHandler::HandleEvent(int fd)
 
 /* 
     METODO PARA EXECUTAR OS COMANDOS REGISTRADOS
-    TODO: ADICIONAR VERFICACOES ANTES, AO INVES DE
-    TODO: FAZER IF/ELSE PROCURANDO TAL COMANDO
-    ! TOMAR CUIDADO POIS EXECUTAR UM COMANDO QUE 
-    ! NAO EXISTE CRASHA O PROGRAMA
 */
+// TODO: APENAS CRIAR UM METODOS IsACommand() e depois botar o o token no map
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 {
-    // TODO: APENAS CRIAR UM METODOS IsACommand() e depois botar o o token no map
     if (messageContent.tokens.empty())
         return ;
 
@@ -178,7 +171,7 @@ MessageContent MessageHandler::ircTokenizer(std::string &buffer)
     {
         if (tempToken[0] == ':') // Everything after the : is the message
         {
-            message = getMessage(buffer, buffer.find(tempToken));
+            message = getMessage(buffer, buffer.find(tempToken) + 1); // + 1 to skip the ':'
             break ;
         }
         tokens.push_back(tempToken); // Store command token
@@ -187,9 +180,9 @@ MessageContent MessageHandler::ircTokenizer(std::string &buffer)
     MessageContent messageContent;
     messageContent.tokens = tokens;
     messageContent.message = message;
+    // std::cout << "[DEBUG] da message:[" << message << "]"  << std::endl;;
     return messageContent;
 }
-
 
 /* 
     METODO PARA EXTRAIR MENSAGEM SEM TOKENIZACAO, ONDE RECEBE REFERENCIA
@@ -201,7 +194,14 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
     std::string result;
 
     result.append(buffer, it);
-
+    
+    // clear the \r\n feed by conventional clients like hexchat
+    if (result[result.size() - 1] == '\n') // same as back()
+        result.erase(result.size() - 1, 1); // same as pop_back()
+    if (result[result.size() - 1] == '\n')
+        result.erase(result.size() - 1, 1);
+    
+    // std::cout << "DEBUG: [" << result << "]"  << std::endl;
     return result;
 }
 
@@ -231,7 +231,7 @@ void MessageHandler::FreeCommands()
 {
     for(std::map<std::string, Command *>::iterator it = _commands.begin(); it != _commands.end(); it++)
         delete (it->second);
-    _commands.clear();
+    _commands.clear(); // not necessary i think
 }
 
 
