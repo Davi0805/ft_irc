@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:33:15 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/16 19:27:54 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ public:
     //SETTER
     void setPass();
     void setNick(std::string nickname);
+    void setStatus(Status status);
     void setUser(std::string username);
+    void setRealName(std::string &setRealName);
     
     // Getter
     bool isAuthenticated() const;
@@ -46,11 +48,13 @@ public:
     std::string getNick();
     int getFd() const;
     std::string getUser() const;
+    std::string getRealName() const;
 
 private:
     int _fd;
     std::string _nickname;
     std::string _username;
+    std::string _realName;
     Status _status;
 };
 
