@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 18:15:01 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/16 20:25:29 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
 
-Socket::Socket(int porta, std::string password) : _porta(porta), _password(password)
+Socket::Socket(int porta) : _porta(porta)
 {
     try
     {
