@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:41:43 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/16 19:28:25 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,10 @@ void User::setNick(std::string nickname)
      this->_nickname = nickname;
 }
 
+void User::setStatus(Status status)
+{
+    this->_status = status;   
+}
 
 /* 
     SETA USUARIO E STATUS APOS JA TER SETADO
@@ -70,6 +74,14 @@ void User::setUser(std::string username)
     this->_status = AUTHENTICATED;
     this->_username = username; 
 }
+
+void User::setRealName(std::string &realName)
+{
+    // TODO - CHECAR OU AQUI OU NO COMMAND USER
+    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
+    this->_realName = realName;
+}
+
 
 
 /* 
@@ -104,4 +116,9 @@ int User::getFd() const
 std::string User::getUser() const
 {
     return _username;
+}
+
+std::string User::getRealName () const
+{
+    return _realName;
 }

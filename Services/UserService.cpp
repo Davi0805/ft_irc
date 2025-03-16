@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 11:34:23 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/15 19:43:17 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,6 @@ void UserService::SetUserByFd(std::string username, int fd)
     std::map<int, User*>::iterator it;
     it = _usersByFd.find(fd);
 
-    // ! Nao sei se a norminette deixa
-    // auto it = _userByFd.find(fd);
 
     if (it != _usersByFd.end())
         it->second->setUser(username);
@@ -166,6 +164,17 @@ void UserService::SetUserByFd(std::string username, int fd)
         return ; // TODO: EXCEPTION
 }
 
+
+void UserService::SetRealNameByFd(std::string realName, int fd)
+{
+    std::map<int, User*>::iterator it;
+    it = _usersByFd.find(fd);
+
+    if (it != _usersByFd.end())
+        it->second->setRealName(realName);
+    else
+        return ; // TODO: Expt
+}
 
 // TESTE UNITARIO
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:08:49 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/15 19:43:49 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,6 @@ public:
 
     void SetNickByFd(std::string nickname, int fd);
     void SetUserByFd(std::string username, int fd);
+    void SetRealNameByFd(std::string realName, int fd);
+
 };
