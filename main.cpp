@@ -6,13 +6,14 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 21:29:52 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/16 20:25:05 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Core/Socket.hpp"
 #include "Core/Events.hpp"
 #include "Handlers/MessageHandler.hpp"
+#include "Models/Server.hpp"
 
 // todo move this elsewhere
 #include <limits> // type limits
@@ -29,7 +30,8 @@ int main(int ac, char **av)
 
     try
     {
-        Socket ioContext(atoi(av[1]), av[2]);
+        Server::getInstance().setPassword(av[2]);
+        Socket ioContext(atoi(av[1]));
         Events pollContext(ioContext.getSocketFd());
         pollContext.runPollLoop();
     }

@@ -1,29 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PassCommand.hpp                                    :+:      :+:    :+:   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/11 13:32:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/16 20:29:48 by fang             ###   ########.fr       */
+/*   Created: 2025/03/16 20:13:13 by fang              #+#    #+#             */
+/*   Updated: 2025/03/16 20:24:47 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#include "Server.hpp"
 
-#include "Command.hpp"
-#include "../Models/Server.hpp"
-#include <iostream>
+Server::Server()
+{}
 
-class PassCommand : public Command
+Server::~Server()
+{}
+
+Server& Server::getInstance()
 {
-private:
-    UserService* _userService;
-    ChannelService* _channelService;
-public:
-    PassCommand(UserService& userService, ChannelService& channelService);
-    ~PassCommand();
+    static Server server;
+    return server;
+}
 
-    void execute(MessageContent messageContent, int fd);
-};
+void Server::setPassword(std::string password)
+{
+    this->_password = password;
+    return ;
+}
+
+std::string Server::getPassword() const
+{
+    return this->_password;
+}

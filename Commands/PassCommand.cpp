@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 17:37:51 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/16 20:30:06 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,5 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     (void)messageContent;
     (void)fd;
     std::cout << "[DEBUG]: COMANDO PASS SENDO CHAMADO" << std::endl;
+    std::cout << "[DEBUG]: PASSWORD: " << Server::getInstance().getPassword()  << std::endl;
 }

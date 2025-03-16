@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
+#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/13 15:28:29 by dmelo-ca         ###   ########.fr        #
+#    Updated: 2025/03/16 20:26:39 by fang             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,11 +32,11 @@ SRC = main.cpp \
 	Commands/WhoCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
+	Models/Server.cpp \
 	Services/UserService.cpp \
 	Services/ChannelService.cpp \
 	Utils/ServerMessages.cpp \
 
-	
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 

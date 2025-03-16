@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:50:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 18:15:17 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/16 20:25:16 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ class Socket
 private:
     int _porta;
     int _socketFd;
-    std::string _password;
 
     // SETUP
     // TODO: Modificar para void pois estou a utilizar exceptions
@@ -44,7 +43,7 @@ private:
     void    startListen();
     
 public:
-    Socket(int porta, std::string password);
+    Socket(int porta);
     ~Socket();
     
     // GETTER
