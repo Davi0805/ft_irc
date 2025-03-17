@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
+#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/16 20:26:39 by fang             ###   ########.fr        #
+#    Updated: 2025/03/17 15:41:53 by artuda-s         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC = main.cpp \
 	Services/UserService.cpp \
 	Services/ChannelService.cpp \
 	Utils/ServerMessages.cpp \
+	Utils/Utils.cpp
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))

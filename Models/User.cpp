@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 11:16:05 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:53:55 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ void User::setPass()
 */
 void User::setNick(std::string nickname)
 {
-    // TODO - CHECAR OU AQUI OU NO COMMAND NICK
-    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
-     this->_status = NICK_RECEIVED;
      this->_nickname = nickname;
 }
 
@@ -69,16 +66,11 @@ void User::setStatus(Status status)
 */
 void User::setUser(std::string username)
 {
-    // TODO - CHECAR OU AQUI OU NO COMMAND USER
-    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
-    this->_status = AUTHENTICATED;
     this->_username = username; 
 }
 
-void User::setRealName(std::string &realName)
+void User::setRealName(std::string realName)
 {
-    // TODO - CHECAR OU AQUI OU NO COMMAND USER
-    // TODO - SE JA UTILIZOU A PASSWORD ANTES DE SETAR
     this->_realName = realName;
 }
 

@@ -3,21 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 19:43:49 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 17:24:16 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "../Models/User.hpp"
+#include "../Utils/Utils.hpp"
 
 #include "unistd.h"
 #include <iostream>
-// unordered map faz parte do c++ 11
-// #include <unordered_map> 
 #include <map>
 
 /* 

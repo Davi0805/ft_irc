@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 11:30:29 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:46:06 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,42 +29,53 @@ UserCommand::~UserCommand()
 
 // USER SO PODE SER MANDADO UMA VEZ
 // 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
+// 451 ERR_NOTREGISTERED :You may not reregister
+// 461 ERR_NEEDMOREPARAMS : bad params
+
 
 void UserCommand::execute(MessageContent messageContent, int fd)
 {
     std::cout << "[DEBUG]: COMANDO USER SENDO CHAMADO" << std::endl;
     
     (void)_channelService;
-    if (_userService->findUserByFd(fd)->getStatus() == User::AUTHENTICATED)
+    
+    User *user = _userService->findUserByFd(fd);
+    
+    // already registred 
+    if (user->getStatus() == User::AUTHENTICATED)  
     {
-        std::cerr << "ERR_ALREADYREGISTRED :Unauthorized command (already registered)" << std::endl; // TODO
+        std::cerr << "ERR_ALREADYREGISTRED 462 :Unauthorized command" << std::endl; // TODO
+        return ;
+    }
+    else if (user->getStatus() != User::NICK_RECEIVED) // no PASS or NICK before
+    {
+        std::cerr << "451 ERR_NOTREGISTERED :You may not reregister" << std::endl; // TODO
         return ;
     }
     
-    // USER username
-    if (messageContent.tokens.size() < 2)
+    // USER || USER user user2 (:...)
+    if (messageContent.tokens.size() != 2)
     {
-        std::cerr << "No username"  << std::endl; // TODO proper error handling
+        std::cerr << "461 bad user"  << std::endl; // TODO proper error handling
         return ;
     }    
     
     // set username
     //? fd entry was created when the connection was established and now were setting the username to that fd
-    _userService->SetUserByFd(messageContent.tokens[1], fd); 
-
+    user->setUser(messageContent.tokens[1]);
+    
     // set realname
     if (!messageContent.message.empty())
-        _userService->SetRealNameByFd(messageContent.message, fd);
+        user->setRealName(messageContent.message);    
     else
-        _userService->SetRealNameByFd("DaviMacaco", fd); // default value
-        
+        user->setRealName("DaviMacaco"); // default value
 
     
     // std::cout << "[DEBUG]: username:" << _userService->findUserByFd(fd)->getUser() << std::endl;
     // std::cout << "[DEBUG]: realname:" << _userService->findUserByFd(fd)->getRealName() << std::endl;
         
     // Update user status
-    _userService->findUserByFd(fd)->setStatus(User::AUTHENTICATED);
+    user->setStatus(User::AUTHENTICATED);
 
     // RESPOSTAs DE SUCESSO NA AUTENTICACAO
     ServerMessages::MensagemAutenticado(fd, _userService->findUserByFd(fd)->getNick());
