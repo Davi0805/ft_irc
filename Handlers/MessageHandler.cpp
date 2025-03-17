@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 11:43:59 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:48:08 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string &buff
     while (it != std::string::npos)
     {
         result.push_back(buffer.substr(0, it + 2));
-        std::cout << "[TOKENS - QUANDO VARIOS CMANDOS JUNTOS]" << buffer.substr(0, it) << std::endl;
+        // std::cout << "[DEBUG] TOKENS - QUANDO VARIOS CMANDOS JUNTOS:" << buffer.substr(0, it) << std::endl;
         buffer.erase(0, it + 2);
         it = buffer.find_first_of("\r\n");
     }

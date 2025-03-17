@@ -6,15 +6,16 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 11:15:02 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:55:03 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <string> 
-#include "../Models/Server.hpp"
+#include <iostream>
 
+#include "../Models/Server.hpp"
 
 /* 
     CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
@@ -41,7 +42,7 @@ public:
     void setNick(std::string nickname);
     void setStatus(Status status);
     void setUser(std::string username);
-    void setRealName(std::string &setRealName);
+    void setRealName(std::string setRealName);
     
     // Getter
     bool isAuthenticated() const;
