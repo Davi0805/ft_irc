@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 19:43:17 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 18:09:06 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ User* UserService::findUserByNickname(std::string nickname)
 
     if (it != _userByNick.end())
         return it->second;
-    else
+    else 
         return NULL; // TODO: EXCEPTION
 }
 
@@ -136,14 +136,16 @@ void UserService::SetNickByFd(std::string nickname, int fd)
     std::map<int, User*>::iterator it;
     it = _usersByFd.find(fd);
 
-    // ! Nao sei se a norminette deixa
-    // auto it = _userByFd.find(fd);
-
     if (it != _usersByFd.end())
     {
-        it->second->setNick(nickname);
+        // This bit is when we are replacing nickname. We must remove the entry of the last one
+        std::map<std::string, User*>::iterator it2;
+        it2 = _userByNick.find(it->second->getNick());
+        if (it2 != _userByNick.end())
+            _userByNick.erase(it2);
         
-        _userByNick[nickname] = it->second;
+        it->second->setNick(nickname); // map<int, User*>
+        _userByNick[nickname] = it->second; // map<string, User*>
     }
     else
         return ; // TODO: EXCEPTION
