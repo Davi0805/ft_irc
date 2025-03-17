@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/16 19:46:45 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 11:30:29 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,19 @@ UserCommand::~UserCommand()
 // portanto o prototipo do comando será do tipo:
 // USER <username> :<realName>
 
+// USER SO PODE SER MANDADO UMA VEZ
+// 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
+
 void UserCommand::execute(MessageContent messageContent, int fd)
 {
     std::cout << "[DEBUG]: COMANDO USER SENDO CHAMADO" << std::endl;
+    
+    (void)_channelService;
+    if (_userService->findUserByFd(fd)->getStatus() == User::AUTHENTICATED)
+    {
+        std::cerr << "ERR_ALREADYREGISTRED :Unauthorized command (already registered)" << std::endl; // TODO
+        return ;
+    }
     
     // USER username
     if (messageContent.tokens.size() < 2)
