@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/16 19:27:54 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 11:15:02 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <string> 
+#include "../Models/Server.hpp"
 
 
 /* 
@@ -49,6 +50,8 @@ public:
     int getFd() const;
     std::string getUser() const;
     std::string getRealName() const;
+
+    bool checkPassword(std::string &pass) const;
 
 private:
     int _fd;
