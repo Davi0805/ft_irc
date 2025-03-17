@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/16 19:28:25 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 11:16:05 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,13 @@ std::string User::getUser() const
 std::string User::getRealName () const
 {
     return _realName;
+}
+
+// Checks if the password passed as a parameter checks out with the server password
+// Returns true or false accordingly
+bool User::checkPassword(std::string &pass) const
+{
+    if (Server::getInstance().getPassword() == pass)
+        return true;
+    return false;
 }
