@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 11:49:55 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:15:09 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,24 @@ PassCommand::~PassCommand()
 {
 }
 
-    // PASS password
-    // PASS :pass word
-    // error:
-    
-    // 461 ERR_NEEDMOREPARAMS <nickname> PASS :Not enough parameters
-    // also if the user already has sent the PASS command returns an error
-    // 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
-    // 464 ERR_PASSWDMISMATCH :Password incorrect
-
-    // Success: no answer and the server proceeds to wait for the NICK and USER commands
-
+/**
+ *? valid
+ * PASS password
+ * PASS :pass word
+ * 
+ *! error:
+ * Bad syntax
+ * 461 ERR_NEEDMOREPARAMS <nickname> PASS :Not enough parameters
+ * 
+ * If the user already has sent the PASS command returns an error
+ * 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
+ *
+ * Wrong password:
+ * 464 ERR_PASSWDMISMATCH :Password incorrect
+ * 
+ * Success: no answer and the server proceeds to wait for the NICK and USER commands
+ */
+// TODO error handling
 void PassCommand::execute(MessageContent messageContent, int fd)
 {
     (void)_channelService;
