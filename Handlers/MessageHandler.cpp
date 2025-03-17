@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/16 19:52:29 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/17 11:43:59 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
     // clear the \r\n feed by conventional clients like hexchat
     if (result[result.size() - 1] == '\n') // same as back()
         result.erase(result.size() - 1, 1); // same as pop_back()
-    if (result[result.size() - 1] == '\n')
+    if (result[result.size() - 1] == '\r')
         result.erase(result.size() - 1, 1);
     
     // std::cout << "DEBUG: [" << result << "]"  << std::endl;
