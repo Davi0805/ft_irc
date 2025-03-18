@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/18 19:25:00 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:43:05 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,16 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     {
         std::cout << "[DEBUG] Senha do canal removida para " << channelName << std::endl;
         channel->removePassword();
+    } 
+    else if (mode == "+l")
+    {
+        std::cout << "[DEBUG] Limite de usuários ativado para " << channelName << std::endl;
+        channel->setUserLimit(std::stoi(messageContent.tokens[3]));
+    }
+    else if (mode == "-l")
+    {
+        std::cout << "[DEBUG] Limite de usuários desativado para " << channelName << std::endl;
+        channel->removeUserLimit();
     }
     else
     {
