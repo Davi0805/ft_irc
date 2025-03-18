@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 21:26:54 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:32:07 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ private:
     std::string topic;
     std::string _channelName;
     std::string _password;
+    int _mode;
     int _userLimit;
     
     //TODO: PENSAR EM UMA LOGICA DE OPERATOR/ADMIN
@@ -52,16 +53,15 @@ public:
     Channel(std::string ChannelName);
     ~Channel();
 
-    std::vector<User*> getUsers() const;
-
-    void AddUser(std::string nickname);
+    
     void AddUser(User *user);
     void removeUser(User *user);
     bool isUserInChannel(int fd) const;
     bool isOperator(int fd) const;
     void promoteToOperator(int fd);
     void demoteOperator(int fd);
-
+    
+    std::vector<User*> getUsers() const;
     std::string getChannelName() const;
     std::string getChannelTopic() const;
     std::string getAllUserString() const;
