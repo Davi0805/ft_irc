@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/18 19:15:00 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:48:30 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ Channel::~Channel()
 
     OBS: TALVEZ MODIFICAR PARA REFERENCIA
     O ARG DESSE METODO, PARA CODIGO MAIS SAFE
+
+    MIGRAR PARA CHANNELSERVICE?
  */
 void Channel::AddUser(User* user)
 {
@@ -50,8 +52,7 @@ void Channel::AddUser(User* user)
         _operators.insert(user->getFd());
 }
 
-
-// DEVE SER POSSÍVEL REMOVER OPERADOR?
+// OPERADOR PODE SER REMOVIDO?
 void Channel::removeUser(User* user)
 {
     for (size_t i = 0; i < _users.size(); i++)
@@ -64,6 +65,7 @@ void Channel::removeUser(User* user)
     }
 }
 
+//JA EXISTE EM CHANNELSERVICE
 bool Channel::isUserInChannel(int fd) const
 {
     for (size_t i = 0; i < _users.size(); i++)
@@ -122,6 +124,11 @@ std::string Channel::getAllUserString() const
         result.append(" ");
     }
     return result;
+}
+
+size_t Channel::getUserLimit() const
+{
+    return this->_userLimit;
 }
 
 void Channel::setInviteOnly(bool enabled)

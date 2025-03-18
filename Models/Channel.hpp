@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/18 19:12:26 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:48:24 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ public:
     std::string getChannelName() const;
     std::string getChannelTopic() const;
     std::string getAllUserString() const;
+    size_t getUserLimit() const;
 
     void setInviteOnly(bool enabled);
     void setRestrictedTopic(bool enabled);
