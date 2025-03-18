@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:32:30 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/18 15:32:14 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,47 @@ Channel::~Channel()
 void Channel::AddUser(User* user)
 {
     _users.push_back(user);
+    if (_users.size() == 1)
+        _operators.insert(user->getFd());
+}
+
+
+// DEVE SER POSSÍVEL REMOVER OPERADOR?
+void Channel::removeUser(User* user)
+{
+    for (size_t i = 0; i < _users.size(); i++)
+    {
+        if (_users[i]->getFd() == user->getFd())
+        {
+            _users.erase(_users.begin() + i);
+            break;
+        }
+    }
+}
+
+bool Channel::isUserInChannel(int fd) const
+{
+    for (size_t i = 0; i < _users.size(); i++)
+    {
+        if (_users[i]->getFd() == fd)
+            return true;
+    }
+    return false;
+}
+
+bool Channel::isOperator(int fd) const
+{
+    return _operators.find(fd) != _operators.end();
+}
+
+void Channel::promoteToOperator(int fd)
+{
+    _operators.insert(fd);
+}
+
+void Channel::demoteOperator(int fd)
+{
+    _operators.erase(fd);
 }
 
 std::vector<User*> Channel::getUsers() const
@@ -82,4 +123,26 @@ std::string Channel::getAllUserString() const
         result.append(" ");
     }
     return result;
+}
+
+
+void Channel::setChannelPassword(std::string password)
+{
+    this->_password = password;
+}
+
+void Channel::setChannelLimit(int limit)
+{
+    this->_userLimit = limit;
+}
+
+void Channel::setChannelTopic(std::string topic)
+{
+    this->topic = topic;
+}
+
+
+void Channel::setChannelMode(int mode)
+{
+    this->_mode = mode;
 }
