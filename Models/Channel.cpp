@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/18 15:32:14 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/18 19:15:00 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,8 @@
     POIS NAO EXISTE TAL COMANDO TBM
  */
 Channel::Channel(std::string ChannelName)
+    : topic("Default topic"), _channelName(ChannelName), _password(""), _userLimit(0), _inviteOnly(false), _restrictedTopic(false), _requiresPassword(false), _limitedUsers(false)
 {
-    this->_channelName = ChannelName;
-    this->topic = "Default topic";
 }
 
 Channel::~Channel()
@@ -125,6 +124,61 @@ std::string Channel::getAllUserString() const
     return result;
 }
 
+void Channel::setInviteOnly(bool enabled)
+{
+    this->_inviteOnly = enabled;
+}
+
+void Channel::setRestrictedTopic(bool enabled)
+{
+    this->_restrictedTopic = enabled;
+}
+
+void Channel::setRequiresPassword(std::string password)
+{
+    this->_password = password;
+    this->_requiresPassword = true;
+}
+
+void Channel::removePassword()
+{
+    this->_password = "";
+    this->_requiresPassword = false;
+}
+
+void Channel::setUserLimit(int limit)
+{
+    this->_userLimit = limit;
+    this->_limitedUsers = true;
+}
+
+void Channel::removeUserLimit()
+{
+    this->_userLimit = 0;
+    this->_limitedUsers = false;
+}
+
+bool Channel::isInviteOnly() const
+{
+    return this->_inviteOnly;
+}
+
+bool Channel::isRestrictedTopic() const
+{
+    return this->_restrictedTopic;
+}
+
+bool Channel::hasPassword() const
+{
+    return this->_requiresPassword;
+}
+
+bool Channel::hasUserLimit() const
+{
+    return this->_limitedUsers;
+}
+
+
 
 void Channel::setChannelPassword(std::string password)
 {
@@ -141,8 +195,3 @@ void Channel::setChannelTopic(std::string topic)
     this->topic = topic;
 }
 
-
-void Channel::setChannelMode(int mode)
-{
-    this->_mode = mode;
-}

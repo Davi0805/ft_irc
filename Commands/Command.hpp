@@ -5,16 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/19 17:10:08 by artuda-s         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/23 15:55:33 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #pragma once
 
 #include "../Services/ChannelService.hpp"
 #include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
+#include "../Models/Channel.hpp"
 #include "../Utils/ServerMessages.hpp"
 #include "../Exceptions/Exceptions.hpp"
 

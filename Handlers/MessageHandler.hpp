@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/19 18:32:50 by artuda-s         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/23 15:56:11 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #pragma once
 
@@ -36,6 +37,7 @@
 #include "../Commands/PrivMsgCommand.hpp"
 #include "../Commands/QuitCommand.hpp"
 #include "../Commands/WhoCommand.hpp"
+#include "../Commands/ModeCommand.hpp"
 
 /* 
     CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,

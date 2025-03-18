@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/19 18:33:29 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/23 15:56:03 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ void MessageHandler::RegisterCommands()
     _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
     _commands["QUIT"] = new QuitCommand(_userService, _channelService);
     _commands["WHO"] = new WhoCommand(_userService, _channelService);
+    _commands["MODE"] = new ModeCommand(_userService, _channelService);
 }
 
 
