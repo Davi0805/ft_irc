@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/11 23:12:54 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/18 19:25:45 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,10 @@ JoinCommand::~JoinCommand()
 
 void JoinCommand::execute(MessageContent messageContent, int fd)
 {
-    (void)_userService;
 
     User * user = _userService->findUserByFd(fd);
-    if (!user->isAuthenticated())
-        return ; // TODO: EXCEPTION
+    // if (!user->isAuthenticated())
+    //     return ; // TODO: EXCEPTION
     
     std::cout << "[DEBUG]: User joined channel " << messageContent.tokens[1] << std::endl;
     

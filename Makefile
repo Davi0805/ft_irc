@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
+#    By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/17 15:41:53 by artuda-s         ###   ########.fr        #
+#    Updated: 2025/03/18 19:19:19 by lebarbos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,13 +30,14 @@ SRC = main.cpp \
 	Commands/PrivMsgCommand.cpp \
 	Commands/QuitCommand.cpp \
 	Commands/WhoCommand.cpp \
+	Commands/ModeCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Models/Server.cpp \
 	Services/UserService.cpp \
 	Services/ChannelService.cpp \
 	Utils/ServerMessages.cpp \
-	Utils/Utils.cpp
+	Utils/Utils.cpp 
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))

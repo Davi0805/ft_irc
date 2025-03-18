@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 18:04:35 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/18 19:17:18 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 #include "../Commands/PrivMsgCommand.hpp"
 #include "../Commands/QuitCommand.hpp"
 #include "../Commands/WhoCommand.hpp"
+#include "../Commands/ModeCommand.hpp"
 
 /* 
     CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,
