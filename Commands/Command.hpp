@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 18:34:54 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/19 17:10:08 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
 #include "../Utils/ServerMessages.hpp"
+#include "../Exceptions/Exceptions.hpp"
+
 
 #include <sys/socket.h>
 class Command

@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/16 20:29:48 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/19 17:10:15 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Command.hpp"
+#include "../Exceptions/Exceptions.hpp"
 #include "../Models/Server.hpp"
 #include <iostream>
 

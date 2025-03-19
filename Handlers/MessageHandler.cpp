@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 15:48:08 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:33:29 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,23 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
     if (it == _commands.end())
         return ;
 
-    it->second->execute(messageContent, clientFd);
+    try
+    {
+        it->second->execute(messageContent, clientFd);
+    }
+    catch(const IRCException& e)
+    {
+        switch (e.getErrorCode())
+        {
+        case 461:
+            // do shit
+            break;
+        
+        default:
+            break;
+        }
+    }
+    
 
     return ;
 }

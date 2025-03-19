@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 13:15:09 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:55:00 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,16 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     User *user = _userService->findUserByFd(fd);
 
     // User can only send one PASS command
-    if (user->getStatus() != User::CONNECTED) 
-    {
-        std::cerr << "ERR_ALREADYREGISTRED :Unauthorized command (already registered)" << std::endl; // TODO
-        return ;
-    }
-
+    if (user->getStatus() != User::CONNECTED)
+        throw ERR_ALREADYREGISTRED();   
     
     // PASS :pass word
     if (!messageContent.message.empty())
     {
-        if (messageContent.tokens.size() != 1) // PASS word: word
-        {
-            std::cerr << "ERR_NEEDMOREPARAMS :Not enough parameters" << std::endl; // TODO
-            return ;
-        }
+        // PASS word: word
+        if (messageContent.tokens.size() != 1)
+            throw (ERR_NEEDMOREPARAMS(messageContent.tokens[0]));
+        
         
         // Verify password
         if (user->checkPassword(messageContent.message))
@@ -97,4 +92,13 @@ void PassCommand::execute(MessageContent messageContent, int fd)
         _userService->RemoveUserByFd(fd);
         return ;
     }
+}
+
+
+void PassCommand::execute(MessageContent messageContent, int fd)
+{
+    (void)_channelService;
+    User *user = _userService->findUserByFd(fd);
+
+    
 }
