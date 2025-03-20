@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 12:53:43 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:55:49 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 PrivMsgCommand::PrivMsgCommand(UserService& userService, ChannelService& channelService)
                         :_userService(&userService), _channelService(&channelService)
 {
-    (void)_userService; // so para remover o erro: not being used 
 }
 
 PrivMsgCommand::~PrivMsgCommand()
