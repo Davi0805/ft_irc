@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 16:07:29 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:56:02 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
 
     // RFC E SEUS CODIGOS DE RESPOSTA
     // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
-    stream << ":" << user->getNick() << "!~user@host JOIN :" << channel->getChannelName() << "\r\n";
+    stream << ":" << user->getNick() << "!~user@host JOIN " << channel->getChannelName() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
