@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 14:56:02 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:36:26 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::
 {
     std::ostringstream stream;
 
-    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " " << message << "\r\n";
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " :" << message << "\r\n";
     
     return stream.str();   
 }
@@ -119,7 +119,7 @@ std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::
 {
     std::ostringstream stream;
 
-    stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " " << message << "\r\n";
+    stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " :" << message << "\r\n";
     
     return stream.str();
 }

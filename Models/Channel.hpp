@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 14:39:00 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:43:01 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,6 @@ public:
     void setChannelPassword(std::string password);
     void setChannelLimit(int limit);
 
-    void broadcastMessage(const std::string& message, int senderFd);
+    void broadcastMessageTemp(const std::string& message, int senderFd);
     
 };

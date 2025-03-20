@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/20 14:52:09 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:42:54 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
         std::stringstream errorMsg;
         errorMsg << ":" << SERVER_NAME << " 461 " << user->getNick() << " MODE :Not enough parameters\r\n";
         send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
-        std::cout << "[DEBUG] Error message (not sent): " << errorMsg.str();
+        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
@@ -58,36 +58,33 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     if (!channel)
     {
         std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 403 " << channelName << " :No such channel\r\n";
+        errorMsg << SERVER_NAME << " 403 "  << user->getNick() << " " << channelName << " :No such channel\r\n";
         send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
-        std::cout << "[DEBUG] Error message (not sent): " << errorMsg.str();
+        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     if (!channel->isUserInChannel(fd))
     {
         std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 442 " << channelName << " :You're not on that channel\r\n";
+        errorMsg << SERVER_NAME << " 442 "  << user->getNick() << " " << channelName << " :You're not on that channel\r\n";
         send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
-        std::cout << "[DEBUG] Error message (not sent): " << errorMsg.str();
+        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     if (!channel->isOperator(fd))
     {
         std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 482 " << channelName << " :You're not channel operator\r\n";
+        errorMsg << ":" << SERVER_NAME << " 482 " << user->getNick() << " " << channelName << " :You're not channel operator\r\n";
         send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
-        std::cout << "[DEBUG] Error message (not sent): " << errorMsg.str();
+        std::cout << "[DEBUG] Error message " << errorMsg.str();
         return;
     }
 
     if (mode == "+i") 
     {
         std::cout << "[DEBUG] Invite-only mode activated for " << channelName << std::endl;
-        std::stringstream msg;
-        msg << ":" << user->getNick() << "!" << user->getUser() << "@host" << " MODE " << channelName << " " << mode << "\r\n";
-        channel->broadcastMessage(msg.str(), fd);
         channel->setInviteOnly(true);
     }
     else if (mode == "-i") 
@@ -128,7 +125,12 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     else
     {
         std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 472 " << mode << " :Unknown mode flag\r\n";
-        std::cout << "[DEBUG] Error message (not sent): " << errorMsg.str();
+        errorMsg << SERVER_NAME << " 472 "  << user->getNick() << " " << mode << " :Unknown mode flag\r\n";
+        send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
+        std::cout << "[DEBUG] Error message: " << errorMsg.str();
+        return;
     }
+    std::stringstream msg;
+    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host" << " MODE " << channelName << " " << mode << "\r\n";
+    channel->broadcastMessageTemp(msg.str(), fd);
 }

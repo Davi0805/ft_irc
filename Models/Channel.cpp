@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 14:38:47 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:42:58 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void Channel::setChannelTopic(std::string topic)
     this->topic = topic;
 }
 
-void Channel::broadcastMessage(const std::string& message, int senderFd)
+void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
 {
     for (size_t i = 0; i < _users.size(); ++i)
     {
