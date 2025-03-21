@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:33 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/20 14:35:27 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 15:26:47 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ private:
 	ChannelService *_channelService;
 
 public:
-	ModeCommand(UserService &userSerice, ChannelService &channelService);
+	ModeCommand(UserService &userService, ChannelService &channelService);
 	~ModeCommand();
 	void execute(MessageContent messageContent, int clientFd);
-	void NewFunction(Channel *channel, std::__1::stringstream &msg, int fd);
 };
