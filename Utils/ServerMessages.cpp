@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 15:36:26 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 09:35:25 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
     // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
     stream << ":" << user->getNick() << "!~user@host JOIN " << channel->getChannelName() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    channel->broadcastMessageTemp(stream.str(), user->getFd());
     stream.str("");
 
     // 332 - CONTENDO O TOPICO DO CANAL
@@ -96,6 +97,7 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
     // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
     stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    channel->broadcastMessageTemp(stream.str(), user->getFd());
     stream.str("");   
 }
 

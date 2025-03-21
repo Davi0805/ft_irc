@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 08:23:41 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 09:24:05 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,14 +91,28 @@ bool Channel::isOperator(int fd) const
     return _operators.find(fd) != _operators.end();
 }
 
-void Channel::promoteToOperator(int fd)
+void Channel::promoteToOperator(std::string nickname)
 {
-    _operators.insert(fd);
+    for (size_t i = 0; i < _users.size(); i++)
+    {
+        if (_users[i]->getNick() == nickname)
+        {
+            _operators.insert(_users[i]->getFd());
+            break;
+        }
+    }
 }
 
-void Channel::demoteOperator(int fd)
+void Channel::demoteOperator(std::string nickname)
 {
-    _operators.erase(fd);
+    for (size_t i = 0; i < _users.size(); i++)
+    {
+        if (_users[i]->getNick() == nickname)
+        {
+            _operators.erase(_users[i]->getFd());
+            break;
+        }
+    }
 }
 
 std::vector<User*> Channel::getUsers() const
