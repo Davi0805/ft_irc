@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:05:45 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 11:28:19 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:55:01 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,10 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 	// Invite the user
 	channel->inviteUser(targetUser);
 	_userService->sendMessage(clientFd, RPL_INVITING(user->getNick(), targetNick, channelName));
-	_userService->sendMessage(targetUser->getFd(), ": You have been invited to " + channelName);
+	_userService->sendMessage(targetUser->getFd(),
+    ":" + user->getNick() + "!~" + user->getUser() + "@host" + 
+    " INVITE " + targetNick + " " + channelName + "\r\n");
+	
 
 	std::cout << "[DEBUG]: User " << targetUser->getNick() << " invited to channel " << channel->getChannelName() << std::endl;
 }
