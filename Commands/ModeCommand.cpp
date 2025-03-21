@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/20 15:42:54 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 09:23:25 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,16 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     {
         std::cout << "[DEBUG] User limit deactivated for " << channelName << std::endl;
         channel->removeUserLimit();
+    }
+    else if (mode == "+o")
+    {
+        std::cout << "[DEBUG] Operator mode activated for " << channelName << std::endl;
+        channel->promoteToOperator(messageContent.tokens[3]);
+    }
+    else if (mode == "-o")
+    {
+        std::cout << "[DEBUG] Operator mode deactivated for " << channelName << std::endl;
+        channel->demoteOperator(messageContent.tokens[3]);
     }
     else
     {
