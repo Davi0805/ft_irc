@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 09:23:25 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:19:57 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     std::cout << "[DEBUG]: MODE COMMAND CALLED" << std::endl;
 
     User* user = _userService->findUserByFd(fd);
+    
 
     if (messageContent.tokens.size() < 3)
     {
@@ -53,28 +54,31 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
 
     std::string channelName = messageContent.tokens[1];
     std::string mode = messageContent.tokens[2];
+    std::string param = messageContent.tokens.size() == 4 ? messageContent.tokens[3] : "";
 
     Channel* channel = _channelService->findChannel(channelName);
     if (!channel)
     {
+        ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
         std::stringstream errorMsg;
         errorMsg << SERVER_NAME << " 403 "  << user->getNick() << " " << channelName << " :No such channel\r\n";
-        send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
         std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     if (!channel->isUserInChannel(fd))
     {
+        ServerMessages::SendErrorMessage(fd, ERR_NOTONCHANNEL, user->getNick(), channelName);
+        //DEBUG PROPURSES
         std::stringstream errorMsg;
         errorMsg << SERVER_NAME << " 442 "  << user->getNick() << " " << channelName << " :You're not on that channel\r\n";
-        send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
         std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     if (!channel->isOperator(fd))
     {
+        ServerMessages::SendErrorMessage(fd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
         std::stringstream errorMsg;
         errorMsg << ":" << SERVER_NAME << " 482 " << user->getNick() << " " << channelName << " :You're not channel operator\r\n";
         send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
@@ -102,10 +106,18 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
         std::cout << "[DEBUG] Topic restriction deactivated for " << channelName << std::endl;
         channel->setRestrictedTopic(false);
     }
-    else if (mode == "+k" && messageContent.tokens.size() == 4) 
+    else if (mode == "+k")
     {
+        if (param.empty())
+        {
+            std::stringstream errorMsg;
+            errorMsg << SERVER_NAME << " 461 "  << user->getNick() << " MODE :Not enough parameters\r\n";
+            std::cout << "[DEBUG] Error message: " << errorMsg.str();
+            ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, user->getNick());
+            return;
+        }
         std::cout << "[DEBUG] Channel password set for " << channelName << std::endl;
-        channel->setRequiresPassword(messageContent.tokens[3]);
+        channel->setRequiresPassword(param);
     }
     else if (mode == "-k") 
     {
@@ -115,7 +127,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     else if (mode == "+l")
     {
         std::cout << "[DEBUG] User limit activated for " << channelName << std::endl;
-        channel->setUserLimit(std::stoi(messageContent.tokens[3]));
+        channel->setUserLimit(std::stoi(param));
     }
     else if (mode == "-l")
     {
@@ -125,19 +137,19 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     else if (mode == "+o")
     {
         std::cout << "[DEBUG] Operator mode activated for " << channelName << std::endl;
-        channel->promoteToOperator(messageContent.tokens[3]);
+        channel->promoteToOperator(param);
     }
     else if (mode == "-o")
     {
         std::cout << "[DEBUG] Operator mode deactivated for " << channelName << std::endl;
-        channel->demoteOperator(messageContent.tokens[3]);
+        channel->demoteOperator(param);
     }
     else
     {
         std::stringstream errorMsg;
         errorMsg << SERVER_NAME << " 472 "  << user->getNick() << " " << mode << " :Unknown mode flag\r\n";
-        send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
         std::cout << "[DEBUG] Error message: " << errorMsg.str();
+        ServerMessages::SendErrorMessage(fd, ERR_UNKNOWNMODE, user->getNick(), mode);
         return;
     }
     std::stringstream msg;
