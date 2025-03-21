@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 15:42:58 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 08:23:41 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@
 Channel::Channel(std::string ChannelName)
     : topic("Default topic"), _channelName(ChannelName), _password(""), _userLimit(0), _inviteOnly(false), _restrictedTopic(false), _requiresPassword(false), _limitedUsers(false)
 {
+    std::cout << "Channel created with name: " << _channelName << std::endl;
+    std::cout << "Default topic: " << topic << std::endl;
+    std::cout << "Password: " << _password << std::endl;
+    std::cout << "User limit: " << _userLimit << std::endl;
+    std::cout << "Invite only: " << (_inviteOnly ? "true" : "false") << std::endl;
+    std::cout << "Restricted topic: " << (_restrictedTopic ? "true" : "false") << std::endl;
+    std::cout << "Requires password: " << (_requiresPassword ? "true" : "false") << std::endl;
+    std::cout << "Limited users: " << (_limitedUsers ? "true" : "false") << std::endl;
 }
 
 Channel::~Channel()
@@ -128,6 +136,11 @@ std::string Channel::getAllUserString() const
     return result;
 }
 
+std::string Channel::getPassword() const
+{
+    return this->_password;
+}
+
 size_t Channel::getUserLimit() const
 {
     return this->_userLimit;
@@ -204,6 +217,13 @@ void Channel::setChannelTopic(std::string topic)
     this->topic = topic;
 }
 
+bool Channel::isUserInvited(User* user) const
+{
+    return _invitedUsers.find(user->getFd()) != _invitedUsers.end();
+}
+
+
+// TEMPORARIA - MIGRAR PARA SERVER MESSAGES???
 void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
 {
     for (size_t i = 0; i < _users.size(); ++i)
