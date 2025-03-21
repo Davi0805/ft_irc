@@ -6,14 +6,13 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:04:49 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 10:56:33 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:33:26 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "Command.hpp"
-#include "ErrorMessages.hpp"
 
 #include <string>
 #include <sstream>

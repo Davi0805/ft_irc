@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/21 11:16:03 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:28:59 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     User * user = _userService->findUserByFd(fd);
     if (!user->isAuthenticated()){
         std::cout << "[DEBUG]: User is not authenticated" << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
         return ; // TODO: EXCEPTION
     }
     if (messageContent.tokens.size() < 2)
