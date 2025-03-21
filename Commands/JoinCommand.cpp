@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/21 12:28:59 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:34:31 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,39 +40,39 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     if (messageContent.tokens.size() < 2)
     {
         std::cout << "[DEBUG]: Invalid number of arguments" << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
         return ; // TODO: EXCEPTION
     }
     Channel* channel = _channelService->get_or_createChannel(messageContent.tokens[1]);
     
     if (channel->isUserInChannel(fd)){
         std::cout << "[DEBUG]: User is already in the channel " << messageContent.tokens[1] << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_USERONCHANNEL, user->getNick());
         return ; // TODO: EXCEPTION
     }
     else if (channel->hasUserLimit() && channel->getUsers().size() >= channel->getUserLimit())
     {
         std::cout << "[DEBUG]: Channel " << messageContent.tokens[1] << " has reached its user limit." << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_CHANNELISFULL, user->getNick());
         return ; 
     }
     else if (channel->isInviteOnly() && !channel->isUserInvited(user)) 
     {
         std::cout << "[DEBUG]: User is not invited to channel " << messageContent.tokens[1] << std::endl;
-        //DEBUR PROPURSES - ADD IN A SERVER HANDLER
-        std::ostringstream errorMessage;
-        errorMessage << ":" << SERVER_NAME << " 473 " 
-                     << user->getNick() << " " << messageContent.tokens[1] 
-                     << " :Cannot join channel (+i)\r\n";
-        send(fd, errorMessage.str().c_str(), errorMessage.str().size(), 0);
-    
-        return ; 
+        ServerMessages::SendErrorMessage(fd, ERR_INVITEONLYCHAN, user->getNick());
+        return ;
     }
     else if (channel->hasPassword() && messageContent.tokens.size() < 3)
     {
+
         std::cout << "[DEBUG]: Channel " << messageContent.tokens[1] << " requires a password." << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
         return ; 
     }
     else if (channel->hasPassword() && messageContent.tokens[2] != channel->getPassword())
     {
         std::cout << "[DEBUG]: Incorrect password for channel " << messageContent.tokens[1] << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_BADCHANNELKEY, user->getNick());
         return ; 
     }
     channel->AddUser(user);
