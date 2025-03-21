@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 09:24:05 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:29:34 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,11 @@ void Channel::setChannelPassword(std::string password)
 void Channel::setChannelLimit(int limit)
 {
     this->_userLimit = limit;
+}
+
+void Channel::inviteUser(User* user)
+{
+    _invitedUsers.insert(user->getFd());
 }
 
 void Channel::setChannelTopic(std::string topic)

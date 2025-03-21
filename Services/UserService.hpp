@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 17:24:16 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:20:10 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "../Utils/Utils.hpp"
 
 #include "unistd.h"
+#include <sys/socket.h>
 #include <iostream>
 #include <map>
 
@@ -53,5 +54,8 @@ public:
     void SetNickByFd(std::string nickname, int fd);
     void SetUserByFd(std::string username, int fd);
     void SetRealNameByFd(std::string realName, int fd);
+
+    // TEMPORARIA?
+    void sendMessage(int fd, const std::string &message);
 
 };
