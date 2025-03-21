@@ -6,11 +6,12 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/18 19:16:56 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:31:09 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHandler.hpp"
+
 
 // EXEMPLOS DE MENSAGEM - SEM O PREFIXO POR ENQUANTO
 //
@@ -150,6 +151,7 @@ void MessageHandler::RegisterCommands()
     _commands["QUIT"] = new QuitCommand(_userService, _channelService);
     _commands["WHO"] = new WhoCommand(_userService, _channelService);
     _commands["MODE"] = new ModeCommand(_userService, _channelService);
+    _commands["INVITE"] = new InviteCommand(_userService, _channelService);
 }
 
 

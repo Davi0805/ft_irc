@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/18 19:17:18 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:31:18 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 #include "../Commands/QuitCommand.hpp"
 #include "../Commands/WhoCommand.hpp"
 #include "../Commands/ModeCommand.hpp"
+#include "../Commands/InviteCommand.hpp"
 
 /* 
     CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 18:09:06 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:20:47 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,30 @@ void UserService::SetRealNameByFd(std::string realName, int fd)
     else
         return ; // TODO: Expt
 }
+
+
+// TEMPORARY SENDMESSAGE TO IMPLEMENT INVITE COMMAND
+void UserService::sendMessage(int fd, const std::string &message)
+{
+    if (fd < 0)
+    {
+        std::cerr << "[ERROR]: Invalid file descriptor" << std::endl;
+        return;
+    }
+
+    std::string formattedMessage = message + "\r\n";
+    ssize_t bytesSent = send(fd, formattedMessage.c_str(), formattedMessage.size(), MSG_NOSIGNAL);
+
+    if (bytesSent == -1)
+    {
+        std::cerr << "[ERROR]: Failed to send message to fd " << fd << ": " << strerror(errno) << std::endl;
+    }
+    else
+    {
+        std::cout << "[DEBUG]: Sent message to fd " << fd << ": " << message << std::endl;
+    }
+}
+
 
 // TESTE UNITARIO
 

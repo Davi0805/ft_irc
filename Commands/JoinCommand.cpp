@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/21 09:16:03 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:16:03 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     else if (channel->isInviteOnly() && !channel->isUserInvited(user)) 
     {
         std::cout << "[DEBUG]: User is not invited to channel " << messageContent.tokens[1] << std::endl;
+        //DEBUR PROPURSES - ADD IN A SERVER HANDLER
+        std::ostringstream errorMessage;
+        errorMessage << ":" << SERVER_NAME << " 473 " 
+                     << user->getNick() << " " << messageContent.tokens[1] 
+                     << " :Cannot join channel (+i)\r\n";
+        send(fd, errorMessage.str().c_str(), errorMessage.str().size(), 0);
+    
         return ; 
     }
     else if (channel->hasPassword() && messageContent.tokens.size() < 3)
