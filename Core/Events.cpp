@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 18:21:07 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:27:11 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void Events::runPollLoop()
                 _msgHandler.CreateEvent(clientSock);
 
                 std::cout << "New client connected: " << clientSock << std::endl;
+                send(clientSock, ":server 001 teste :Welcome to IRC!\r\n", 36, 0);
             }
         }
         

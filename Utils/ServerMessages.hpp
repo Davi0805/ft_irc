@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/13 15:04:53 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:25:11 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include "../Models/User.hpp"
 
 #include "../Models/MessageContent.hpp"
+
+#include "Replies.hpp"
 
 
 // SERVER_NAME CRIADO MERAMENTE ILUSTRATIVAMENTE
@@ -54,4 +56,7 @@ public:
     static std::string PrivMsgFormatter(User* sender, User* receiver, std::string message);
 
     static std::string WhoReply(User* user, Channel* channel);
+
+    static void SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target = "");
+
 };

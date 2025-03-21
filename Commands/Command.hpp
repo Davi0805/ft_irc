@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:15:08 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 18:34:54 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/18 18:52:25 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "../Services/ChannelService.hpp"
 #include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
+#include "../Models/Channel.hpp"
 #include "../Utils/ServerMessages.hpp"
 
 #include <sys/socket.h>

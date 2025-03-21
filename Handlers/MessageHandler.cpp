@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 15:48:08 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:31:09 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHandler.hpp"
+
 
 // EXEMPLOS DE MENSAGEM - SEM O PREFIXO POR ENQUANTO
 //
@@ -149,6 +150,8 @@ void MessageHandler::RegisterCommands()
     _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
     _commands["QUIT"] = new QuitCommand(_userService, _channelService);
     _commands["WHO"] = new WhoCommand(_userService, _channelService);
+    _commands["MODE"] = new ModeCommand(_userService, _channelService);
+    _commands["INVITE"] = new InviteCommand(_userService, _channelService);
 }
 
 

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
+#    By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/17 15:41:53 by artuda-s         ###   ########.fr        #
+#    Updated: 2025/03/21 12:34:35 by lebarbos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = ircserv
 
 # Compiler
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 
 # Files
 SRC = main.cpp \
@@ -30,13 +30,15 @@ SRC = main.cpp \
 	Commands/PrivMsgCommand.cpp \
 	Commands/QuitCommand.cpp \
 	Commands/WhoCommand.cpp \
+	Commands/ModeCommand.cpp \
+	Commands/InviteCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Models/Server.cpp \
 	Services/UserService.cpp \
 	Services/ChannelService.cpp \
 	Utils/ServerMessages.cpp \
-	Utils/Utils.cpp
+	Utils/Utils.cpp 
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
