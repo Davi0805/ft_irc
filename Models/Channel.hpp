@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/20 15:43:01 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/21 08:13:02 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ private:
 
     std::vector<User*> _users;
     std::set<int> _operators;
+    std::set<int> _invitedUsers;
     std::string topic;
     std::string _channelName;
     std::string _password;
@@ -68,6 +69,7 @@ public:
     std::string getChannelName() const;
     std::string getChannelTopic() const;
     std::string getAllUserString() const;
+    std::string getPassword() const;
     size_t getUserLimit() const;
 
     void setInviteOnly(bool enabled);
@@ -81,6 +83,7 @@ public:
     bool isRestrictedTopic() const;
     bool hasPassword() const;
     bool hasUserLimit() const;
+    bool isUserInvited(User *user) const;
 
     void setChannelTopic(std::string topic);
     void setChannelPassword(std::string password);
