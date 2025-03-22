@@ -6,13 +6,14 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 15:25:58 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:36:10 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ModeCommand.hpp"
 #include <iostream>
 #include <sstream> // For formatting messages
+#include <cstdlib> // For atoi
 
 ModeCommand::ModeCommand(UserService& userService, ChannelService& channelService)
     : _userService(&userService), _channelService(&channelService) {}
@@ -131,7 +132,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     else if (mode == "+l")
     {
         std::cout << "[DEBUG] User limit activated for " << channelName << std::endl;
-        channel->setUserLimit(std::stoi(param));
+        channel->setUserLimit(std::atoi(param.c_str()));
     }
     else if (mode == "-l")
     {
