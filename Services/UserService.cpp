@@ -6,11 +6,13 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 10:20:47 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:38:40 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserService.hpp"
+#include <cerrno>
+#include <cstring>
 
 /* 
     ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA

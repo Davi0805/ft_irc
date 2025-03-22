@@ -6,11 +6,12 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 10:31:09 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:37:02 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHandler.hpp"
+#include <cstring>
 
 
 // EXEMPLOS DE MENSAGEM - SEM O PREFIXO POR ENQUANTO
@@ -85,7 +86,7 @@ bool MessageHandler::HandleEvent(int fd)
         if (errno == EAGAIN || errno == EWOULDBLOCK)
             break; // Sem mais dados disponíveis, saída normal
 
-        std::cerr << "FATAL: " << strerror(errno) << std::endl;
+        std::cerr << "FATAL: " << std::strerror(errno) << std::endl;
         return false;
     }
 
