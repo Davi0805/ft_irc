@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   QuitCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:35:11 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 00:42:00 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/23 12:27:25 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "QuitCommand.hpp"
+#include "../Core/Events.hpp"
+
 
 QuitCommand::QuitCommand(UserService& userService, ChannelService& channelService)
                         :_userService(&userService), _channelService(&channelService)
@@ -30,4 +32,5 @@ void QuitCommand::execute(MessageContent messageContent, int fd)
     
     std::cout << "[DEBUG]: COMANDO QUIT SENDO CHAMADO" << std::endl;
     _userService->RemoveUserByFd(fd);
+    Events::getInstance()->removeClient(fd);
 }
