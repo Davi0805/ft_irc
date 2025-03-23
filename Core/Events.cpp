@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/19 17:27:11 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:05:44 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Events.hpp"
+
+
+// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
+Events* Events::_instance = NULL;
 
 //! CODIGO BASEADO NA DOCUMENTACAO - MAN EPOLL
 
@@ -24,6 +28,18 @@ Events::~Events()
 {
 }
 
+Events* Events::getInstance(int socketFd)
+{
+    if (!_instance)
+        _instance = new Events(socketFd);
+    return _instance;
+}
+
+Events* Events::getInstance()
+{
+    return _instance;
+}
+
 // TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 // TODO: ERROR CHECKING ?
 bool Events::setupPollContext()
@@ -34,7 +50,6 @@ bool Events::setupPollContext()
     pfd.revents = 0;                // no events initially
 
     this->_pfds.push_back(pfd);     // add this pollfd to the vector of pollfds
-
     return true;
 }
 

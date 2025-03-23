@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:33:54 by davi              #+#    #+#             */
-/*   Updated: 2025/03/16 20:25:05 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/23 12:08:58 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ int main(int ac, char **av)
     {
         Server::getInstance().setPassword(av[2]);
         Socket ioContext(atoi(av[1]));
-        Events pollContext(ioContext.getSocketFd());
-        pollContext.runPollLoop();
+        Events::getInstance(ioContext.getSocketFd());
+        Events::getInstance()->runPollLoop();
     }
     catch(const std::exception& e)
     {
