@@ -162,7 +162,7 @@
         return stream.str();
     }
 
-    void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target, const std::string& target2)
+    void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target)
 {
     std::ostringstream stream;
 
@@ -172,10 +172,6 @@
     // Se houver um alvo (ex: um canal ou usuário específico), adicionamos
     if (!target.empty())
         stream << " " << target;
-
-    // Se houver um segundo alvo, adicionamos também
-    if (!target2.empty())
-        stream << " " << target2;
     
     // Associa o código de erro à mensagem correspondente
     switch (errorCode)
