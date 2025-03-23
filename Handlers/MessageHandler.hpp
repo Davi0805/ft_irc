@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 10:31:18 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:20:24 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ private:
     std::string getMessage(std::string& buffer, std::size_t it);
     std::string getMessage(std::string& strBegin, std::istringstream& stream);
 
-    UserService _userService;
-    ChannelService _channelService;
+    UserService& _userService;
+    ChannelService& _channelService;
     cmdsMap _commands;
 
     std::vector<std::string> splitDeVariosComandos(std::string &buffer);
