@@ -3,16 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/22 12:38:40 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:21:49 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserService.hpp"
 #include <cerrno>
 #include <cstring>
+
+// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
+UserService* UserService::_instance = NULL;
 
 /* 
     ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
@@ -43,6 +46,13 @@ UserService::~UserService()
 void UserService::CreateUserByFd(int fd)
 {
     _usersByFd[fd] = new User(fd);
+}
+
+UserService& UserService::getInstance()
+{
+    if (!_instance)
+        _instance = new UserService();
+    return *_instance;
 }
 
 
