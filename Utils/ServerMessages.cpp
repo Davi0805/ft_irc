@@ -160,16 +160,30 @@
         return stream.str();
     }
 
-    void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target)
+/** 
+ * TODO DOXYGEN PLS
+ * 
+ * @brief $placeholder
+ * @param fd client fd to send error message to
+ * @param errorCode error number identifier
+ * @param nickname client nickname
+ * @param target //TODO
+ */
+void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& param1, const std::string& param2)
 {
+    (void)param2;
     std::ostringstream stream;
 
     // Adiciona o prefixo do servidor e o código do erro
-    stream << ":" << SERVER_NAME << " " << errorCode << " " << nickname;
+    stream << ":" << SERVER_NAME << " " << errorCode;
+    
+    if (!nickname.empty())
+        stream << " " << nickname;
 
+    // TODO implementar cada parametro corretamente para cada erro? quem se chega a frente? kkkkkk
     // Se houver um alvo (ex: um canal ou usuário específico), adicionamos
-    if (!target.empty())
-        stream << " " << target;
+    if (!param1.empty())
+        stream << " " << param1;
 
     // Associa o código de erro à mensagem correspondente
     switch (errorCode)
@@ -188,9 +202,9 @@
         case 441: stream << " :They aren't on that channel"; break;
         case 442: stream << " :You're not on that channel"; break;
         case 451: stream << " :You have not registered"; break;
-        case 461: stream << " :Not enough parameters"; break;
-        case 462: stream << " :You may not reregister"; break;
-        case 464: stream << " :Password incorrect"; break;
+        case ERR_NEEDMOREPARAMS: stream << " :Not enough parameters"; break;
+        case ERR_ALREADYREGISTERED: stream << " :Unauthorized command (already registered)"; break;
+        case ERR_PASSWDMISMATCH: stream << " :Password incorrect - disconnecting..."; break;
         case 471: stream << " :Channel is full"; break;
         case 472: stream << " :Unknown mode flag"; break;
         case 473: stream << " :Invite-only channel"; break;
@@ -204,6 +218,7 @@
 
     stream << "\r\n";  // IRC requer a terminação \r\n
 
+    std::cout << stream.str() << std::endl;
     // Envia a mensagem ao cliente
     send(fd, stream.str().c_str(), stream.str().size(), 0);
 }
