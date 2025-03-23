@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:30:43 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 17:48:29 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,6 @@ public:
     static void SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target = "");
 
     static void QuitMsg(Channel* channel, User* user, std::string message);
+
+    static void PartMsg(Channel* channel, User* user, std::string message);
 };

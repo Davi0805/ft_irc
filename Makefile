@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+         #
+#    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/21 12:34:35 by lebarbos         ###   ########.fr        #
+#    Updated: 2025/03/23 17:26:15 by dmelo-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC = main.cpp \
 	Commands/WhoCommand.cpp \
 	Commands/ModeCommand.cpp \
 	Commands/InviteCommand.cpp \
+	Commands/PartCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Models/Server.cpp \
