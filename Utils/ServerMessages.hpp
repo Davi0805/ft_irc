@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 12:25:11 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:15:54 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,6 @@ public:
 
     static std::string WhoReply(User* user, Channel* channel);
 
-    static void SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target = "");
+    static void SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target = "", const std::string& target2 = "");
 
 };

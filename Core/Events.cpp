@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:05:44 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:50:52 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ void Events::readAndPrintFd(int fd)
 {
     char buffer[1024];
     ssize_t bytesRead;
-
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
     if (bytesRead < 0)
     {

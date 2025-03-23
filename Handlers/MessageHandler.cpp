@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:22:39 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:57:42 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ bool MessageHandler::HandleEvent(int fd)
     while (true)
     {
         ssize_t bytesRead = recv(fd, buffer, sizeof(buffer), 0);
-        
         if (bytesRead > 0)
         {
             buf.append(buffer, bytesRead);

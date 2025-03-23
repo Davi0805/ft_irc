@@ -85,18 +85,20 @@
         stream.str("");
 
         // 332 - CONTENDO O TOPICO DO CANAL
-        stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " :" << channel->getChannelTopic() << "\r\n";
+        stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " : " << channel->getChannelTopic() << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
         stream.str("");
 
         // 353 - LISTA DE USUARIOS DO CANAL
-        stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " @ " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
+        stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " = " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
         stream.str("");
+        std::cout << "USERS: " << channel->getAllUserString() << std::endl;
 
         // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
         stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    
         channel->broadcastMessageTemp(stream.str(), user->getFd());
         stream.str("");   
     }
@@ -160,7 +162,7 @@
         return stream.str();
     }
 
-    void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target)
+    void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target, const std::string& target2)
 {
     std::ostringstream stream;
 
@@ -171,6 +173,10 @@
     if (!target.empty())
         stream << " " << target;
 
+    // Se houver um segundo alvo, adicionamos também
+    if (!target2.empty())
+        stream << " " << target2;
+    
     // Associa o código de erro à mensagem correspondente
     switch (errorCode)
     {
