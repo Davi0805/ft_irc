@@ -6,13 +6,14 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 13:40:43 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:29:47 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include "../Models/Channel.hpp"
+#include "../Utils/ServerMessages.hpp"
 
 // unordered map faz parte do c++ 11
 // #include <unordered_map>
@@ -46,7 +47,7 @@ public:
 
     static ChannelService& getInstance();
 
-    void removeFromAllChannels(int fd);
+    void quitFromAllChannels(User* user, std::string message);
 
     Channel *get_or_createChannel(std::string channelName);
 
