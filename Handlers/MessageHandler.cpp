@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 17:35:46 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 18:38:26 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,10 @@ bool MessageHandler::HandleEvent(int fd)
         for (size_t i = 0; i < splittedCommands.size(); i++)
         {
             messageContent = ircTokenizer(splittedCommands[i]);
+            // if not user
+            if (!_userService.findUserByFd(fd))
+                return false;
+            
             ProcessCommand(messageContent, fd);
         }
     }
