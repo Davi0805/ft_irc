@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:47:08 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 17:38:21 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ public:
     
     void AddUser(User *user);
     void removeUser(User *user);
+    void removeUser(int fd);
     bool isUserInChannel(int fd) const;
     bool isOperator(int fd) const;
     void promoteToOperator(const std::string& nickname);

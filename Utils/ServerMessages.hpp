@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 13:15:54 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 17:38:27 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,5 @@ public:
 
     static void SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& target = "", const std::string& target2 = "");
 
+    static void QuitMsg(Channel* channel, User* user, std::string message);
 };

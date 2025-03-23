@@ -213,3 +213,13 @@
     // Envia a mensagem ao cliente
     send(fd, stream.str().c_str(), stream.str().size(), 0);
 }
+
+void ServerMessages::QuitMsg(Channel* channel, User* user, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host QUIT :" << message << "\r\n";
+
+    for(size_t i = 0; i < channel->getUsers().size(); i++)
+        send(channel->getUsers()[i]->getFd(), stream.str().c_str(), stream.str().size(), 0);
+}
