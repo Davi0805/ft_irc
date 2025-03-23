@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:19:21 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:40:43 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ public:
     ~ChannelService();
 
     static ChannelService& getInstance();
+
+    void removeFromAllChannels(int fd);
 
     Channel *get_or_createChannel(std::string channelName);
 
