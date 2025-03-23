@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:21:29 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:35:37 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,19 @@ ChannelService& ChannelService::getInstance()
     if (!_instance)
         _instance = new ChannelService();
     return *_instance;
+}
+
+void ChannelService::quitFromAllChannels(User* user, std::string message)
+{
+    std::map<std::string, Channel*>::iterator it;
+    for(it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if (it->second->isUserInChannel(user->getFd()))
+        {
+            it->second->removeUser(user->getFd());
+            ServerMessages::QuitMsg(it->second, user, message);
+        }
+    }
 }
 
 /* 

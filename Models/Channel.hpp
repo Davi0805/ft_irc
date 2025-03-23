@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 10:29:45 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:46:12 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ public:
     
     void AddUser(User *user);
     void removeUser(User *user);
+    void removeUser(int fd);
     bool isUserInChannel(int fd) const;
     bool isOperator(int fd) const;
     void promoteToOperator(std::string nickname);

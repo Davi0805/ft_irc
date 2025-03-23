@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/21 13:25:13 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/23 13:46:00 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,18 @@ void Channel::removeUser(User* user)
     for (size_t i = 0; i < _users.size(); i++)
     {
         if (_users[i]->getFd() == user->getFd())
+        {
+            _users.erase(_users.begin() + i);
+            break;
+        }
+    }
+}
+
+void Channel::removeUser(int fd)
+{
+    for (size_t i = 0; i < _users.size(); i++)
+    {
+        if (_users[i]->getFd() == fd)
         {
             _users.erase(_users.begin() + i);
             break;
