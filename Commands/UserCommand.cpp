@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 17:46:06 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/23 12:03:08 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,11 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     }
     
     // USER || USER user user2 (:...)
-    if (messageContent.tokens.size() != 2)
+/*     if (messageContent.tokens.size() != 2)
     {
         std::cerr << "461 bad user"  << std::endl; // TODO proper error handling
         return ;
-    }    
+    }    */ 
     
     // set username
     //? fd entry was created when the connection was established and now were setting the username to that fd
