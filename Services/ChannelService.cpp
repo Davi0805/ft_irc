@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:06:25 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/23 12:21:29 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ChannelService.hpp"
+
+
+// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
+ChannelService* ChannelService::_instance = NULL;
 
 /* 
     ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
@@ -30,6 +34,13 @@ ChannelService::ChannelService(/* args */)
 
 ChannelService::~ChannelService()
 {
+}
+
+ChannelService& ChannelService::getInstance()
+{
+    if (!_instance)
+        _instance = new ChannelService();
+    return *_instance;
 }
 
 /* 

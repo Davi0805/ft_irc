@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 15:57:03 by artuda-s         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/23 15:57:16 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "MessageHandler.hpp"
 #include <cstring>
@@ -28,7 +29,8 @@
 */
 
 
-MessageHandler::MessageHandler()
+MessageHandler::MessageHandler() 
+        : _userService(UserService::getInstance()), _channelService(ChannelService::getInstance())
 {
     RegisterCommands();
 }

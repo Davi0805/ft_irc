@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 01:00:17 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/23 12:19:21 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,15 @@ class ChannelService
 private:
     // channelName - Channel*
     std::map<std::string, Channel*> _channels;
-public:
+    
     ChannelService(/* args */);
+
+    static ChannelService* _instance;
+    
+public:
     ~ChannelService();
+
+    static ChannelService& getInstance();
 
     Channel *get_or_createChannel(std::string channelName);
 

@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 15:56:43 by artuda-s         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/03/23 15:57:42 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #pragma once
@@ -53,8 +54,8 @@ private:
     std::string getMessage(std::string& buffer, std::size_t it);
     std::string getMessage(std::string& strBegin, std::istringstream& stream);
 
-    UserService _userService;
-    ChannelService _channelService;
+    UserService& _userService;
+    ChannelService& _channelService;
     cmdsMap _commands;
 
     std::vector<std::string> splitDeVariosComandos(std::string &buffer);
