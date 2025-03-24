@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/23 12:03:08 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:36:36 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,21 @@ UserCommand::UserCommand(UserService& userService, ChannelService& channelServic
 UserCommand::~UserCommand()
 {
 }
+
+/**
+ * @brief Iterates the nickname char by char and see if it is contained by the set of valid chars
+ * @return FALSE for bad nickname or TRUE for good nickname
+ */
+bool UserCommand::ValidateUserCharset(const std::string &newNick) const
+{
+    for (std::string::const_iterator it = newNick.begin(); it != newNick.end(); ++it)
+    {
+        if (!std::isalnum(*it) && *it != '-' && *it != '_' && *it != '.')
+            return false; // bad nick
+    }
+    return true; // all good
+}
+
 
 // USER <username> <hostname> <servername> :<realName>
 // hostname e server name nao serão explorados no âmbito deste projeto então eu vou deixar para quem quiser implementar xd
@@ -40,29 +55,40 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     (void)_channelService;
     
     User *user = _userService->findUserByFd(fd);
+    if (!user) return ;
     
     // already registred 
     if (user->getStatus() == User::AUTHENTICATED)  
     {
-        std::cerr << "ERR_ALREADYREGISTRED 462 :Unauthorized command" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_ALREADYREGISTERED, "USER");
         return ;
     }
     else if (user->getStatus() != User::NICK_RECEIVED) // no PASS or NICK before
     {
-        std::cerr << "451 ERR_NOTREGISTERED :You may not reregister" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "USER");
         return ;
     }
     
     // USER || USER user user2 (:...)
-/*     if (messageContent.tokens.size() != 2)
+    if (messageContent.tokens.size() != 4)
     {
-        std::cerr << "461 bad user"  << std::endl; // TODO proper error handling
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS);
         return ;
-    }    */ 
+    }
     
+    std::string username = messageContent.tokens[1];
+    
+    //Validate username
+    if (username.empty() || username.size() > _usernameMaxLen || !ValidateUserCharset(username))
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_ERRONEUSNICKNAME, username);
+        return ;
+    }
+        
+
     // set username
     //? fd entry was created when the connection was established and now were setting the username to that fd
-    user->setUser(messageContent.tokens[1]);
+    user->setUser(username);
     
     // set realname
     if (!messageContent.message.empty())
@@ -71,15 +97,10 @@ void UserCommand::execute(MessageContent messageContent, int fd)
         user->setRealName("DaviMacaco"); // default value
 
     
-    // std::cout << "[DEBUG]: username:" << _userService->findUserByFd(fd)->getUser() << std::endl;
-    // std::cout << "[DEBUG]: realname:" << _userService->findUserByFd(fd)->getRealName() << std::endl;
-        
     // Update user status
     user->setStatus(User::AUTHENTICATED);
 
     // RESPOSTAs DE SUCESSO NA AUTENTICACAO
     ServerMessages::MensagemAutenticado(fd, _userService->findUserByFd(fd)->getNick());
 
-    /* User* debug = _userService->findUserByFd(fd);
-    std::cout << "[DEBUG]: FD = " << debug->getFd() << " | Nick = " << debug->getNick() << " | User = " << debug->getUser() << std::endl; */
 }
