@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 20:12:41 by fang              #+#    #+#             */
-/*   Updated: 2025/03/16 20:24:55 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/24 16:08:15 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ private:
     ~Server();
 
     std::string _password;
+    static const std::string _serverName;
     
 public:
 
     static Server& getInstance();
     void setPassword(std::string password);
     std::string getPassword() const;
+    const std::string getServerName() const;
 };
 

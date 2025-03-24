@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 18:38:52 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/24 16:11:20 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "../Models/Channel.hpp"
 #include "../Models/User.hpp"
-
+#include "../Services/UserService.hpp"
 #include "../Models/MessageContent.hpp"
 
 #include "Replies.hpp"
@@ -28,7 +28,7 @@
 // JA QUE O NOSSO SERVER RODA LOCALMENTE
 // POR SER EDUCACIONAL APENAS
 
-#define SERVER_NAME "ft_irc.42Network.local"
+#define SERVER_NAME "ft_irc.42Network.local" // TODO usar Server class
 
 
 /* 
@@ -58,6 +58,8 @@ public:
     static std::string WhoReply(User* user, Channel* channel);
 
     static void SendErrorMessage(int fd, int errorCode, const std::string& nickname = "", const std::string& param = "", const std::string& param2 = "");
+
+    static void NickMsg(const std::map<int, User*> fdsMap, const std::string& oldNick, const std::string& newNick);
 
     static void QuitMsg(Channel* channel, User* user, std::string message);
 

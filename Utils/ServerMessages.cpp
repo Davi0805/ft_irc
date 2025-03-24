@@ -196,12 +196,12 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
         case 411: stream << " :No recipient given"; break;
         case 412: stream << " :No text to send"; break;
         case 421: stream << " :Unknown command"; break;
-        case 431: stream << " :No nickname given"; break;
-        case 432: stream << " :Erroneous nickname"; break;
-        case 433: stream << " :Nickname is already in use"; break;
+        case ERR_NONICKNAMEGIVEN: stream << " :No nickname given"; break;
+        case ERR_ERRONEUSNICKNAME: stream << " :Erroneous nickname"; break;
+        case ERR_NICKNAMEINUSE: stream << " :Nickname is already in use"; break;
         case 441: stream << " :They aren't on that channel"; break;
         case 442: stream << " :You're not on that channel"; break;
-        case 451: stream << " :You have not registered"; break;
+        case ERR_NOTREGISTERED: stream << " :You have not registered"; break;
         case ERR_NEEDMOREPARAMS: stream << " :Not enough parameters"; break;
         case ERR_ALREADYREGISTERED: stream << " :Unauthorized command (already registered)"; break;
         case ERR_PASSWDMISMATCH: stream << " :Password incorrect - disconnecting..."; break;
@@ -221,6 +221,18 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
     std::cout << stream.str() << std::endl;
     // Envia a mensagem ao cliente
     send(fd, stream.str().c_str(), stream.str().size(), 0);
+}
+
+void ServerMessages::NickMsg(const std::map<int, User*> fdsMap, const std::string& oldNick, const std::string& newNick)
+{
+    std::ostringstream stream;
+
+    stream << ":" << oldNick << " NICK :" << newNick << "\r\n";
+
+    for (std::map<int, User*>::const_iterator it = fdsMap.begin(); it != fdsMap.end(); ++it)
+    {
+        send(it->first, stream.str().c_str(), stream.str().size(), 0);
+    }
 }
 
 void ServerMessages::QuitMsg(Channel* channel, User* user, std::string message)

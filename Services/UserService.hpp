@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:07:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:20:16 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:59:58 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,19 @@
 class UserService
 {
 private:
+    UserService();
+
     // Infelizmente redundante porem otimizado para buscas
     std::map<int, User*> _usersByFd;
     std::map<std::string, User*> _userByNick;
-    
-    UserService();
 
     static UserService* _instance;
 
 public:
     ~UserService();
-
+    const std::map<int, User*> getFdsMap() const;
     static UserService& getInstance();
-
+    
     User* findUserByFd(int fd);
     User* findUserByNickname(std::string nickname);
 
