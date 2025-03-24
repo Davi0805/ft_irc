@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/24 17:01:29 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/24 17:37:01 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     // We can use nick whenever we want after the PASS cmd
     if (user->getStatus() < User::PASS_RECEIVED)
     {
-        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED);
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "NICK");
         return ;
     }
 
@@ -88,7 +88,7 @@ void NickCommand::execute(MessageContent messageContent, int fd)
 
     // nickname filter
     //              size                          non alphanumeric chars
-    if (newNick.size() > _nicknameMaxLen || !ValidateNickCharset(newNick))
+    if (newNick.empty() || newNick.size() > _nicknameMaxLen || !ValidateNickCharset(newNick))
     {
         ServerMessages::SendErrorMessage(fd, ERR_ERRONEUSNICKNAME, newNick);
         return ;
