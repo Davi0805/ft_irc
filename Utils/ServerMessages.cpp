@@ -188,31 +188,31 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
     // Associa o código de erro à mensagem correspondente
     switch (errorCode)
     {
-        case 401: stream << " :No such nick/channel"; break;
+        case ERR_NOSUCHNICK: stream << " :No such nick/channel"; break;
         case 402: stream << " :No such server"; break;
-        case 403: stream << " :No such channel"; break;
-        case 404: stream << " :Cannot send to channel"; break;
+        case ERR_NOSUCHCHANNEL: stream << " :No such channel"; break;
+        case ERR_CANNOTSENDTOCHAN: stream << " :Cannot send to channel"; break;
         case 405: stream << " :You have joined too many channels"; break;
-        case 411: stream << " :No recipient given"; break;
-        case 412: stream << " :No text to send"; break;
-        case 421: stream << " :Unknown command"; break;
+        case ERR_NORECIPIENT: stream << " :No recipient given"; break;
+        case ERR_NOTEXTTOSEND: stream << " :No text to send"; break;
+        case ERR_UNKNOWNCOMMAND: stream << " :Unknown command"; break;
         case ERR_NONICKNAMEGIVEN: stream << " :No nickname given"; break;
         case ERR_ERRONEUSNICKNAME: stream << " :Erroneous nickname"; break;
         case ERR_NICKNAMEINUSE: stream << " :Nickname is already in use"; break;
         case 441: stream << " :They aren't on that channel"; break;
-        case 442: stream << " :You're not on that channel"; break;
+        case ERR_NOTONCHANNEL: stream << " :You're not on that channel"; break;
         case ERR_NOTREGISTERED: stream << " :You have not registered"; break;
         case ERR_NEEDMOREPARAMS: stream << " :Not enough parameters"; break;
         case ERR_ALREADYREGISTERED: stream << " :Unauthorized command (already registered)"; break;
         case ERR_PASSWDMISMATCH: stream << " :Password incorrect - disconnecting..."; break;
-        case 471: stream << " :Channel is full"; break;
-        case 472: stream << " :Unknown mode flag"; break;
-        case 473: stream << " :Invite-only channel"; break;
-        case 474: stream << " :Banned from channel"; break;
-        case 475: stream << " :Bad channel key"; break;
-        case 482: stream << " :You're not channel operator"; break;
-        case 501: stream << " :Unknown MODE flag"; break;
-        case 502: stream << " :Cannot change mode for other users"; break;
+        case ERR_CHANNELISFULL: stream << " :Channel is full"; break;
+        case ERR_UNKNOWNMODE: stream << " :Unknown mode flag"; break;
+        case ERR_INVITEONLYCHAN: stream << " :Invite-only channel"; break;
+        case ERR_BANNEDFROMCHAN: stream << " :Banned from channel"; break;
+        case ERR_BADCHANNELKEY: stream << " :Bad channel key"; break;
+        case ERR_CHANOPRIVSNEEDED: stream << " :You're not channel operator"; break;
+        case ERR_UMODEUNKNOWNFLAG: stream << " :Unknown MODE flag"; break;
+        case ERR_USERSDONTMATCH: stream << " :Cannot change mode for other users"; break;
         default:  stream << " :Unknown error"; break;
     }
 
