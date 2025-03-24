@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:10:56 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/23 17:55:20 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:11:27 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void PartCommand::execute(MessageContent messageContent, int fd)
         {
             ServerMessages::PartMsg(_channelService->findChannel(messageContent.tokens[i]), user, messageContent.message);
             _channelService->findChannel(messageContent.tokens[i])->removeUser(fd);
+        } else if (!_channelService->findChannel(messageContent.tokens[i])) {
+            ServerMessages::SendErrorMessage(fd, 403, user->getNick(), "");
         } else
             ServerMessages::SendErrorMessage(fd, 442, user->getNick(), ""); 
     }
