@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ChannelService.hpp"
+#include <cstdlib>
 
 // INICIANDO A VARIAVEL INSTANCE DO SINGLETON
 ChannelService *ChannelService::_instance = NULL;
