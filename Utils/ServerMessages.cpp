@@ -203,10 +203,12 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
         case ERR_NICKNAMEINUSE: stream << " :Nickname is already in use"; break;
         case 441: stream << " :They aren't on that channel"; break;
         case ERR_NOTONCHANNEL: stream << " :You're not on that channel"; break;
+        case ERR_USERONCHANNEL: stream << " :is already on channel"; break;
         case ERR_NOTREGISTERED: stream << " :You have not registered"; break;
         case ERR_NEEDMOREPARAMS: stream << " :Not enough parameters"; break;
         case ERR_ALREADYREGISTERED: stream << " :Unauthorized command (already registered)"; break;
         case ERR_PASSWDMISMATCH: stream << " :Password incorrect - disconnecting..."; break;
+        case ERR_KEYSET: stream << " :Channel key already set"; break;
         case ERR_CHANNELISFULL: stream << " :Channel is full"; break;
         case ERR_UNKNOWNMODE: stream << " :Unknown mode flag"; break;
         case ERR_INVITEONLYCHAN: stream << " :Invite-only channel"; break;

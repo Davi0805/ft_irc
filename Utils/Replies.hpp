@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:09:53 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/23 12:00:13 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:49:30 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #define ERR_NEEDMOREPARAMS 461
 #define ERR_ALREADYREGISTERED 462
 #define ERR_PASSWDMISMATCH 464
+#define ERR_KEYSET 467
 #define ERR_CHANNELISFULL 471
 #define ERR_UNKNOWNMODE 472
 #define ERR_INVITEONLYCHAN 473
@@ -61,11 +62,12 @@ static const IrcReply ircErrors[] = {
     {433, "Nickname is already in use"},
     {441, "They aren't on that channel"},
     {442, "You're not on that channel"},
-    {443, "User is already on that channel"}, // Added ERR_USERONCHANNEL
+    {443, "User is already on that channel"},
     {451, "You have not registered"},
     {461, "Not enough parameters"},
     {462, "You may not reregister"},
     {464, "Password incorrect"},
+    {467, "Channel key already set"},
     {471, "Channel is full"},
     {472, "Unknown mode flag"},
     {473, "Invite-only channel"},
