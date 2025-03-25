@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 17:05:16 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:31:48 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void MessageHandler::RegisterCommands()
     _commands["INVITE"] = new InviteCommand(_userService, _channelService);
     _commands["PART"] = new PartCommand(_userService, _channelService);
     _commands["KICK"] = new KickCommand(_userService, _channelService);
+    _commands["TOPIC"] = new TopicCommand();
 }
 
 

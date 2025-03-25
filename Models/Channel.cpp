@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 17:38:13 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:30:01 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
     for (size_t i = 0; i < _users.size(); ++i)
     {
         User* user = _users[i];
-        if (user->getFd() != senderFd)
+        if (senderFd == 0 || user->getFd() != senderFd)
         {
             send(user->getFd(), message.c_str(), message.size(), 0);
         }

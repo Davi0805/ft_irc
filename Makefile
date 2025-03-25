@@ -6,7 +6,7 @@
 #    By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/25 17:05:55 by lebarbos         ###   ########.fr        #
+#    Updated: 2025/03/25 18:32:02 by lebarbos         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC = main.cpp \
 	Commands/ModeCommand.cpp \
 	Commands/InviteCommand.cpp \
 	Commands/KickCommand.cpp \
+	Commands/TopicCommand.cpp \
 	Commands/PartCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \

@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:05:26 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/25 17:31:35 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:39:31 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,7 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTREGISTERED, user->getNick());
 		return;
 	}
-	std::cout << "Executing KICK command" << std::endl;
-	std::cout << "Number of tokens: " << messageContent.tokens.size() << std::endl;
-	for (size_t i = 0; i < messageContent.tokens.size(); ++i)
-	{
-		std::cout << "Token[" << i << "]: " << messageContent.tokens[i] << std::endl;
-	}
+	std::cout << "[DEBUG] Executing KICK command" << std::endl;
 	if (messageContent.tokens.size() < 3) // Pelo menos 3 parâmetros: KICK <channel> <user>
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_NEEDMOREPARAMS, "KICK");
@@ -41,7 +36,7 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 	std::vector<std::string> channelNames = Utils::split(messageContent.tokens[1], ',');
 	std::vector<std::string> targetNicks = Utils::split(messageContent.tokens[2], ',');
 
-	std::string reason = "No reason"; // Motivo padrão
+	std::string reason = "No reason";
 	if (!messageContent.message.empty())
 		reason = messageContent.message;
 

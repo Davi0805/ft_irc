@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 17:05:40 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:31:40 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 #include "../Commands/InviteCommand.hpp"
 #include "../Commands/PartCommand.hpp"
 #include "../Commands/KickCommand.hpp"
+#include "../Commands/TopicCommand.hpp"
 
 
 /* 

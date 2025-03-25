@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:09:53 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/25 15:49:30 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:23:47 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 
+#define RPL_NOTOPIC 331
+#define RPL_TOPIC 332
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHCHANNEL 403
 #define ERR_CANNOTSENDTOCHAN 404
@@ -49,6 +51,8 @@ struct IrcReply
 };
 
 static const IrcReply ircErrors[] = {
+    {331, "No topic is set"},
+    {332, "Topic for channel"},
     {401, "No such nick/channel"},
     {402, "No such server"},
     {403, "No such channel"},
