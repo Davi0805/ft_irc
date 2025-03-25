@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 18:02:08 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:37:01 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,19 @@ NickCommand::~NickCommand()
 {
 }
 
+/**
+ * @brief Iterates the nickname char by char and see if it is contained by the set of valid chars
+ * @return FALSE for bad nickname or TRUE for good nickname
+ */
+bool NickCommand::ValidateNickCharset(const std::string &newNick) const
+{
+    for (std::string::const_iterator it = newNick.begin(); it != newNick.end(); ++it)
+    {
+        if (!std::isalnum(*it) && *it != '-' && *it != '_' && *it != '.')
+            return false; // bad nick
+    }
+    return true; // all good
+}
 
 /**
  * Must have use PASS cmd first
@@ -42,73 +55,66 @@ NickCommand::~NickCommand()
  */
 void NickCommand::execute(MessageContent messageContent, int fd)
 {
-    std::cout << "[DEBUG]: COMANDO NICK CHAMADO" << std::endl;
-    
     (void)_channelService; // to sush warnings ugh
     User *user = _userService->findUserByFd(fd);
+    if (!user) return ;
     
     // We can use nick whenever we want after the PASS cmd
     if (user->getStatus() < User::PASS_RECEIVED)
     {
-        std::cerr << "451 ERR_NOTREGISTERED :You have not registered" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "NICK");
         return ;
     }
 
     // NICK || NICK :
     if (messageContent.tokens.size() == 1 && messageContent.message.empty())
     {
-        std::cerr << ":server_name 431 * :No nickname given" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_NONICKNAMEGIVEN);
         return ;
     }
-    
     // NICK nick name || NICK nick :name
     if ((messageContent.tokens.size() != 2 || !messageContent.message.empty())
         && (messageContent.tokens.size() != 1 || messageContent.message.empty()))
     {
-        std::cerr << ":server_name 432 * newnickname :Erroneous nickname" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS);
         return;
     }
     
-    std::string nickname;
+    std::string newNick;
     if (messageContent.message.empty())     // nick password
-        nickname = messageContent.tokens[1];
+        newNick = messageContent.tokens[1];
     else                                    // nick :pwd
-        nickname = messageContent.message;
+        newNick = messageContent.message;
 
     // nickname filter
     //              size                          non alphanumeric chars
-    if (nickname.size() > _nicknameMaxLen || !Utils::StrIsAlphaNum(nickname))
+    if (newNick.empty() || newNick.size() > _nicknameMaxLen || !ValidateNickCharset(newNick))
     {
-        std::cerr << "432 ERR_ERRONEUSNICKNAME <nick> :Erroneous nickname" << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_ERRONEUSNICKNAME, newNick);
         return ;
     }
         
     // nickname colisions
+    if (_userService->findUserByNickname(newNick))
     {
-        // std::cout << "[DEBUG]: nickname: [" << nickname << "]" << std::endl;
-        // std::cout << "[DEBUG]: lowernickname: [" << Utils::StrToLower(nickname) << "]" << std::endl;
-
-        std::cout << "[DEBUG] user *" << _userService->findUserByNickname(Utils::StrToLower(nickname)) << std::endl;
-        std::cout << "[DEBUG] Check nick: [" << _userService->findUserByFd(fd)->getNick() << "]" << std::endl;
-        
-    }
-    if (_userService->findUserByNickname(nickname))
-    {
-        std::cout << "what: " << _userService->findUserByNickname(nickname) << " nick: " <<  _userService->findUserByNickname(nickname)->getNick() << std::endl;
-        std::cerr << "433 ERR_NICKNAMEINUSE <nick> :Nickname is already in use" << std::endl;
+        ServerMessages::SendErrorMessage(fd, ERR_NICKNAMEINUSE, newNick);
         return ;
     }
- 
-    // all good, change nickname    
-    std::cout << "MUDANDO NICK..." << std::endl;
-    if (user->getStatus() )
-    _userService->SetNickByFd(nickname, fd);
-    std::cout << "[DEBUG] Check new nick: [" << _userService->findUserByFd(fd)->getNick() << "]" << std::endl;
     
-    if (user->getStatus() != User::AUTHENTICATED) // only change this to NICK_RECV on authentication
+    // all good, change nickname    
+    // inform users of nickname change
+    if (user->getStatus() == User::AUTHENTICATED)
     {
-        std::cout << "SETED NICK RECIEVED" << std::endl;
-        user->setStatus(User::NICK_RECEIVED);
+        std::string oldNick = _userService->findUserByFd(fd)->getNick();
+        ServerMessages::NickMsg(_userService->getFdsMap(), oldNick, newNick);
     }
+    // update nickname
+    _userService->SetNickByFd(newNick, fd);
+
+
+    // only change this to NICK_RECV on authentication
+    if (user->getStatus() != User::AUTHENTICATED) 
+        user->setStatus(User::NICK_RECEIVED);
+        
     return ;
 }

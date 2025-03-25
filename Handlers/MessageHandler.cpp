@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:57:42 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:02:04 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,10 @@ bool MessageHandler::HandleEvent(int fd)
         for (size_t i = 0; i < splittedCommands.size(); i++)
         {
             messageContent = ircTokenizer(splittedCommands[i]);
+            // if not user
+            if (!_userService.findUserByFd(fd))
+                return false;
+            
             ProcessCommand(messageContent, fd);
         }
     }
@@ -153,6 +157,7 @@ void MessageHandler::RegisterCommands()
     _commands["WHO"] = new WhoCommand(_userService, _channelService);
     _commands["MODE"] = new ModeCommand(_userService, _channelService);
     _commands["INVITE"] = new InviteCommand(_userService, _channelService);
+    _commands["PART"] = new PartCommand(_userService, _channelService);
 }
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/17 13:15:09 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/24 14:23:24 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,17 @@ PassCommand::~PassCommand()
  *! error:
  * Bad syntax
  * 461 ERR_NEEDMOREPARAMS <nickname> PASS :Not enough parameters
- * 
+  * 
  * If the user already has sent the PASS command returns an error
  * 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
+ *    :<servidor> 461 <nickname> <comando> :<mensagem de erro>
+ * 
  *
  * Wrong password:
  * 464 ERR_PASSWDMISMATCH :Password incorrect
  * 
  * Success: no answer and the server proceeds to wait for the NICK and USER commands
  */
-// TODO error handling
 void PassCommand::execute(MessageContent messageContent, int fd)
 {
     (void)_channelService;
@@ -48,7 +49,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     // User can only send one PASS command
     if (user->getStatus() != User::CONNECTED) 
     {
-        std::cerr << "ERR_ALREADYREGISTRED :Unauthorized command (already registered)" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_ALREADYREGISTERED, "", "PASS");
         return ;
     }
 
@@ -58,10 +59,10 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     {
         if (messageContent.tokens.size() != 1) // PASS word: word
         {
-            std::cerr << "ERR_NEEDMOREPARAMS :Not enough parameters" << std::endl; // TODO
+            ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "", "PASS");
             return ;
         }
-        
+            
         // Verify password
         if (user->checkPassword(messageContent.message))
         {
@@ -70,7 +71,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
         }
         else // Wrong password
         {
-            std::cerr << "ERR_PASSWDMISMATCH :Password incorrect" << std::endl; // TODO
+            ServerMessages::SendErrorMessage(fd, ERR_PASSWDMISMATCH, "", "PASS");
             // Disconnects user
             _userService->RemoveUserByFd(fd);
             return ;
@@ -80,7 +81,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     // PASS pass word
     if (messageContent.tokens.size() != 2)
     {
-        std::cerr << "ERR_NEEDMOREPARAMS :Not enough parameters" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "", "PASS");
         return ;
     }
     
@@ -92,7 +93,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     }
     else // Wrong password
     {
-        std::cerr << "ERR_PASSWDMISMATCH :Password incorrect" << std::endl; // TODO
+        ServerMessages::SendErrorMessage(fd, ERR_PASSWDMISMATCH, "", "PASS");
         // Disconnects user
         _userService->RemoveUserByFd(fd);
         return ;

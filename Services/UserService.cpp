@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserService.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 12:21:49 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:13:01 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ void UserService::CreateUserByFd(int fd)
     _usersByFd[fd] = new User(fd);
 }
 
+const std::map<int, User*> UserService::getFdsMap() const
+{
+    return this->_usersByFd;
+}
+
+
 UserService& UserService::getInstance()
 {
     if (!_instance)
@@ -82,7 +88,6 @@ void UserService::RemoveUserByFd(int fd)
     close(fd); // fecha fd do user desconectado
     
 
-    // TODO: ADICONAR EXCEPTION SE EXISTIR ERRO NO RFC
 }
 
 /* 
@@ -105,7 +110,6 @@ void UserService::RemoveUserByNick(std::string nickname)
         delete itFd->second;
         _usersByFd.erase(itFd);
     }
-    // TODO: ADICONAR EXCEPTION SE EXISTIR ERRO NO RFC
 }
 
 /* 
@@ -137,7 +141,7 @@ User* UserService::findUserByNickname(std::string nickname)
     if (it != _userByNick.end())
         return it->second;
     else 
-        return NULL; // TODO: EXCEPTION
+        return NULL; 
 }
 
 /* 
@@ -160,7 +164,7 @@ void UserService::SetNickByFd(std::string nickname, int fd)
         _userByNick[nickname] = it->second; // map<string, User*>
     }
     else
-        return ; // TODO: EXCEPTION
+        return ;
 }
 
 /* 
@@ -175,7 +179,7 @@ void UserService::SetUserByFd(std::string username, int fd)
     if (it != _usersByFd.end())
         it->second->setUser(username);
     else
-        return ; // TODO: EXCEPTION
+        return ; 
 }
 
 
@@ -187,7 +191,7 @@ void UserService::SetRealNameByFd(std::string realName, int fd)
     if (it != _usersByFd.end())
         it->second->setRealName(realName);
     else
-        return ; // TODO: Expt
+        return ; 
 }
 
 
