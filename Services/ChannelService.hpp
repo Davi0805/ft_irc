@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:29:47 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:20:43 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,9 @@ public:
 
     bool isUserPartOfChannel(std::string nickname, std::string channelName);
     bool isUserPartOfChannel(int fd, std::string channelName);
+
+
+    void handleModeChange(User* user, int fd, const std::string& channelName, const std::string& modeString, std::vector<std::string>& params);
+    void applyMode(Channel* channel, char mode, bool addMode, std::vector<std::string>& params, size_t& paramIndex);
+    void broadcastModeChange(Channel* channel, User* user, int fd, const std::string& modeString, std::vector<std::string>& params, size_t paramIndex);
 };

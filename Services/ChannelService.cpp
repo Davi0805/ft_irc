@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:35:37 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/25 09:43:52 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,75 @@ bool ChannelService::isUserPartOfChannel(int fd, std::string channelName)
             return true;
     }
     return false;
+}
+
+void ChannelService::handleModeChange(User* user, int fd, const std::string& channelName, const std::string& modeString, std::vector<std::string>& params)
+{
+    Channel* channel = findChannel(channelName);
+    if (!channel) return;
+
+    bool addMode = true;
+    size_t paramIndex = 0;
+    std::string validModes = "itkol"; // Modos válidos
+
+    for (size_t i = 0; i < modeString.size(); i++)
+    {
+        char mode = modeString[i];
+        if (mode == '+') { addMode = true; continue; }
+        if (mode == '-') { addMode = false; continue; }
+
+        if (validModes.find(mode) == std::string::npos) {
+            std::stringstream errorMsg;
+            errorMsg << ":server 472 " << user->getNick() << " " << mode << " :Unknown mode flag\r\n";
+            send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
+            continue;
+        }
+
+        applyMode(channel, mode, addMode, params, paramIndex);
+    }
+    broadcastModeChange(channel, user, fd, modeString, params, paramIndex);
+}
+
+
+void ChannelService::applyMode(Channel* channel, char mode, bool addMode, std::vector<std::string>& params, size_t& paramIndex)
+{
+    switch (mode)
+    {
+        case 'i': channel->setInviteOnly(addMode); break;
+        case 't': channel->setRestrictedTopic(addMode); break;
+        case 'k':
+            if (addMode)
+            {
+                if (paramIndex >= params.size()) return;
+                channel->setRequiresPassword(params[paramIndex++]);
+            }
+            else channel->removePassword();
+            break;
+        case 'l':
+            if (addMode)
+            {
+                if (paramIndex >= params.size()) return;
+                int limit = std::atoi(params[paramIndex++].c_str());
+                channel->setUserLimit(limit);
+            }
+            else channel->removeUserLimit();
+            break;
+        case 'o':
+            if (paramIndex >= params.size()) return;
+            if (addMode) channel->promoteToOperator(params[paramIndex++]);
+            else channel->demoteOperator(params[paramIndex++]);
+            break;
+        default: return;
+    }
+}
+
+void ChannelService::broadcastModeChange(Channel* channel, User* user, int fd, const std::string& modeString, std::vector<std::string>& params, size_t paramIndex)
+{
+    std::stringstream msg;
+    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host MODE " << channel->getChannelName() << " " << modeString;
+    for (size_t i = 0; i < paramIndex; i++)
+        msg << " " << params[i];
+    msg << "\r\n";
+    send(fd, msg.str().c_str(), msg.str().size(), 0);
+    channel->broadcastMessageTemp(msg.str(), fd);
 }
