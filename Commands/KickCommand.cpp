@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 11:51:57 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/23 14:05:19 by lebarbos         ###   ########.fr       */
+/*   Created: 2025/03/25 17:05:26 by lebarbos          #+#    #+#             */
+/*   Updated: 2025/03/25 17:31:35 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "KickCommand.hpp"
 
@@ -25,44 +26,75 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTREGISTERED, user->getNick());
 		return;
 	}
-	if (messageContent.tokens.size() < 3)
+	std::cout << "Executing KICK command" << std::endl;
+	std::cout << "Number of tokens: " << messageContent.tokens.size() << std::endl;
+	for (size_t i = 0; i < messageContent.tokens.size(); ++i)
+	{
+		std::cout << "Token[" << i << "]: " << messageContent.tokens[i] << std::endl;
+	}
+	if (messageContent.tokens.size() < 3) // Pelo menos 3 parâmetros: KICK <channel> <user>
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_NEEDMOREPARAMS, "KICK");
 		return;
 	}
 
-	std::string channelName = messageContent.tokens[1];
-	std::string targetNick = messageContent.tokens[2];
+	std::vector<std::string> channelNames = Utils::split(messageContent.tokens[1], ',');
+	std::vector<std::string> targetNicks = Utils::split(messageContent.tokens[2], ',');
 
-	Channel *channel = _channelService->findChannel(channelName);
-	if (!channel)
+	std::string reason = "No reason"; // Motivo padrão
+	if (!messageContent.message.empty())
+		reason = messageContent.message;
+
+	if (channelNames.size() != targetNicks.size())
 	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
+		ServerMessages::SendErrorMessage(clientFd, ERR_NEEDMOREPARAMS, "KICK");
 		return;
 	}
 
-	User *targetUser = _userService->findUserByNickname(targetNick);
-	if (!targetUser)
+	for (size_t i = 0; i < channelNames.size(); ++i)
 	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHNICK, user->getNick(), targetNick);
-		return;
-	}
+		std::string channelName = channelNames[i];
+		std::string targetNick = targetNicks[i];
 
-	if (!channel->isUserInChannel(clientFd))
-	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_NOTONCHANNEL, user->getNick(), channelName);
-		return;
-	}
+		Channel *channel = _channelService->findChannel(channelName);
+		if (!channel)
+		{
+			ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
+			continue;
+		}
 
-	if (!channel->isUserInChannel(targetUser->getFd()))
-	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_USERNOTINCHANNEL, user->getNick(), targetNick, channelName);
-		return;
-	}
+		User *targetUser = _userService->findUserByNickname(targetNick);
+		if (!targetUser)
+		{
+			ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHNICK, user->getNick(), targetNick);
+			continue;
+		}
 
-	if (!channel->isOperator(clientFd) && clientFd != targetUser->getFd())
-	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
-		return;
+		if (!channel->isUserInChannel(clientFd))
+		{
+			ServerMessages::SendErrorMessage(clientFd, ERR_NOTONCHANNEL, user->getNick(), channelName);
+			continue;
+		}
+
+		if (!channel->isUserInChannel(targetUser->getFd()))
+		{
+			ServerMessages::SendErrorMessage(clientFd, ERR_USERNOTINCHANNEL, user->getNick(), targetNick, channelName);
+			continue;
+		}
+
+		if (!channel->isOperator(clientFd))
+		{
+			ServerMessages::SendErrorMessage(clientFd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
+			continue;
+		}
+
+		// Enviar mensagem de KICK para todos no canal
+		std::stringstream kickMessage;
+		kickMessage << ":" << user->getNick() << " KICK " << channelName << " " << targetNick << " :" << reason << "\r\n";
+		send(clientFd, kickMessage.str().c_str(), kickMessage.str().size(), 0);
+		channel->broadcastMessageTemp(kickMessage.str(), clientFd);
+
+		// Remover o usuário do canal
+		channel->removeUser(targetUser->getFd());
 	}
 }

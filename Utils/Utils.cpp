@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:04:51 by artuda-s          #+#    #+#             */
-/*   Updated: 2025/03/17 15:26:17 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:01:24 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,35 @@ std::string Utils::StrToLower(std::string result)
     {
         if (std::isupper(*it))
             *it = std::tolower(*it);
+    }
+    return result;
+}
+
+std::vector<std::string> Utils::split(const std::string &str, char delimiter)
+{
+    std::vector<std::string> tokens;
+    std::stringstream ss(str);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter))
+    {
+        if (!token.empty())
+            tokens.push_back(token);
+    }
+    return tokens;
+}
+
+/**
+ * Joins a vector of strings into a single string with a given separator
+ */
+std::string Utils::join(std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end, const std::string &separator)
+{
+    std::string result;
+    for (std::vector<std::string>::iterator it = begin; it != end; ++it)
+    {
+        if (!result.empty())
+            result += separator;
+        result += *it;
     }
     return result;
 }
