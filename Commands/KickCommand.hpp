@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   KickCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 11:50:51 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/23 11:54:26 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:33:28 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 class KickCommand : public Command
 {
 private:
-	UserService *_userService;
-	ChannelService *_channelService;
 public:
-	KickCommand(UserService &_userService, ChannelService &_channelService);
+	KickCommand();
 	~KickCommand();
 	void execute(MessageContent messageContent, int fd) ;
 };
