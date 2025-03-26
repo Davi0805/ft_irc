@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/22 12:36:10 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:47:23 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,123 +42,52 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     std::cout << "[DEBUG]: MODE COMMAND CALLED" << std::endl;
 
     User* user = _userService->findUserByFd(fd);
-    
+    if (!user) return;
 
-    if (messageContent.tokens.size() < 3)
+    if (messageContent.tokens.size() < 2)
     {
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, user->getNick(), "MODE");
-        //DEBUG PROPURSES
-        std::stringstream errorMsg;
-        errorMsg << ":" << SERVER_NAME << " 461 " << user->getNick() << " MODE :Not enough parameters\r\n";
-        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     std::string channelName = messageContent.tokens[1];
-    std::string mode = messageContent.tokens[2];
-    std::string param = messageContent.tokens.size() == 4 ? messageContent.tokens[3] : "";
-
     Channel* channel = _channelService->findChannel(channelName);
     if (!channel)
     {
         ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
-        //DEBUG PROPURSES
-        std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 403 "  << user->getNick() << " " << channelName << " :No such channel\r\n";
-        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
-    if (!channel->isUserInChannel(fd))
+    if (messageContent.tokens.size() == 2)
+    {
+        std::string activeModes = channel->getModeString();
+        std::string modeParams = channel->getModeParameters(channel->isOperator(fd));
+        std::stringstream response;
+        response << ":" << SERVER_NAME << " 324 " << user->getNick() 
+                 << " " << channelName << " " << activeModes;
+        if (!modeParams.empty()) 
+            response << " " << modeParams;
+        response << "\r\n";
+
+        send(fd, response.str().c_str(), response.str().size(), 0);
+        std::cout << "[DEBUG] Sent channel modes: " << response.str();
+        return;
+    }
+
+    if (!_channelService->isUserPartOfChannel(fd, channelName))
     {
         ServerMessages::SendErrorMessage(fd, ERR_NOTONCHANNEL, user->getNick(), channelName);
-        //DEBUG PROPURSES
-        std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 442 "  << user->getNick() << " " << channelName << " :You're not on that channel\r\n";
-        std::cout << "[DEBUG] Error message: " << errorMsg.str();
         return;
     }
 
     if (!channel->isOperator(fd))
     {
         ServerMessages::SendErrorMessage(fd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
-        //DEBUG PROPURSES
-        std::stringstream errorMsg;
-        errorMsg << ":" << SERVER_NAME << " 482 " << user->getNick() << " " << channelName << " :You're not channel operator\r\n";
-        send(fd, errorMsg.str().c_str(), errorMsg.str().size(), 0);
-        std::cout << "[DEBUG] Error message " << errorMsg.str();
         return;
     }
 
-    if (mode == "+i") 
-    {
-        std::cout << "[DEBUG] Invite-only mode activated for " << channelName << std::endl;
-        channel->setInviteOnly(true);
-    }
-    else if (mode == "-i") 
-    {
-        std::cout << "[DEBUG] Invite-only mode deactivated for " << channelName << std::endl;
-        channel->setInviteOnly(false);
-    }
-    else if (mode == "+t") 
-    {
-        std::cout << "[DEBUG] Topic restriction activated for " << channelName << std::endl;
-        channel->setRestrictedTopic(true);
-    }
-    else if (mode == "-t") 
-    {
-        std::cout << "[DEBUG] Topic restriction deactivated for " << channelName << std::endl;
-        channel->setRestrictedTopic(false);
-    }
-    else if (mode == "+k")
-    {
-        if (param.empty())
-        {
-            ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, user->getNick());
-            //DEBUG PROPURSES
-            std::stringstream errorMsg;
-            errorMsg << SERVER_NAME << " 461 "  << user->getNick() << " MODE :Not enough parameters\r\n";
-            std::cout << "[DEBUG] Error message: " << errorMsg.str();
-            return;
-        }
-        std::cout << "[DEBUG] Channel password set for " << channelName << std::endl;
-        channel->setRequiresPassword(param);
-    }
-    else if (mode == "-k") 
-    {
-        std::cout << "[DEBUG] Channel password removed for " << channelName << std::endl;
-        channel->removePassword();
-    } 
-    else if (mode == "+l")
-    {
-        std::cout << "[DEBUG] User limit activated for " << channelName << std::endl;
-        channel->setUserLimit(std::atoi(param.c_str()));
-    }
-    else if (mode == "-l")
-    {
-        std::cout << "[DEBUG] User limit deactivated for " << channelName << std::endl;
-        channel->removeUserLimit();
-    }
-    else if (mode == "+o")
-    {
-        std::cout << "[DEBUG] Operator mode activated for " << channelName << std::endl;
-        channel->promoteToOperator(param);
-    }
-    else if (mode == "-o")
-    {
-        std::cout << "[DEBUG] Operator mode deactivated for " << channelName << std::endl;
-        channel->demoteOperator(param);
-    }
-    else
-    {
-        ServerMessages::SendErrorMessage(fd, ERR_UNKNOWNMODE, user->getNick(), mode);
-        //DEBUG PROPURSES
-        std::stringstream errorMsg;
-        errorMsg << SERVER_NAME << " 472 "  << user->getNick() << " " << mode << " :Unknown mode flag\r\n";
-        std::cout << "[DEBUG] Error message: " << errorMsg.str();
-        return;
-    }
-    std::stringstream msg;
-    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host" << " MODE " << channelName << " " << mode << "\r\n";
-    channel->broadcastMessageTemp(msg.str(), fd);
+    std::string modeString = messageContent.tokens[2];
+    std::vector<std::string> params(messageContent.tokens.begin() + 3, messageContent.tokens.end());
+
+    _channelService->handleModeChange(user, fd, channelName, modeString, params);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 17:25:47 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:31:40 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 #include "../Commands/ModeCommand.hpp"
 #include "../Commands/InviteCommand.hpp"
 #include "../Commands/PartCommand.hpp"
+#include "../Commands/KickCommand.hpp"
+#include "../Commands/TopicCommand.hpp"
 
 
 /* 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 13:46:00 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:30:01 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,26 +95,26 @@ bool Channel::isOperator(int fd) const
     return _operators.find(fd) != _operators.end();
 }
 
-void Channel::promoteToOperator(std::string nickname)
+void Channel::promoteToOperator(const std::string& nickname)
 {
     for (size_t i = 0; i < _users.size(); i++)
     {
         if (_users[i]->getNick() == nickname)
         {
             _operators.insert(_users[i]->getFd());
-            break;
+            return;
         }
     }
 }
 
-void Channel::demoteOperator(std::string nickname)
+void Channel::demoteOperator(const std::string& nickname)
 {
     for (size_t i = 0; i < _users.size(); i++)
     {
         if (_users[i]->getNick() == nickname)
         {
             _operators.erase(_users[i]->getFd());
-            break;
+            return;
         }
     }
 }
@@ -145,14 +145,21 @@ std::string Channel::getChannelTopic() const
 std::string Channel::getAllUserString() const
 {
     std::string result;
-
-    for(size_t i = 0; i < _users.size(); i++)
+    
+    for (size_t i = 0; i < _users.size(); i++)
     {
+        if (i > 0)
+            result.append(" "); 
+
+        if (isOperator(_users[i]->getFd()))
+            result.append("@");
+        
         result.append(_users[i]->getNick());
-        result.append(" ");
     }
+    
     return result;
 }
+
 
 std::string Channel::getPassword() const
 {
@@ -245,6 +252,34 @@ bool Channel::isUserInvited(User* user) const
     return _invitedUsers.find(user->getFd()) != _invitedUsers.end();
 }
 
+std::string Channel::getModeParameters(bool showPassword) const
+{
+    std::stringstream params;
+
+    if (showPassword && !_password.empty())  // Só mostra se permitido
+        params << _password << " ";
+    if (_userLimit > 0)
+        params << _userLimit;
+
+    return params.str();
+}
+
+std::string Channel::getModeString() const
+{
+    std::string modes = "+";
+
+    if (_inviteOnly)
+        modes += "i";
+    if (_restrictedTopic)
+        modes += "t";
+    if (!_password.empty())
+        modes += "k";
+    if (_userLimit > 0)
+        modes += "l";
+
+    return (modes.size() > 1) ? modes : "";
+}
+
 
 // TEMPORARIA - MIGRAR PARA SERVER MESSAGES???
 void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
@@ -252,7 +287,7 @@ void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
     for (size_t i = 0; i < _users.size(); ++i)
     {
         User* user = _users[i];
-        if (user->getFd() != senderFd)
+        if (senderFd == 0 || user->getFd() != senderFd)
         {
             send(user->getFd(), message.c_str(), message.size(), 0);
         }

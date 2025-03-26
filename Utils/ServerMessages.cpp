@@ -85,18 +85,20 @@
         stream.str("");
 
         // 332 - CONTENDO O TOPICO DO CANAL
-        stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " :" << channel->getChannelTopic() << "\r\n";
+        stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " : " << channel->getChannelTopic() << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
         stream.str("");
 
         // 353 - LISTA DE USUARIOS DO CANAL
-        stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " @ " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
+        stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " = " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
         stream.str("");
+        std::cout << "USERS: " << channel->getAllUserString() << std::endl;
 
         // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
         stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
         send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    
         channel->broadcastMessageTemp(stream.str(), user->getFd());
         stream.str("");   
     }
@@ -201,10 +203,12 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
         case ERR_NICKNAMEINUSE: stream << " :Nickname is already in use"; break;
         case 441: stream << " :They aren't on that channel"; break;
         case ERR_NOTONCHANNEL: stream << " :You're not on that channel"; break;
+        case ERR_USERONCHANNEL: stream << " :is already on channel"; break;
         case ERR_NOTREGISTERED: stream << " :You have not registered"; break;
         case ERR_NEEDMOREPARAMS: stream << " :Not enough parameters"; break;
         case ERR_ALREADYREGISTERED: stream << " :Unauthorized command (already registered)"; break;
         case ERR_PASSWDMISMATCH: stream << " :Password incorrect - disconnecting..."; break;
+        case ERR_KEYSET: stream << " :Channel key already set"; break;
         case ERR_CHANNELISFULL: stream << " :Channel is full"; break;
         case ERR_UNKNOWNMODE: stream << " :Unknown mode flag"; break;
         case ERR_INVITEONLYCHAN: stream << " :Invite-only channel"; break;

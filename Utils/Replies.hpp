@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:09:53 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 12:31:32 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:23:47 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <string>
 
+#define RPL_NOTOPIC 331
+#define RPL_TOPIC 332
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHCHANNEL 403
 #define ERR_CANNOTSENDTOCHAN 404
@@ -24,12 +26,14 @@
 #define ERR_NONICKNAMEGIVEN 431
 #define ERR_ERRONEUSNICKNAME 432
 #define ERR_NICKNAMEINUSE 433
+#define ERR_USERNOTINCHANNEL 441
 #define ERR_NOTONCHANNEL 442
 #define ERR_USERONCHANNEL 443
 #define ERR_NOTREGISTERED 451
 #define ERR_NEEDMOREPARAMS 461
 #define ERR_ALREADYREGISTERED 462
 #define ERR_PASSWDMISMATCH 464
+#define ERR_KEYSET 467
 #define ERR_CHANNELISFULL 471
 #define ERR_UNKNOWNMODE 472
 #define ERR_INVITEONLYCHAN 473
@@ -47,6 +51,8 @@ struct IrcReply
 };
 
 static const IrcReply ircErrors[] = {
+    {331, "No topic is set"},
+    {332, "Topic for channel"},
     {401, "No such nick/channel"},
     {402, "No such server"},
     {403, "No such channel"},
@@ -60,11 +66,12 @@ static const IrcReply ircErrors[] = {
     {433, "Nickname is already in use"},
     {441, "They aren't on that channel"},
     {442, "You're not on that channel"},
-    {443, "User is already on that channel"}, // Added ERR_USERONCHANNEL
+    {443, "User is already on that channel"},
     {451, "You have not registered"},
     {461, "Not enough parameters"},
     {462, "You may not reregister"},
     {464, "Password incorrect"},
+    {467, "Channel key already set"},
     {471, "Channel is full"},
     {472, "Unknown mode flag"},
     {473, "Invite-only channel"},
