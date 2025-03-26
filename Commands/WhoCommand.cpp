@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 14:53:53 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/13 15:25:54 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:39:42 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void WhoCommand::execute(MessageContent messageContent, int fd)
 
     User* sender = _userService->findUserByFd(fd);
 
-    if (messageContent.tokens[1][0] == '#') // Se for um channel publico, comeca com # (jogo da velha no inicio)
+    if (messageContent.tokens.size() > 1 && messageContent.tokens[1][0] == '#') // Se for um channel publico, comeca com # (jogo da velha no inicio)
     {
         // ! NAO SEI SE ISSO SE APLICA AO CHANNEL
         if (_channelService->isUserPartOfChannel(fd, messageContent.tokens[1]))
