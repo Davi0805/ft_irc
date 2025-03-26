@@ -253,7 +253,7 @@ void ServerMessages::PartMsg(Channel* channel, User* user, std::string message)
 {
     std::ostringstream stream;
 
-    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PART :" << message << "\r\n";
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PART " << channel->getChannelName() << " :" << message << "\r\n";
 
     for(size_t i = 0; i < channel->getUsers().size(); i++)
         send(channel->getUsers()[i]->getFd(), stream.str().c_str(), stream.str().size(), 0);
