@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/26 14:00:12 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:04:50 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 void MessageHandler::RegisterCommands()
 {
     _commands["PASS"] = new PassCommand();
-    _commands["NICK"] = new NickCommand(_userService, _channelService);
+    _commands["NICK"] = new NickCommand();
     _commands["USER"] = new UserCommand(_userService, _channelService);
     _commands["JOIN"] = new JoinCommand(_userService, _channelService);
     _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
