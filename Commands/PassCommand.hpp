@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/16 20:29:48 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/26 13:56:09 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,8 @@
 class PassCommand : public Command
 {
 private:
-    UserService* _userService;
-    ChannelService* _channelService;
 public:
-    PassCommand(UserService& userService, ChannelService& channelService);
+    PassCommand();
     ~PassCommand();
 
     void execute(MessageContent messageContent, int fd);
