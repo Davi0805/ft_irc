@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ModeCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/25 15:47:23 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:24:35 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include <sstream> // For formatting messages
 #include <cstdlib> // For atoi
 
-ModeCommand::ModeCommand(UserService& userService, ChannelService& channelService)
-    : _userService(&userService), _channelService(&channelService) {}
+ModeCommand::ModeCommand()
+{}
 
 ModeCommand::~ModeCommand() {}
 
@@ -41,7 +41,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
 {
     std::cout << "[DEBUG]: MODE COMMAND CALLED" << std::endl;
 
-    User* user = _userService->findUserByFd(fd);
+    User* user = UserService::getInstance().findUserByFd(fd);
     if (!user) return;
 
     if (messageContent.tokens.size() < 2)
@@ -51,7 +51,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     }
 
     std::string channelName = messageContent.tokens[1];
-    Channel* channel = _channelService->findChannel(channelName);
+    Channel* channel = ChannelService::getInstance().findChannel(channelName);
     if (!channel)
     {
         ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
@@ -74,7 +74,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
         return;
     }
 
-    if (!_channelService->isUserPartOfChannel(fd, channelName))
+    if (!ChannelService::getInstance().isUserPartOfChannel(fd, channelName))
     {
         ServerMessages::SendErrorMessage(fd, ERR_NOTONCHANNEL, user->getNick(), channelName);
         return;
@@ -89,5 +89,5 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
     std::string modeString = messageContent.tokens[2];
     std::vector<std::string> params(messageContent.tokens.begin() + 3, messageContent.tokens.end());
 
-    _channelService->handleModeChange(user, fd, channelName, modeString, params);
+    ChannelService::getInstance().handleModeChange(user, fd, channelName, modeString, params);
 }

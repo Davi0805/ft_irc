@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/26 14:21:09 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:24:48 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ void MessageHandler::RegisterCommands()
     _commands["PRIVMSG"] = new PrivMsgCommand();
     _commands["QUIT"] = new QuitCommand();
     _commands["WHO"] = new WhoCommand();
-    _commands["MODE"] = new ModeCommand(_userService, _channelService);
+    _commands["MODE"] = new ModeCommand();
     _commands["INVITE"] = new InviteCommand(_userService, _channelService);
     _commands["PART"] = new PartCommand(_userService, _channelService);
     _commands["KICK"] = new KickCommand(_userService, _channelService);
