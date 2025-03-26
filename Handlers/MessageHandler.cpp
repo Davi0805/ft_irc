@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/26 14:27:42 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:30:23 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void MessageHandler::RegisterCommands()
     _commands["WHO"] = new WhoCommand();
     _commands["MODE"] = new ModeCommand();
     _commands["INVITE"] = new InviteCommand();
-    _commands["PART"] = new PartCommand(_userService, _channelService);
+    _commands["PART"] = new PartCommand();
     _commands["KICK"] = new KickCommand(_userService, _channelService);
     _commands["TOPIC"] = new TopicCommand();
 }
