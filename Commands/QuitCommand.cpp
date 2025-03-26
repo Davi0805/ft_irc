@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:35:11 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 16:30:30 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:17:52 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "../Core/Events.hpp"
 
 
-QuitCommand::QuitCommand(UserService& userService, ChannelService& channelService)
-                        :_userService(&userService), _channelService(&channelService)
+QuitCommand::QuitCommand()
 {
 }
 
@@ -31,7 +30,7 @@ void QuitCommand::execute(MessageContent messageContent, int fd)
     //(void)fd;
     
     std::cout << "[DEBUG]: COMANDO QUIT SENDO CHAMADO" << std::endl;
-    _channelService->quitFromAllChannels(_userService->findUserByFd(fd), messageContent.message);
-    _userService->RemoveUserByFd(fd);
+    ChannelService::getInstance().quitFromAllChannels(UserService::getInstance().findUserByFd(fd), messageContent.message);
+    UserService::getInstance().RemoveUserByFd(fd);
     Events::getInstance()->removeClient(fd);
 }
