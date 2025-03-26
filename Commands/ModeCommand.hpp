@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ModeCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:33 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 15:26:47 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:23:07 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,9 @@
 class ModeCommand : public Command
 {
 private:
-	UserService *_userService;
-	ChannelService *_channelService;
 
 public:
-	ModeCommand(UserService &userService, ChannelService &channelService);
+	ModeCommand();
 	~ModeCommand();
 	void execute(MessageContent messageContent, int clientFd);
 };

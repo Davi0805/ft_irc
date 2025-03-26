@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   InviteCommand.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:05:45 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 12:33:45 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:27:33 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InviteCommand.hpp"
 
-InviteCommand::InviteCommand(UserService &userService, ChannelService &channelService)
-	: _userService(&userService), _channelService(&channelService) {}
+InviteCommand::InviteCommand()
+{}
 
 InviteCommand::~InviteCommand() {}
 
 void InviteCommand::execute(MessageContent messageContent, int clientFd)
 {
-	User *user = _userService->findUserByFd(clientFd);
+	User *user = UserService::getInstance().findUserByFd(clientFd);
 	if (!user || !user->isAuthenticated())  // Check if user is authenticated
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTREGISTERED, user->getNick());
@@ -34,7 +34,7 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 	std::string channelName = messageContent.tokens[2];
 	std::string targetNick = messageContent.tokens[1];
 
-	Channel *channel = _channelService->findChannel(channelName);
+	Channel *channel = ChannelService::getInstance().findChannel(channelName);
 	if (!channel) // Channel does not exist
 	{
 		// _userService->sendMessage(clientFd, ERR_NOSUCHCHANNEL(user->getNick(), channelName));
@@ -42,7 +42,7 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 		return;
 	}
 
-	User *targetUser = _userService->findUserByNickname(targetNick);
+	User *targetUser = UserService::getInstance().findUserByNickname(targetNick);
 	if (!targetUser) // Target user does not exist
 	{
 		// _userService->sendMessage(clientFd, ERR_NOSUCHNICK(user->getNick(), targetNick));
@@ -73,7 +73,7 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 
 	// Invite the user
 	channel->inviteUser(targetUser);
-	_userService->sendMessage(targetUser->getFd(),
+	UserService::getInstance().sendMessage(targetUser->getFd(),
     ":" + user->getNick() + "!~" + user->getUser() + "@host" + 
     " INVITE " + targetNick + " " + channelName + "\r\n");
 	

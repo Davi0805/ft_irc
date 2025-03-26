@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 18:31:48 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:35:16 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,17 +148,17 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 */
 void MessageHandler::RegisterCommands()
 {
-    _commands["PASS"] = new PassCommand(_userService, _channelService);
-    _commands["NICK"] = new NickCommand(_userService, _channelService);
-    _commands["USER"] = new UserCommand(_userService, _channelService);
-    _commands["JOIN"] = new JoinCommand(_userService, _channelService);
-    _commands["PRIVMSG"] = new PrivMsgCommand(_userService, _channelService);
-    _commands["QUIT"] = new QuitCommand(_userService, _channelService);
-    _commands["WHO"] = new WhoCommand(_userService, _channelService);
-    _commands["MODE"] = new ModeCommand(_userService, _channelService);
-    _commands["INVITE"] = new InviteCommand(_userService, _channelService);
-    _commands["PART"] = new PartCommand(_userService, _channelService);
-    _commands["KICK"] = new KickCommand(_userService, _channelService);
+    _commands["PASS"] = new PassCommand();
+    _commands["NICK"] = new NickCommand();
+    _commands["USER"] = new UserCommand();
+    _commands["JOIN"] = new JoinCommand();
+    _commands["PRIVMSG"] = new PrivMsgCommand();
+    _commands["QUIT"] = new QuitCommand();
+    _commands["WHO"] = new WhoCommand();
+    _commands["MODE"] = new ModeCommand();
+    _commands["INVITE"] = new InviteCommand();
+    _commands["PART"] = new PartCommand();
+    _commands["KICK"] = new KickCommand();
     _commands["TOPIC"] = new TopicCommand();
 }
 

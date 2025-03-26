@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   NickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/24 17:37:01 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/26 14:04:18 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-NickCommand::NickCommand(UserService& userService, ChannelService& channelService)
-                 : _userService(&userService), _channelService(&channelService)
+NickCommand::NickCommand()
 {
 }
 
@@ -55,8 +54,7 @@ bool NickCommand::ValidateNickCharset(const std::string &newNick) const
  */
 void NickCommand::execute(MessageContent messageContent, int fd)
 {
-    (void)_channelService; // to sush warnings ugh
-    User *user = _userService->findUserByFd(fd);
+    User *user = UserService::getInstance().findUserByFd(fd);
     if (!user) return ;
     
     // We can use nick whenever we want after the PASS cmd
@@ -95,7 +93,7 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     }
         
     // nickname colisions
-    if (_userService->findUserByNickname(newNick))
+    if (UserService::getInstance().findUserByNickname(newNick))
     {
         ServerMessages::SendErrorMessage(fd, ERR_NICKNAMEINUSE, newNick);
         return ;
@@ -105,11 +103,11 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     // inform users of nickname change
     if (user->getStatus() == User::AUTHENTICATED)
     {
-        std::string oldNick = _userService->findUserByFd(fd)->getNick();
-        ServerMessages::NickMsg(_userService->getFdsMap(), oldNick, newNick);
+        std::string oldNick = UserService::getInstance().findUserByFd(fd)->getNick();
+        ServerMessages::NickMsg(UserService::getInstance().getFdsMap(), oldNick, newNick);
     }
     // update nickname
-    _userService->SetNickByFd(newNick, fd);
+    UserService::getInstance().SetNickByFd(newNick, fd);
 
 
     // only change this to NICK_RECV on authentication

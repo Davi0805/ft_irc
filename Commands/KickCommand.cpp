@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   KickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:05:26 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/25 18:39:31 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:34:15 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "KickCommand.hpp"
 
-KickCommand::KickCommand(UserService &_userService, ChannelService &_channelService)
-	: _userService(&_userService), _channelService(&_channelService) {}
+KickCommand::KickCommand()
+{}
 
 KickCommand::~KickCommand() {}
 
 void KickCommand::execute(MessageContent messageContent, int clientFd)
 {
-	User *user = _userService->findUserByFd(clientFd);
+	User *user = UserService::getInstance().findUserByFd(clientFd);
 	if (!user || !user->isAuthenticated())
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTREGISTERED, user->getNick());
@@ -51,14 +51,14 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 		std::string channelName = channelNames[i];
 		std::string targetNick = targetNicks[i];
 
-		Channel *channel = _channelService->findChannel(channelName);
+		Channel *channel = ChannelService::getInstance().findChannel(channelName);
 		if (!channel)
 		{
 			ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
 			continue;
 		}
 
-		User *targetUser = _userService->findUserByNickname(targetNick);
+		User *targetUser = UserService::getInstance().findUserByNickname(targetNick);
 		if (!targetUser)
 		{
 			ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHNICK, user->getNick(), targetNick);

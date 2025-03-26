@@ -6,15 +6,14 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 12:55:11 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/26 13:59:50 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PassCommand.hpp"
 #include "../Core/Events.hpp"
 
-PassCommand::PassCommand(UserService& userService, ChannelService& channelService)
-                        :_userService(&userService), _channelService(&channelService)
+PassCommand::PassCommand()
 {
 }
 
@@ -43,9 +42,8 @@ PassCommand::~PassCommand()
  */
 void PassCommand::execute(MessageContent messageContent, int fd)
 {
-    (void)_channelService;
-
-    User *user = _userService->findUserByFd(fd);
+    
+    User *user = UserService::getInstance().findUserByFd(fd);
 
     // User can only send one PASS command
     if (user->getStatus() != User::CONNECTED) 
@@ -74,7 +72,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
         {
             ServerMessages::SendErrorMessage(fd, ERR_PASSWDMISMATCH, "", "PASS");
             // Disconnects user
-            _userService->RemoveUserByFd(fd);
+            UserService::getInstance().RemoveUserByFd(fd);
             Events::getInstance()->removeClient(fd);
             return ;
         }
@@ -97,7 +95,7 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     {
         ServerMessages::SendErrorMessage(fd, ERR_PASSWDMISMATCH, "", "PASS");
         // Disconnects user
-        _userService->RemoveUserByFd(fd);
+        UserService::getInstance().RemoveUserByFd(fd);
         Events::getInstance()->removeClient(fd);
         return ;
     }

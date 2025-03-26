@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   QuitCommand.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 00:35:27 by davi              #+#    #+#             */
-/*   Updated: 2025/03/12 00:36:58 by davi             ###   ########.fr       */
+/*   Updated: 2025/03/26 14:17:05 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@
 class QuitCommand : public Command
 {
 private:
-    UserService* _userService;
-    ChannelService* _channelService;
 public:
-    QuitCommand(UserService& userService, ChannelService& channelService);
+    QuitCommand();
     ~QuitCommand();
 
     void execute(MessageContent messageContent, int fd);

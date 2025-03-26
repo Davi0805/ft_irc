@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/24 17:36:36 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/26 14:08:19 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "UserCommand.hpp"
 
-UserCommand::UserCommand(UserService& userService, ChannelService& channelService)
-                        :_userService(&userService), _channelService(&channelService)
+UserCommand::UserCommand()
 {
 }
 
@@ -52,9 +51,7 @@ void UserCommand::execute(MessageContent messageContent, int fd)
 {
     std::cout << "[DEBUG]: COMANDO USER SENDO CHAMADO" << std::endl;
     
-    (void)_channelService;
-    
-    User *user = _userService->findUserByFd(fd);
+    User *user = UserService::getInstance().findUserByFd(fd);
     if (!user) return ;
     
     // already registred 
@@ -101,6 +98,6 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     user->setStatus(User::AUTHENTICATED);
 
     // RESPOSTAs DE SUCESSO NA AUTENTICACAO
-    ServerMessages::MensagemAutenticado(fd, _userService->findUserByFd(fd)->getNick());
+    ServerMessages::MensagemAutenticado(fd, UserService::getInstance().findUserByFd(fd)->getNick());
 
 }
