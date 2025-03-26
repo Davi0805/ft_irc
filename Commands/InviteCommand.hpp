@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   InviteCommand.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:04:49 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/21 12:33:26 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:26:43 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,9 @@
 class InviteCommand : public Command
 {
 private:
-	UserService *_userService;
-	ChannelService *_channelService;
 	
 public:
-	InviteCommand(UserService &userService, ChannelService &channelService);
+	InviteCommand();
 	~InviteCommand();
 	void execute(MessageContent messageContent, int clientFd);
 };
