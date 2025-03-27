@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:46:23 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:29:35 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 17:58:50 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 #include <sys/socket.h> // socket connect send recv
 #include <netinet/in.h> // sockaddr_in
 #include <arpa/inet.h> // in_addr_t and inet_addr
-
+#include <vector>
+#include <sstream>
 class Bot
 {
     private:
@@ -30,6 +31,9 @@ class Bot
         const std::string _botServerPass = "d082dc29b65ed2e80db4ef542ca7ee8c4d3971043cbe214090f61b238493893f";
 
         int _botSocketFd;
+        
+        void TokenizeCommand(std::string& cmd) const;
+        void HandleCommand(std::string& channel, std::string& cmd) const;
     public:
         //Default Constructor
         Bot( void );
@@ -40,11 +44,9 @@ class Bot
 
         static bool IsPortValid(const char *port);
         
-        bool Connect(const in_addr_t ipAddr, const unsigned short port);
-        void Register( void );
-        void RecieveData( void );
-        void HandleData( void );
-        void ExecuteCommands( void );
+        bool Connect(const in_addr_t ipAddr, const unsigned short port) const;
+        void Register( void ) const;
+        void RecvAndSend( void ) const;
         
         
 };
