@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:46:23 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:28:32 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 16:29:35 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,19 @@ class Bot
         int _botSocketFd;
     public:
         //Default Constructor
-        Bot();
+        Bot( void );
         // Name param Constructor
         Bot(const std::string& botName);
         //Destructor
-        ~Bot();
+        ~Bot( void );
 
         static bool IsPortValid(const char *port);
         
         bool Connect(const in_addr_t ipAddr, const unsigned short port);
-        void Register();
-        void RecieveData();
-        void HandleData();
-        void ExecuteCommands();
+        void Register( void );
+        void RecieveData( void );
+        void HandleData( void );
+        void ExecuteCommands( void );
         
         
 };

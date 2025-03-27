@@ -6,14 +6,14 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:28:29 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 16:31:40 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
 
 //Default Constructor
-Bot::Bot() :_botName("UselessBot") 
+Bot::Bot( void ) :_botName("UselessBot") 
 {
     // Create the socket
     _botSocketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -37,7 +37,7 @@ Bot::Bot(const std::string& botName) : _botName(botName)
 }
 
 //Destructor
-Bot::~Bot()
+Bot::~Bot( void )
 {
     if (_botSocketFd >= 0)
         close(_botSocketFd);
@@ -93,22 +93,34 @@ bool Bot::Connect(const in_addr_t ipAddr, const unsigned short port)
     return true;
 }
 
-void Bot::Register()
+void Bot::Register( void )
 {
     
 }
 
-void Bot::RecieveData()
+/**
+ * 
+ * This method sends the IRC commands PASS, NICK and USER through the bot socket
+ * and registers in that server
+ * 
+ */
+void Bot::RecieveData( void )
+{
+    std::string passCmd = std::string("PASS ") + std::string(_botServerPass);
+    std::string nickCmd = std::string("NICK ") + std::string(_botName);
+    std::string userCmd = std::string("USER ") + std::string(_botName);
+ 
+    send(_botSocketFd, passCmd.c_str(), passCmd.length(), 0);
+    send(_botSocketFd, nickCmd.c_str(), nickCmd.length(), 0);
+    send(_botSocketFd, userCmd.c_str(), userCmd.length(), 0);
+}
+
+void Bot::HandleData( void )
 {
     
 }
 
-void Bot::HandleData()
-{
-    
-}
-
-void Bot::ExecuteCommands()
+void Bot::ExecuteCommands( void )
 {
     
 }
