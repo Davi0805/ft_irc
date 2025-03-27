@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 19:19:35 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 21:12:12 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     // Bot registering
     if (user->getStatus() == User::BOT)
     {
-        UserService::getInstance().SetUserByFd("UselessBot", fd);
+        user->setUser("UselessBot");
         user->setStatus(User::AUTHENTICATED);
         return ;
     }

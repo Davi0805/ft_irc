@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 19:22:44 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 19:26:54 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ void Bot::RecvAndSend( void ) const
             break ;
 
         msg.append(buffer); // appending to a temporary message buffer
-        std::cout << msg << std::endl;
             
         // parsing commands
         // this is important for parcial reads in case the server sends a lot of 

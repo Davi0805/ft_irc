@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/26 14:14:33 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:42:08 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
 
     // TODO: VERIFICACOES PARA EVITAR CRASHES
     User* sender = UserService::getInstance().findUserByFd(fd);
+    if (!sender) return ;
 
     if (messageContent.tokens.size() == 2 && messageContent.message.find(":DCC") == 0)
     {
@@ -59,11 +60,10 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
     {
         User* receiver = UserService::getInstance().findUserByNickname(messageContent.tokens[1]);
         if (receiver == NULL)
-            return ; // TODO: Exception
+            return ;
 
         std::string msgFormatada = ServerMessages::PrivMsgFormatter(sender, receiver, messageContent.message);
         
-        //send(receiver->getFd(), messageContent.message.c_str(), messageContent.message.size(), 0);
         send(receiver->getFd(), msgFormatada.c_str(), msgFormatada.size(), 0);
     }
 }

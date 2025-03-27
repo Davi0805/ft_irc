@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/24 17:13:01 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 21:16:16 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ void UserService::RemoveUserByFd(int fd)
     
     it = _usersByFd.find(fd);
     
-    // ! Nao sei se a norminette deixa
-    // auto it = _userByFd.find(fd);
 
     // Apaga ambos maps e deleta User
     if (it != _usersByFd.end())
@@ -82,7 +80,8 @@ void UserService::RemoveUserByFd(int fd)
         itNick = _userByNick.find(it->second->getNick());
         if (itNick != _userByNick.end())
             _userByNick.erase(itNick);
-        delete it->second;
+        if (it->second)
+            delete it->second;
         _usersByFd.erase(it);
     }
     close(fd); // fecha fd do user desconectado

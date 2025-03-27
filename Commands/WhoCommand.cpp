@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WhoCommand.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 14:53:53 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 14:21:00 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:05:08 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void WhoCommand::execute(MessageContent messageContent, int fd)
 {
 
     User* sender = UserService::getInstance().findUserByFd(fd);
+    if (!sender)
+        return ;
 
     if (messageContent.tokens.size() > 1 && messageContent.tokens[1][0] == '#') // Se for um channel publico, comeca com # (jogo da velha no inicio)
     {

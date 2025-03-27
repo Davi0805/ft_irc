@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/26 14:35:16 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:36:56 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ bool MessageHandler::HandleEvent(int fd)
         if (bytesRead == 0) // Desconexão
         {
             std::cerr << "INFO: User disconnected" << std::endl;
+            _channelService.quitFromAllChannels(_userService.findUserByFd(fd), "Disconnect");
             _userService.RemoveUserByFd(fd);
             return false;
         }
