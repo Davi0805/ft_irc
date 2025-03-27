@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 18:39:12 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 19:22:44 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,6 @@ const std::string Bot::_botServerPass = "d082dc29b65ed2e80db4ef542ca7ee8c4d39710
 
 //Default Constructor
 Bot::Bot( void ) :_botName("UselessBot") 
-{
-    // Create the socket
-    _botSocketFd = socket(AF_INET, SOCK_STREAM, 0);
-    if (_botSocketFd == -1)
-    {
-        std::cerr << "FATAL: " << strerror(errno) << std::endl;
-        exit(1);
-    }
-}
-
-// Name param Constructor
-Bot::Bot(const std::string& botName) : _botName(botName) 
 {
     // Create the socket
     _botSocketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -109,9 +97,6 @@ void Bot::Register( void ) const
     std::string nickCmd = std::string("NICK ") + std::string(_botName) + "\r\n";
     std::string userCmd = std::string("USER ") + std::string(_botName) + " * *" + "\r\n";
     
-    std::cout << passCmd << std::endl;
-    std::cout << nickCmd << std::endl;
-    std::cout << userCmd << std::endl;
     send(_botSocketFd, passCmd.c_str(), passCmd.length(), 0);
     send(_botSocketFd, nickCmd.c_str(), nickCmd.length(), 0);
     send(_botSocketFd, userCmd.c_str(), userCmd.length(), 0);
@@ -191,12 +176,13 @@ void Bot::RecvAndSend( void ) const
             break ;
 
         msg.append(buffer); // appending to a temporary message buffer
-        
+        std::cout << msg << std::endl;
+            
         // parsing commands
         // this is important for parcial reads in case the server sends a lot of 
         // requests for the bot to handle at a time while it is still procecing
         size_t pos; 
-        while ((pos = msg.find("\r\n") != std::string::npos))
+        while ((pos = msg.find("\r\n")) != std::string::npos)
         {
             std::string cmd = msg.substr(0, pos);
             msg.erase(0, pos + 2);

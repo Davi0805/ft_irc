@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:46:23 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 18:28:16 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 18:51:34 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ class Bot
     public:
         //Default Constructor
         Bot( void );
-        // Name param Constructor
-        Bot(const std::string& botName);
         //Destructor
         ~Bot( void );
 
