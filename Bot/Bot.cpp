@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:14:16 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 16:28:29 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,23 @@ bool Bot::IsPortValid(const char *port)
     return true; // all good
 }
 
-void Bot::Connect()
+/**
+ * 
+ * Recieves an ipAddr and a port and trys to to connect the socket fd to that ip and port
+ * Returns true in case of success and false in case of error
+ * 
+ */
+bool Bot::Connect(const in_addr_t ipAddr, const unsigned short port)
 {
-    
+    sockaddr_in serverAddress;
+    memset(&serverAddress, 0, sizeof(serverAddress)); // clear any trash data
+    serverAddress.sin_family = AF_INET; // IPv4
+    serverAddress.sin_port = htons(port);
+    serverAddress.sin_addr.s_addr = ipAddr;
+
+    if (connect(_botSocketFd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)))
+        return false;
+    return true;
 }
 
 void Bot::Register()

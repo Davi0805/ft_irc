@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:46:23 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:12:46 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 16:28:32 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Bot
 
         static bool IsPortValid(const char *port);
         
-        void Connect();
+        bool Connect(const in_addr_t ipAddr, const unsigned short port);
         void Register();
         void RecieveData();
         void HandleData();
