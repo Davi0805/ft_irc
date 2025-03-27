@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+         #
+#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/25 18:32:02 by lebarbos         ###   ########.fr        #
+#    Updated: 2025/03/27 18:44:15 by fang             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,25 +62,58 @@ $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
 $(OBJ_DIR):
 	@mkdir -p $@
 
+
+
+############################################################################################################################################
+############################################################################################################################################
+############################################################################################################################################
+# Bot compilation details
+BOT_NAME = mybot
+BOT_SRC = Bot/bot_main.cpp \
+          Bot/Bot.cpp
+BOT_OBJ_DIR = $(OBJ_DIR)/Bot
+BOT_OBJ = $(addprefix $(BOT_OBJ_DIR)/, $(notdir $(BOT_SRC:.cpp=.o)))
+
+# Bot compilation rule
+bot: $(BOT_NAME)
+
+$(BOT_NAME): $(BOT_OBJ)
+	@$(CC) $(CFLAGS) $(BOT_OBJ) -o $@
+	@echo "\n$(GRN)➾ [ BOT ] created$(RES)"
+
+# Rule to create object files for bot
+$(BOT_OBJ_DIR)/%.o: Bot/%.cpp | $(BOT_OBJ_DIR)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@printf "$(YEL)➾ Compiling Bot$(RES)\r"
+
+# Create bot object directory
+$(BOT_OBJ_DIR):
+	@mkdir -p $@
+
+# Update clean and fclean to handle bot
 clean:
 	@if [ -d "$(OBJ_DIR)" ]; then \
-		rm -rf $(OBJ_DIR);\
-		echo "${RED}➾ Cleaned the workspace${RES}";\
+		rm -rf $(OBJ_DIR); \
+		echo "${RED}➾ Cleaned the workspace${RES}"; \
 	fi
 
 fclean: clean
 	@if [ -f "$(NAME)" ]; then \
-		rm -f $(NAME);\
-		echo "${RED}➾ Fully cleaned the workspace${RES}";\
+		rm -f $(NAME); \
+	fi
+	@if [ -f "$(BOT_NAME)" ]; then \
+		rm -f $(BOT_NAME); \
+		echo "${RED}➾ Fully cleaned the workspace${RES}"; \
 	fi
 
 re: fclean all
 
+# Phony targets
+.PHONY: all clean fclean re bot
+
 TOTAL_FILES := $(words $(SRC))
 COMPILED_FILES := $(shell if [ -d "$(OBJ_DIR)" ]; then find $(OBJ_DIR) -name "*.o" | wc -l;	 else echo 0; fi)
-
-# Phony targets
-.PHONY: all clean fclean re
 
 # Color variables
 RED = \033[0;31m

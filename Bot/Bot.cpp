@@ -6,11 +6,14 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 18:00:10 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 18:39:12 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
+
+const std::string Bot::_botServerPass = "d082dc29b65ed2e80db4ef542ca7ee8c4d3971043cbe214090f61b238493893f";
+
 
 //Default Constructor
 Bot::Bot( void ) :_botName("UselessBot") 
@@ -102,10 +105,13 @@ bool Bot::Connect(const in_addr_t ipAddr, const unsigned short port) const
 void Bot::Register( void ) const
 
 {
-    std::string passCmd = std::string("PASS ") + std::string(_botServerPass);
-    std::string nickCmd = std::string("NICK ") + std::string(_botName);
-    std::string userCmd = std::string("USER ") + std::string(_botName);
+    std::string passCmd = std::string("PASS ") + std::string(_botServerPass) + "\r\n";
+    std::string nickCmd = std::string("NICK ") + std::string(_botName) + "\r\n";
+    std::string userCmd = std::string("USER ") + std::string(_botName) + " * *" + "\r\n";
     
+    std::cout << passCmd << std::endl;
+    std::cout << nickCmd << std::endl;
+    std::cout << userCmd << std::endl;
     send(_botSocketFd, passCmd.c_str(), passCmd.length(), 0);
     send(_botSocketFd, nickCmd.c_str(), nickCmd.length(), 0);
     send(_botSocketFd, userCmd.c_str(), userCmd.length(), 0);

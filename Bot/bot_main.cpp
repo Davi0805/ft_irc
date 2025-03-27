@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:57:49 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 18:01:22 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 18:38:37 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
+    bot.Register();
+    
     // Actual work of the bot
     try
     {
