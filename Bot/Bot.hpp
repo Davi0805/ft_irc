@@ -6,16 +6,19 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:46:23 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 15:47:02 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 15:51:20 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 //Includes
-#include <unistd.h>
-#include <cstdlib>
-
+#include <unistd.h> // close
+#include <cstdlib> // exit
+#include <limits> // numeric limits
+#include <iostream> // cout cerr endl
+#include <cerrno> // errno
+#include <cstring> // strerror
 
 class Bot
 {
@@ -31,7 +34,7 @@ class Bot
         //Destructor
         ~Bot();
 
-        static bool IsPortValid(char *port);
+        static bool IsPortValid(const char *port);
         
         void Connect();
         void Register();
