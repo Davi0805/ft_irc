@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PassCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 13:59:50 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 19:00:36 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ PassCommand::~PassCommand()
  * PASS password
  * PASS :pass word
  * 
+ * For the bot to connect we will accept a specific password for bots and allow 
+ * them to register with the reserved bot nickname
+ * 
  *! error:
  * Bad syntax
  * 461 ERR_NEEDMOREPARAMS <nickname> PASS :Not enough parameters
@@ -42,16 +45,14 @@ PassCommand::~PassCommand()
  */
 void PassCommand::execute(MessageContent messageContent, int fd)
 {
-    
     User *user = UserService::getInstance().findUserByFd(fd);
-
+    
     // User can only send one PASS command
     if (user->getStatus() != User::CONNECTED) 
     {
         ServerMessages::SendErrorMessage(fd, ERR_ALREADYREGISTERED, "", "PASS");
         return ;
     }
-
     
     // PASS :pass word
     if (!messageContent.message.empty())
@@ -90,6 +91,11 @@ void PassCommand::execute(MessageContent messageContent, int fd)
     {
         user->setStatus(User::PASS_RECEIVED);
         return;
+    }
+    else if(user->checkBotPassword(messageContent.tokens[1])) // bot password verification
+    {
+        user->setStatus(User::BOT);
+        return ;
     }
     else // Wrong password
     {

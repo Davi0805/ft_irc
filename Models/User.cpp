@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 16:53:55 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:58:27 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,13 @@ std::string User::getRealName () const
 bool User::checkPassword(std::string &pass) const
 {
     if (Server::getInstance().getPassword() == pass)
+        return true;
+    return false;
+}
+
+bool User::checkBotPassword(std::string &pass) const
+{
+    if (Server::getInstance().getBotPassword() == pass)
         return true;
     return false;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 14:08:19 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 19:19:35 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,17 @@ bool UserCommand::ValidateUserCharset(const std::string &newNick) const
 
 void UserCommand::execute(MessageContent messageContent, int fd)
 {
-    std::cout << "[DEBUG]: COMANDO USER SENDO CHAMADO" << std::endl;
-    
     User *user = UserService::getInstance().findUserByFd(fd);
     if (!user) return ;
     
+    // Bot registering
+    if (user->getStatus() == User::BOT)
+    {
+        UserService::getInstance().SetUserByFd("UselessBot", fd);
+        user->setStatus(User::AUTHENTICATED);
+        return ;
+    }
+
     // already registred 
     if (user->getStatus() == User::AUTHENTICATED)  
     {

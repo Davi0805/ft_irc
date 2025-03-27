@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 14:04:18 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/03/27 19:06:33 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,12 @@ void NickCommand::execute(MessageContent messageContent, int fd)
 {
     User *user = UserService::getInstance().findUserByFd(fd);
     if (!user) return ;
+
+    if (user->getStatus() == User::BOT)
+    {
+        UserService::getInstance().SetNickByFd("UselessBot", fd);
+        return ;
+    }
     
     // We can use nick whenever we want after the PASS cmd
     if (user->getStatus() < User::PASS_RECEIVED)
@@ -93,7 +99,7 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     }
         
     // nickname colisions
-    if (UserService::getInstance().findUserByNickname(newNick))
+    if (UserService::getInstance().findUserByNickname(newNick) || newNick == "UselessBot")
     {
         ServerMessages::SendErrorMessage(fd, ERR_NICKNAMEINUSE, newNick);
         return ;

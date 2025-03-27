@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/17 16:55:03 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:57:08 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ public:
         CONNECTED,
         PASS_RECEIVED,
         NICK_RECEIVED,
-        AUTHENTICATED
+        AUTHENTICATED,
+        BOT
     };
 
     //SETTER
@@ -53,6 +54,7 @@ public:
     std::string getRealName() const;
 
     bool checkPassword(std::string &pass) const;
+    bool checkBotPassword(std::string &pass) const;
 
 private:
     int _fd;
