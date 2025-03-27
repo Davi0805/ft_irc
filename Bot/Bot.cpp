@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 16:31:40 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/27 16:33:26 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ bool Bot::Connect(const in_addr_t ipAddr, const unsigned short port)
     return true;
 }
 
-void Bot::Register( void )
+void Bot::RecieveData( void )
 {
     
 }
@@ -104,7 +104,8 @@ void Bot::Register( void )
  * and registers in that server
  * 
  */
-void Bot::RecieveData( void )
+void Bot::Register( void )
+
 {
     std::string passCmd = std::string("PASS ") + std::string(_botServerPass);
     std::string nickCmd = std::string("NICK ") + std::string(_botName);
