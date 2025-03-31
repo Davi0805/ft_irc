@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
+#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/27 19:24:24 by fang             ###   ########.fr        #
+#    Updated: 2025/03/31 18:50:48 by artuda-s         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC = main.cpp \
 	Commands/KickCommand.cpp \
 	Commands/TopicCommand.cpp \
 	Commands/PartCommand.cpp \
+	Commands/PingCommand.cpp \
 	Models/Channel.cpp \
 	Models/User.cpp \
 	Models/Server.cpp \
