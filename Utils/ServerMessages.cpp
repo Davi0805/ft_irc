@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 18:00:59 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/31 22:42:26 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,21 @@ void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
     stream.str("");
 
     // 004 - Server features
-    stream << ":" << svName << " 004 " << nickname << " ft_irc-1.0 ioklt iotkl :is supported" << "\r\n";
+    stream << ":" << svName << " 004 " << nickname << " ft_irc-1.0 ioklt iotkl" << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
     // 005 - Some configs
-    stream << ":" << svName << " 005 " << nickname << " CHANTYPES=# PREFIX=(o)@+ CHANMODES=k,l,i,o,l NICKLEN=9" << "\r\n";
+    stream << ":" << svName << " 005 " << nickname << " CHANTYPES=# PREFIX=(o)@ CHANMODES=,,, NICKLEN=9 CASEMAPPING=ascii :are supported by this server" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // LUSERS
+    stream << ":" << svName << " 251 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users on 1 server (PS: this is network-wide)\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    
+    stream << ":" << svName << " 255 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users and 0 servers (PS: this is local)\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
@@ -73,15 +82,15 @@ void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
-    stream << ":" << svName << " 372 " << nickname << ":- This is a line of the MOTD" << "\r\n";
+    stream << ":" << svName << " 372 " << nickname << " :- This is a line of the MOTD" << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
-    stream << ":" << svName << " 372 " << nickname << ":- This is another line of the MOTD"  << "\r\n";
+    stream << ":" << svName << " 372 " << nickname << " :- This is another line of the MOTD"  << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
-    stream << ":" << svName << " 376 " << nickname << ":End of /MOTD command" << "\r\n";
+    stream << ":" << svName << " 376 " << nickname << " :End of /MOTD command" << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
     
