@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/31 12:51:58 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     {
         user->setStatus(User::AUTHENTICATED);
         // RESPOSTAs DE SUCESSO NA AUTENTICACAO
-        ServerMessages::MensagemAutenticado(fd, UserService::getInstance().findUserByFd(fd)->getNick());
+        ServerMessages::SendWelcomeMessage(fd, UserService::getInstance().findUserByFd(fd)->getNick());
     }
 }
