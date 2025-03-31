@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 21:12:12 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/31 11:53:20 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,6 @@ void UserCommand::execute(MessageContent messageContent, int fd)
         ServerMessages::SendErrorMessage(fd, ERR_ALREADYREGISTERED, "USER");
         return ;
     }
-    else if (user->getStatus() != User::NICK_RECEIVED) // no PASS or NICK before
-    {
-        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "USER");
-        return ;
-    }
     
     // USER || USER user user2 (:...)
     if (messageContent.tokens.size() != 4)
@@ -101,9 +96,10 @@ void UserCommand::execute(MessageContent messageContent, int fd)
 
     
     // Update user status
-    user->setStatus(User::AUTHENTICATED);
-
-    // RESPOSTAs DE SUCESSO NA AUTENTICACAO
-    ServerMessages::MensagemAutenticado(fd, UserService::getInstance().findUserByFd(fd)->getNick());
-
+    if (!user->getNick().empty() && !user->getUser().empty())
+    {
+        user->setStatus(User::AUTHENTICATED);
+        // RESPOSTAs DE SUCESSO NA AUTENTICACAO
+        ServerMessages::MensagemAutenticado(fd, UserService::getInstance().findUserByFd(fd)->getNick());
+    }
 }
