@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 21:12:12 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,13 @@ void UserCommand::execute(MessageContent messageContent, int fd)
         ServerMessages::SendErrorMessage(fd, ERR_ALREADYREGISTERED, "USER");
         return ;
     }
-    else if (user->getStatus() != User::NICK_RECEIVED) // no PASS or NICK before
-    {
-        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "USER");
-        return ;
-    }
     
     // USER || USER user user2 (:...)
-    if (messageContent.tokens.size() != 4)
+    // USER a           (T && (t || t)) = t && t = t
+    // USER a b c       (t && (f || t)) = t && t = t
+    // USER a b c :d    (t && (f || f)) = t && f = f
+    // USER a b c d     f && x) = f && x = f
+    if (messageContent.tokens.size() != 5 && (messageContent.tokens.size() != 4 || messageContent.message.empty()))
     {
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS);
         return ;
@@ -94,16 +93,16 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     user->setUser(username);
     
     // set realname
-    if (!messageContent.message.empty())
-        user->setRealName(messageContent.message);    
+    if (messageContent.message.empty())
+        user->setRealName(messageContent.tokens[4]);    
     else
-        user->setRealName("DaviMacaco"); // default value
-
+        user->setRealName(messageContent.message);
     
     // Update user status
-    user->setStatus(User::AUTHENTICATED);
-
-    // RESPOSTAs DE SUCESSO NA AUTENTICACAO
-    ServerMessages::MensagemAutenticado(fd, UserService::getInstance().findUserByFd(fd)->getNick());
-
+    if (!user->getNick().empty() && !user->getUser().empty())
+    {
+        user->setStatus(User::AUTHENTICATED);
+        // RESPOSTAs DE SUCESSO NA AUTENTICACAO
+        ServerMessages::SendWelcomeMessage(fd, UserService::getInstance().findUserByFd(fd)->getNick());
+    }
 }

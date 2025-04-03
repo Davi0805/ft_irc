@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/27 21:36:56 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/31 18:56:32 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ void MessageHandler::RegisterCommands()
     _commands["PART"] = new PartCommand();
     _commands["KICK"] = new KickCommand();
     _commands["TOPIC"] = new TopicCommand();
+    _commands["PING"] = new PingCommand();
 }
 
 

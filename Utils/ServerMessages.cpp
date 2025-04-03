@@ -1,175 +1,206 @@
-    /* ************************************************************************** */
-    /*                                                                            */
-    /*                                                        :::      ::::::::   */
-    /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
-    /*                                                    +:+ +:+         +:+     */
-    /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
-    /*                                                +#+#+#+#+#+   +#+           */
-    /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-    /*   Updated: 2025/03/21 09:35:25 by lebarbos         ###   ########.fr       */
-    /*                                                                            */
-    /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ServerMessages.cpp                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
+/*   Updated: 2025/03/31 22:42:26 by fang             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-    #include "ServerMessages.hpp"
+#include "ServerMessages.hpp"
 
 
-    /* 
-        CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
-        COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
-        SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
-    */
+/* 
+    CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
+    COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
+    SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
+*/
 
-    ServerMessages::ServerMessages()
-    {
-    }
+ServerMessages::ServerMessages()
+{
+}
 
-    ServerMessages::~ServerMessages()
-    {
-    }
+ServerMessages::~ServerMessages()
+{
+}
 
-    /* 
-        APOS AUTENTICAR, DE ACORDO COM MINHAS PESQUISAS O SERVIDOR
-        COSTUMA MANDAR AS RESPOSTAS COM CODIGO DE 001 A 005
-        CONTENDO INFORMCAOES PERTINENTES DO SERVIDOR, QUE CLARAMENTE
-        O NOSSO NAO TEM, POR SER UM SERVIDOR DESENVOLVIDO PARA APRENDIZAGEM    
-    */
+/* 
+    APOS AUTENTICAR, DE ACORDO COM MINHAS PESQUISAS O SERVIDOR
+    COSTUMA MANDAR AS RESPOSTAS COM CODIGO DE 001 A 005
+    CONTENDO INFORMCAOES PERTINENTES DO SERVIDOR, QUE CLARAMENTE
+    O NOSSO NAO TEM, POR SER UM SERVIDOR DESENVOLVIDO PARA APRENDIZAGEM    
+*/
 
-    // TODO: ACREDITO QUE A LISTA DE USUARIOS SO VAI SER ENVIADA PELO COMANDO WHO
-    // TODO: POIS O CLIENT AO ENTRAR NO CANAL, MANDA O COMANDO WHO
-    void ServerMessages::MensagemAutenticado(int fd, std::string nickname)
-    {
-        std::ostringstream stream;
-
-        // RFC E SEUS CODIGOS DE RESPOSTA
-        // 001 - CODIGO DE BOAS VINDAS
-        stream << ":" << SERVER_NAME << " 001 " << nickname << " :Bem vindo ao nosso irc, malandragem!\r\n";
-        send(fd, stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-        
-        // 002 - INFO DO HOST - INSIGNIFICANTE PARA GNT POIS RODA EM LOCAL E SE TRATA DE UM PROJETO EDUCACIONAL
-        stream << ":" << SERVER_NAME << " 002 " << nickname << " :O host setado "<< SERVER_NAME << " e ficticio pois esta hosteado localmente" << "\r\n";
-        send(fd, stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-        
-        // 003 - DATA DE CRIACAO DO SERVIDOR
-        // ! NAO SEI SE PODEMOS USAR TIME FUNCTIONS, LOGO VOU SETAR UMA MENSAGEM ALEATORIA E DEPOIS MODIFICAMOS
-        stream << ":" << SERVER_NAME << " 003 " << nickname << " :Na teoria, aqui passaria a data de criacao do servidor" << "\r\n";
-        send(fd, stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-
-        // 004 - RECURSOS DO SERVIDOR
-        // ! QUE PORRA QUE ISSO QUER DIZER??
-        stream << ":" << SERVER_NAME << " 004 " << nickname << " :Nao tenho ideia do que recursos do servidor significa" << "\r\n";
-        send(fd, stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-
-        // 005 - CONFIGURACOES DE CANAIS - APARENTEMENTE TIPOS DE CANAIS E OUTRAS COISAS
-        // ! SE POSSIVEL ALGUEM DEPOIS REVISE ISSO
-        stream << ":" << SERVER_NAME << " 005 " << nickname << " :JESUS, ALGUEM TA AFIM DE LER O RFC INTEIRO?" << "\r\n";
-        send(fd, stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-    }
-
-    /* 
-        O MESMO QUE FOI CITADO ACIMA, POREM PARA QUANDO SE JUNTA EM UM CANAL
-    */
-    void ServerMessages::JoinedChannel(User* user, Channel* channel)
-    {
-        std::ostringstream stream;
-
-        // RFC E SEUS CODIGOS DE RESPOSTA
-        // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
-        stream << ":" << user->getNick() << "!~user@host JOIN " << channel->getChannelName() << "\r\n";
-        send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
-        channel->broadcastMessageTemp(stream.str(), user->getFd());
-        stream.str("");
-
-        // 332 - CONTENDO O TOPICO DO CANAL
-        stream << ":" << SERVER_NAME << " 332 " << user->getNick() << " " << channel->getChannelName() << " : " << channel->getChannelTopic() << "\r\n";
-        send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-
-        // 353 - LISTA DE USUARIOS DO CANAL
-        stream << ":" << SERVER_NAME << " 353 " << user->getNick() << " = " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
-        send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
-        stream.str("");
-        std::cout << "USERS: " << channel->getAllUserString() << std::endl;
-
-        // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
-        stream << ":" << SERVER_NAME << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
-        send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
+{
+    std::ostringstream stream;
+    std::string svName = Server::getInstance().getServerName();
+    // 001 - Welcome message
+    stream << ":" << svName << " 001 " << nickname << " :Welcome to ft_irc!\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
     
-        channel->broadcastMessageTemp(stream.str(), user->getFd());
-        stream.str("");   
-    }
+    // 002 - Host info
+    stream << ":" << svName << " 002 " << nickname << " :Host is "<< svName << " and is set locally lol" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    
+    // 003 - Server creation date
+    stream << ":" << svName << " 003 " << nickname << " :Server was created - what, in march? i dont know xd" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 004 - Server features
+    stream << ":" << svName << " 004 " << nickname << " ft_irc-1.0 ioklt iotkl" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 005 - Some configs
+    stream << ":" << svName << " 005 " << nickname << " CHANTYPES=# PREFIX=(o)@ CHANMODES=,,, NICKLEN=9 CASEMAPPING=ascii :are supported by this server" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // LUSERS
+    stream << ":" << svName << " 251 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users on 1 server (PS: this is network-wide)\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    
+    stream << ":" << svName << " 255 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users and 0 servers (PS: this is local)\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // MOTD cuz why not
+    /**
+     * 375 start of motd
+     * 372 motd message
+     * 376 end of motd
+     */
+    stream << ":" << svName << " 375 " << nickname << " :- " << svName << " Message of the Day -" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    stream << ":" << svName << " 372 " << nickname << " :- This is a line of the MOTD" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    stream << ":" << svName << " 372 " << nickname << " :- This is another line of the MOTD"  << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    stream << ":" << svName << " 376 " << nickname << " :End of /MOTD command" << "\r\n";
+    send(fd, stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    
+    return;
+}
+
+/* 
+    O MESMO QUE FOI CITADO ACIMA, POREM PARA QUANDO SE JUNTA EM UM CANAL
+*/
+void ServerMessages::JoinedChannel(User* user, Channel* channel)
+{
+    std::ostringstream stream;
+
+    std::cout << "[DEUBG] JOINED CHANNEL CALLED LALALAL" << std::endl;
+
+    // RFC E SEUS CODIGOS DE RESPOSTA
+    // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
+    stream << ":" << user->getNick() << "!~user@host JOIN " << channel->getChannelName() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    channel->broadcastMessageTemp(stream.str(), user->getFd());
+    stream.str("");
+
+    // 332 - CONTENDO O TOPICO DO CANAL
+    stream << ":" << Server::getInstance().getServerName() << " 332 " << user->getNick() << " " << channel->getChannelName() << " : " << channel->getChannelTopic() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+
+    // 353 - LISTA DE USUARIOS DO CANAL
+    stream << ":" << Server::getInstance().getServerName() << " 353 " << user->getNick() << " = " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+    stream.str("");
+    std::cout << "USERS: " << channel->getAllUserString() << std::endl;
+
+    // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
+    stream << ":" << Server::getInstance().getServerName() << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
+    send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
+
+    channel->broadcastMessageTemp(stream.str(), user->getFd());
+    stream.str("");   
+}
 
 
-    /* 
-        DIFERENTE DOS METODOS ANTERIORES, ESSE METODO E PARA FORMATACAO.
-        OU SEJA, ELE NAO ENVIA NADA, POIS NESSE CASO ESSE METODO SERA UTILIZADO
-        MAJORITARIAMENTE EM BROADCAST DE MENSAGEM, SENDO MELHOR TER A LOGICA DE BROADCAST
-        SEPARADA DA CLASSE SERVER MESSAGE    
-    */
-    std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::string message)
+/* 
+    DIFERENTE DOS METODOS ANTERIORES, ESSE METODO E PARA FORMATACAO.
+    OU SEJA, ELE NAO ENVIA NADA, POIS NESSE CASO ESSE METODO SERA UTILIZADO
+    MAJORITARIAMENTE EM BROADCAST DE MENSAGEM, SENDO MELHOR TER A LOGICA DE BROADCAST
+    SEPARADA DA CLASSE SERVER MESSAGE    
+*/
+std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " :" << message << "\r\n";
+    
+    return stream.str();   
+}
+
+std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::string message)
+{
+    std::ostringstream stream;
+
+    stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " :" << message << "\r\n";
+    
+    return stream.str();
+}
+
+std::string ServerMessages::ConvertMessageContentToA(MessageContent content)
+{
+    std::string result;
+
+    for (size_t i = 0; i < content.tokens.size(); i++)
     {
-        std::ostringstream stream;
-
-        stream << ":" << user->getNick() << "!~" << user->getUser() << "@host PRIVMSG " << channel->getChannelName() << " :" << message << "\r\n";
-        
-        return stream.str();   
+        result.append(content.tokens[i]);
+        result.append(" ");
     }
+    result.append(content.message);
+    result.append("\r\n"); // indiferente, porem boa pratica
+                        // apararentemente n funciona ao fazer
+                        // por outros computadores pois o protocolo
+                        // precisa de acesso a port forwarding
+                        // via rede privada
+                        // e provavelmente o vitor deve ter bloqueado
+    return result;
+}
 
-    std::string ServerMessages::PrivMsgFormatter(User* sender, User* receiver, std::string message)
+std::string ServerMessages::WhoReply(User* user, Channel* channel)
+{
+    std::ostringstream stream;
+
+    std::vector<User*> tempChannel = channel->getUsers();
+    std::string svName = Server::getInstance().getServerName();
+
+    for (size_t i = 0; i < tempChannel.size(); i++)
     {
-        std::ostringstream stream;
-
-        stream << ":" << sender->getNick() << "!~" << sender->getUser() << "@host PRIVMSG " << receiver->getNick() << " :" << message << "\r\n";
-        
-        return stream.str();
+        stream << ":" << svName << " 352 " << user->getNick() << " " << channel->getChannelName() << " host " << svName << tempChannel[i]->getNick() << " H :0 " << tempChannel[i]->getRealName() << "\r\n";
     }
+    stream << ":" << svName << " 315 " << user->getNick() << " " << channel->getChannelName() << " :End of /WHO list." << "\r\n";
 
-    std::string ServerMessages::ConvertMessageContentToA(MessageContent content)
-    {
-        std::string result;
-
-        for (size_t i = 0; i < content.tokens.size(); i++)
-        {
-            result.append(content.tokens[i]);
-            result.append(" ");
-        }
-        result.append(content.message);
-        result.append("\r\n"); // indiferente, porem boa pratica
-                            // apararentemente n funciona ao fazer
-                            // por outros computadores pois o protocolo
-                            // precisa de acesso a port forwarding
-                            // via rede privada
-                            // e provavelmente o vitor deve ter bloqueado
-        return result;
-    }
-
-    std::string ServerMessages::WhoReply(User* user, Channel* channel)
-    {
-        std::ostringstream stream;
-
-        std::vector<User*> tempChannel = channel->getUsers();
-
-        for (size_t i = 0; i < tempChannel.size(); i++)
-        {
-            stream << ":" << SERVER_NAME << " 352 " << user->getNick() << " " << channel->getChannelName() << " host " << SERVER_NAME << tempChannel[i]->getNick() << " H :0 " << " COLOCAR AQUI O REAL NAME" << "\r\n";
-        }
-        stream << ":" << SERVER_NAME << " 315 " << user->getNick() << " " << channel->getChannelName() << " :End of /WHO list." << "\r\n";
-
-        return stream.str();
-    }
+    return stream.str();
+}
 
 /** 
  * TODO DOXYGEN PLS
  * 
- * @brief $placeholder
+ * @brief Sends error code and a message associated with that error code
  * @param fd client fd to send error message to
  * @param errorCode error number identifier
  * @param nickname client nickname
- * @param target //TODO
+ * @param param1 might not be used in some commands but needed in some others
+ * @param param2 might not be used in some commands but needed in some others
  */
 void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& nickname, const std::string& param1, const std::string& param2)
 {
@@ -177,7 +208,7 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
     std::ostringstream stream;
 
     // Adiciona o prefixo do servidor e o código do erro
-    stream << ":" << SERVER_NAME << " " << errorCode;
+    stream << ":" << Server::getInstance().getServerName() << " " << errorCode;
     
     if (!nickname.empty())
         stream << " " << nickname;

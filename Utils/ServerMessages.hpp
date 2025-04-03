@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 15:02:23 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ public:
     ~ServerMessages();
 
     // TODO: Substituir fd e nickname apenas por um User* para clean code
-    static void MensagemAutenticado(int fd, std::string nickname);
+    static void SendWelcomeMessage(int fd, std::string nickname);
 
     static void JoinedChannel(User* user, Channel* channel);
 

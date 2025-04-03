@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 19:06:33 by fang             ###   ########.fr       */
+/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,12 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     // update nickname
     UserService::getInstance().SetNickByFd(newNick, fd);
 
-
-    // only change this to NICK_RECV on authentication
-    if (user->getStatus() != User::AUTHENTICATED) 
-        user->setStatus(User::NICK_RECEIVED);
-        
+    // Update user status
+    if (user->getStatus() != User::AUTHENTICATED && !user->getNick().empty() && !user->getUser().empty())
+    {
+        user->setStatus(User::AUTHENTICATED);
+        // RESPOSTAs DE SUCESSO NA AUTENTICACAO
+        ServerMessages::SendWelcomeMessage(fd, UserService::getInstance().findUserByFd(fd)->getNick());
+    }
     return ;
 }

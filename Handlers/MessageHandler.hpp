@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 18:31:40 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:55:56 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@
 #include "../Commands/PartCommand.hpp"
 #include "../Commands/KickCommand.hpp"
 #include "../Commands/TopicCommand.hpp"
+#include "../Commands/PingCommand.hpp"
 
 
 /* 

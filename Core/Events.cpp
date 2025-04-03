@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 12:12:59 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/03 13:45:12 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void Events::runPollLoop()
                 _msgHandler.CreateEvent(clientSock);
 
                 std::cout << "New client connected: " << clientSock << std::endl;
-                //send(clientSock, ":server 001 teste :Welcome to IRC!\r\n", 36, 0);
             }
         }
         
