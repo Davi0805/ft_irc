@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 16:37:47 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/03 13:36:23 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,9 @@ Channel *ChannelService::get_or_createChannel(std::string channelName)
 {
     std::map<std::string, Channel *>::iterator it;
 
+    if (channelName[0] != '#')
+        channelName.insert(0, "#");
+
     it = _channels.find(channelName);
 
     // Se existir retorna channel
@@ -87,6 +90,8 @@ Channel *ChannelService::get_or_createChannel(std::string channelName)
 Channel *ChannelService::findChannel(std::string channelName)
 {
     std::map<std::string, Channel *>::iterator it;
+    if (channelName[0] != '#')
+        channelName.insert(0, "#");
 
     it = _channels.find(channelName);
     if (it != _channels.end())
