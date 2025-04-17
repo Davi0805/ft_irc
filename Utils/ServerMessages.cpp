@@ -59,16 +59,7 @@ void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
     stream.str("");
 
     // 005 - Some configs
-    stream << ":" << svName << " 005 " << nickname << " CHANTYPES=# PREFIX=(o)@ CHANMODES=,,, NICKLEN=9 CASEMAPPING=ascii :are supported by this server" << "\r\n";
-    send(fd, stream.str().c_str(), stream.str().size(), 0);
-    stream.str("");
-
-    // LUSERS
-    stream << ":" << svName << " 251 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users on 1 server (PS: this is network-wide)\r\n";
-    send(fd, stream.str().c_str(), stream.str().size(), 0);
-    stream.str("");
-    
-    stream << ":" << svName << " 255 " << nickname << " :There are " << UserService::getInstance().getFdsMap().size() << " users and 0 servers (PS: this is local)\r\n";
+    stream << ":" << svName << " 005 " << nickname << " CASEMAPPING=ascii CHANTYPES=# PREFIX=(o)@+ CHANMODES=k,l,i,o, NICKLEN=9" << "\r\n";
     send(fd, stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 

@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 18:56:32 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/02 10:57:50 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void MessageHandler::CreateEvent(int fd)
 bool MessageHandler::HandleEvent(int fd)
 {
     MessageContent messageContent;
-    char buffer[1024];
+    char buffer[512];
     std::string buf;
 
     while (true)
@@ -91,7 +91,6 @@ bool MessageHandler::HandleEvent(int fd)
         return false;
     }
 
-    // std::cout   << "[DEBUG] Recebido do fd " << fd  << ": " << buf << "[EOF]" << std::endl;
 
     /* 
         IF/ELSE, POIS DIFERENTE DO NCAT, O HEXCHAT MANDA TODAS
