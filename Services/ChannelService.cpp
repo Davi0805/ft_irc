@@ -6,35 +6,29 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:33:03 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:38:11 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ChannelService.hpp"
 #include <cstdlib>
 
-// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
 ChannelService *ChannelService::_instance = NULL;
 
 /*
-    ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
-    TODAS OS CANAIS DO PROGRAMA, ONDE TEM COMO OBJETIVO, SEPARAR E/OU
-    DESACOPLAR AS LOGICAS PARA MAIS ESCALABILIDADE, FACIL MANUTENCAO E
-    VERSATILIDADE NA HORA DE CRIAR NOVOS COMANDOS OU IMPLEMENTAR NOVAS
-    FEATURES
+    THIS CLASS HAS THE PURPOSE OF MANAGING AND IMPLEMENTING METHODS FOR
+    ALL CHANNELS OF THE PROGRAM, WITH THE OBJECTIVE OF SEPARATING AND/OR
+    DECOUPLING THE LOGIC FOR GREATER SCALABILITY, EASY MAINTENANCE, AND
+    VERSATILITY WHEN CREATING NEW COMMANDS OR IMPLEMENTING NEW FEATURES.
 
-    USE CASES: AO CRIAR UM COMANDO, TODOS COMANDOS POSSUEM PONTEIROS PARA
-    ESSA CLASSE, ONDE VOCE PODE SIMPLESMENTE REUTILIZAR OS METODOS E/OU
-    IMPLEMENTAR NOVOS QUE IRAO FACILITAR/SIMPLICAR LOGICAS FUTURAS
+    USE CASES: WHEN CREATING A COMMAND, ALL COMMANDS HAVE POINTERS TO
+    THIS CLASS, WHERE YOU CAN SIMPLY REUSE THE METHODS AND/OR IMPLEMENT
+    NEW ONES THAT WILL FACILITATE/SIMPLIFY FUTURE LOGIC.
  */
 
-ChannelService::ChannelService(/* args */)
-{
-}
+ChannelService::ChannelService() {}
 
-ChannelService::~ChannelService()
-{
-}
+ChannelService::~ChannelService() {}
 
 ChannelService &ChannelService::getInstance()
 {
@@ -57,9 +51,8 @@ void ChannelService::quitFromAllChannels(User *user, std::string message)
 }
 
 /*
-    CLASSE COM OBJETIVO DE RETORNAR UM CANAL EXISTENTE OU CRIAR CANAL
-    QUANDO TAL CANAL NAO EXISTIR AINDA, SENDO SEMELHANTE AO COMANDO JOIN
-    DO IRC
+    CLASS WITH THE OBJECTIVE OF RETURNING AN EXISTING CHANNEL OR CREATING A CHANNEL
+    WHEN SUCH CHANNEL DOES NOT EXIST YET, SIMILAR TO THE IRC JOIN COMMAND
  */
 Channel *ChannelService::get_or_createChannel(std::string channelName)
 {
@@ -70,8 +63,8 @@ Channel *ChannelService::get_or_createChannel(std::string channelName)
 
     it = _channels.find(channelName);
 
-    // Se existir retorna channel
-    // Se n, cria um novo channel
+    // If it exists, return the channel
+    // If not, create a new channel
     if (it != _channels.end())
         return it->second;
     else
@@ -83,9 +76,8 @@ Channel *ChannelService::get_or_createChannel(std::string channelName)
 }
 
 /*
-    METHODO PARA ENCONTRAR TAL CANAL SEM CRIA-LO, CASO N ENCONTRE,
-    PARA USAR EM CASOS ONDE SE TRATA MAIS DE CHECAGEM DO QUE PROPRIAMENTE
-    DO COMANDO JOIN
+    METHOD TO FIND A CHANNEL WITHOUT CREATING IT, IN CASE IT IS NOT FOUND,
+    TO BE USED IN CASES WHERE IT IS MORE ABOUT CHECKING THAN THE JOIN COMMAND ITSELF
  */
 Channel *ChannelService::findChannel(std::string channelName)
 {
@@ -101,8 +93,8 @@ Channel *ChannelService::findChannel(std::string channelName)
 }
 
 /*
-    METHODO PARA CHECAGEM SE TAL USUARIO, FAZ PARTE DE TAL CANAL, GERALMENTE CHECAGEM
-    PARA TESTES HARDCODED PROVAVELMENTE EXECUTADOS VIA NCAT
+    METHOD FOR CHECKING IF A USER IS PART OF A CHANNEL, GENERALLY USED
+    FOR HARDCODED TESTS PROBABLY EXECUTED VIA NCAT
 */
 bool ChannelService::isUserPartOfChannel(std::string nickname, std::string channelName)
 {
@@ -119,8 +111,8 @@ bool ChannelService::isUserPartOfChannel(std::string nickname, std::string chann
 }
 
 /*
-    METHODO PARA CHECAGEM SE TAL USUARIO, FAZ PARTE DE TAL CANAL, GERALMENTE CHECAGEM
-    PARA TESTES HARDCODED PROVAVELMENTE EXECUTADOS VIA NCAT
+    METHOD FOR CHECKING IF A USER IS PART OF A CHANNEL, GENERALLY USED
+    FOR HARDCODED TESTS PROBABLY EXECUTED VIA NCAT
 */
 bool ChannelService::isUserPartOfChannel(int fd, std::string channelName)
 {

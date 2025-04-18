@@ -6,19 +6,15 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:51:17 by artuda-s          #+#    #+#             */
-/*   Updated: 2025/03/31 22:54:09 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 19:43:17 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PingCommand.hpp"
 
-PingCommand::PingCommand(/* args */)
-{
-}
+PingCommand::PingCommand() {}
 
-PingCommand::~PingCommand()
-{
-}
+PingCommand::~PingCommand() {}
 
 std::string PingCommand::getToken() const
 {

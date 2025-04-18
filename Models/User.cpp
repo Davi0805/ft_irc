@@ -6,22 +6,22 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:23 by davi              #+#    #+#             */
-/*   Updated: 2025/03/27 18:58:27 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 20:03:26 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "User.hpp"
 
 /* 
-    CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
-    ONDE EXISTE MAIS COM O OBJETIVO DE GUARDAR DADOS
-    DO QUE PROPRIAMENTE EXECUTAR E/OU TER LOGICAS COMPLEXAS    
+    CLASS FOR MODELING/DTO (DATA TRANSFER OBJECT),
+    MAINLY USED FOR STORING DATA RATHER THAN EXECUTING
+    OR HAVING COMPLEX LOGIC    
 */
 
 
 /* 
-    INSTANCIA O OBJ USUARIO, JA SETANDO O FD DA CONEXAO
-    E STATUS DE AUTH COMO CONNECTED
+    INSTANTIATES THE USER OBJECT, SETTING THE CONNECTION FD
+    AND AUTH STATUS AS CONNECTED
 */
 User::User(int fd)
 {
@@ -29,26 +29,11 @@ User::User(int fd)
     this->_status = CONNECTED;
 }
 
-User::~User()
-{
-}
+User::~User() {}
 
 /* 
-    TODO: VERIFICAR A SENHA AQUI OU EM OUTRA PARTE MAIS RELACIONADA A LOGICA
-    MODIFICA O STATUS PARA PASS RECEIVED,
-    ONDE JA SE PODE UTILIZAR METODOS SUBSEQUENTES
-    COMO SETNICK E SETUSER
-*/
-void User::setPass()
-{
-    // TODO
-    // this->_status = 
-}
-
-
-/* 
-    SETA O NICKNAME PARA TAL USUARIO E MODIFICA
-    O STATUS DO USUARIO, JA SENDO POSSIVEL SETAR USER    
+    SETS THE NICKNAME FOR THE USER AND MODIFIES
+    THE USER'S STATUS, MAKING IT POSSIBLE TO SET USER    
 */
 void User::setNick(std::string nickname)
 {
@@ -61,8 +46,8 @@ void User::setStatus(Status status)
 }
 
 /* 
-    SETA USUARIO E STATUS APOS JA TER SETADO
-    PASS E NICKNAME E FINALIZA AUTENTICACAO   
+    SETS USERNAME AND STATUS AFTER HAVING ALREADY SET
+    PASS AND NICKNAME, AND COMPLETES AUTHENTICATION   
 */
 void User::setUser(std::string username)
 {

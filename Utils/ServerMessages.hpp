@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:32 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:14:14 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,28 +23,25 @@
 
 #include "Replies.hpp"
 
+// SERVER_NAME CREATED MERELY FOR ILLUSTRATION
+// SINCE OUR SERVER RUNS LOCALLY
+// FOR EDUCATIONAL PURPOSES ONLY
 
-// SERVER_NAME CRIADO MERAMENTE ILUSTRATIVAMENTE
-// JA QUE O NOSSO SERVER RODA LOCALMENTE
-// POR SER EDUCACIONAL APENAS
-
-#define SERVER_NAME "ft_irc.42Network.local" // TODO usar Server class
+#define SERVER_NAME "ft_irc.42Network.local" 
 
 
 /* 
-    CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
-    COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
-    SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
+    CLASS WITH THE PURPOSE OF ADDING STATIC METHODS
+    TO FORMAT AND/OR SEND MESSAGES TO CLIENTS
+    FOLLOWING THE DOCUMENTED IRC RFC STANDARDS    
 */
 class ServerMessages
 {
 private:
-    /* data */
 public:
-    ServerMessages(/* args */);
+    ServerMessages();
     ~ServerMessages();
 
-    // TODO: Substituir fd e nickname apenas por um User* para clean code
     static void SendWelcomeMessage(int fd, std::string nickname);
 
     static void JoinedChannel(User* user, Channel* channel);

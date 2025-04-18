@@ -3,22 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   NickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:49:40 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:42:22 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "NickCommand.hpp"
 
-NickCommand::NickCommand()
-{
-}
+NickCommand::NickCommand() {}
 
-NickCommand::~NickCommand()
-{
-}
+NickCommand::~NickCommand() {}
 
 /**
  * @brief Iterates the nickname char by char and see if it is contained by the set of valid chars
@@ -119,7 +115,7 @@ void NickCommand::execute(MessageContent messageContent, int fd)
     if (user->getStatus() != User::AUTHENTICATED && !user->getNick().empty() && !user->getUser().empty())
     {
         user->setStatus(User::AUTHENTICATED);
-        // RESPOSTAs DE SUCESSO NA AUTENTICACAO
+        // Successfully register welcome message
         ServerMessages::SendWelcomeMessage(fd, UserService::getInstance().findUserByFd(fd)->getNick());
     }
     return ;

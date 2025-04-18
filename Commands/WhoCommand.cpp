@@ -6,19 +6,15 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 14:53:53 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 21:05:08 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 19:48:35 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WhoCommand.hpp"
 
-WhoCommand::WhoCommand()
-{
-}
+WhoCommand::WhoCommand() {}
 
-WhoCommand::~WhoCommand()
-{
-}
+WhoCommand::~WhoCommand() {}
 
 void WhoCommand::execute(MessageContent messageContent, int fd)
 {
@@ -27,9 +23,8 @@ void WhoCommand::execute(MessageContent messageContent, int fd)
     if (!sender)
         return ;
 
-    if (messageContent.tokens.size() > 1 && messageContent.tokens[1][0] == '#') // Se for um channel publico, comeca com # (jogo da velha no inicio)
+    if (messageContent.tokens.size() > 1 && messageContent.tokens[1][0] == '#')
     {
-        // ! NAO SEI SE ISSO SE APLICA AO CHANNEL
         if (ChannelService::getInstance().isUserPartOfChannel(fd, messageContent.tokens[1]))
         {
             std::vector<User*> users = ChannelService::getInstance().findChannel(messageContent.tokens[1])->getUsers();
@@ -38,11 +33,6 @@ void WhoCommand::execute(MessageContent messageContent, int fd)
             std::string msgFormatada = ServerMessages::WhoReply(sender, channel);
 
             send(sender->getFd(), msgFormatada.c_str(), msgFormatada.size(), 0);
-            /* for (size_t i = 0; i < users.size(); i++)
-            {
-                if (users[i]->getFd() != sender->getFd())
-                    send(users[i]->getFd(), msgFormatada.c_str(), msgFormatada.size(), 0);
-            } */
         }
     }
 }

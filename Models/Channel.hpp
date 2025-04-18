@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:41 by davi              #+#    #+#             */
-/*   Updated: 2025/03/23 17:38:21 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:01:19 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 
 
 /* 
-    CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
-    ONDE EXISTE MAIS COM O OBJETIVO DE GUARDAR DADOS
-    DO QUE PROPRIAMENTE EXECUTAR E/OU TER LOGICAS COMPLEXAS    
+    CLASS FOR MODELING/DTO (DATA TRANSFER OBJECT),
+    WHICH EXISTS MORE FOR THE PURPOSE OF STORING DATA
+    RATHER THAN EXECUTING AND/OR HAVING COMPLEX LOGIC    
 */
 class Channel
 {
@@ -33,9 +33,6 @@ private:
         RESTRICTED_TOPIC,
         REQUIRES_PASSWORD,
         LIMITED
-        // TENHO QUE LER A DOCUMENTACAO,
-        // POREM SEPARAR MODES COM O ENUM
-
     };
 
     std::vector<User*> _users;
@@ -46,18 +43,15 @@ private:
     std::string _password;
     int _userLimit;
     
-    //TODO: PENSAR EM UMA LOGICA DE OPERATOR/ADMIN
     bool _inviteOnly;
     bool _restrictedTopic;
     bool _requiresPassword;
     bool _limitedUsers;
     
-    //TODO: ADICIONAR METHODOS PARA GET E SET DE VARIAVEIS 
 public:
     Channel(std::string ChannelName);
     ~Channel();
 
-    
     void AddUser(User *user);
     void removeUser(User *user);
     void removeUser(int fd);
@@ -90,8 +84,6 @@ public:
     void setChannelPassword(std::string password);
     void setChannelLimit(int limit);
     void inviteUser(User *user);
-
-    
 
     std::string getModeParameters(bool showPassword) const;
     std::string getModeString() const;

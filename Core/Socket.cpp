@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/03/16 20:25:29 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 19:53:15 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,14 @@ Socket::Socket(int porta) : _porta(porta)
     catch(const std::exception& e)
     {
         std::cerr << RED << "[FATAL]" << RESET << ": " << e.what() << '\n';
-        if (_socketFd != -1)
-            close(_socketFd);
-        throw std::runtime_error("Saindo do programa!");
+        throw std::runtime_error("Exiting!");
     }
 }
 
-// Provavelmente o close sera feito para alguma outra classe geral
-Socket::~Socket() //todo
+Socket::~Socket()
 {
+    if (_socketFd >= 0)
+        close(_socketFd);
 }
 
 // -----------GETTERS-----------
@@ -44,7 +43,6 @@ int Socket::getSocketFd() const
 
 // -----------SOCKET SETUP-----------
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 /*
  * Initializes socket and sets SO_REUSEADDR option to true
 */
@@ -71,10 +69,8 @@ void Socket::setupSocketContext()
         throw std::runtime_error("Erro ao configurar socket");
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 void Socket::setNonBlock()
 {
-    // UTILIZA O FCNTL PARA PEGAR CONFIGURACOES/FLAGS JA EXISTENTES DO SOCKET
     /*
      * - fcntl is a general-purpose interface for manipulating file descriptors.
      * - We use the cmd F_GETFL to fetch the current active flags on the socket fd for later usage
@@ -93,7 +89,6 @@ void Socket::setNonBlock()
         throw std::runtime_error("Erro ao setar o NONBLOCK no socket");
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 /*
  *   - Binds the socket to an ip and a port
  *   - bind() uses a generic sockaddr struct thus the cast
@@ -120,10 +115,9 @@ void    Socket::bindSocket()
     configs.sin_port = htons(_porta); // to turn it to Big Endian (Network standard)
 
     if (bind(_socketFd, (sockaddr *)&configs, sizeof(configs)) < 0)
-        throw std::runtime_error("Erro ao redirecionar conexoes desse socket para porta determinada");
+        throw std::runtime_error("Error on bind -- socket");
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 /*
  * Marks _socketFd (a previously bound socket) as passive, meaning it will accept incoming connections.
  * It transitions the socket from an unconnected state to a listening state.
@@ -133,5 +127,5 @@ void    Socket::bindSocket()
 void    Socket::startListen()
 {
     if (listen(_socketFd, MAX_CONN) < 0)
-        throw std::runtime_error("Erro ao comecar a ouvir conexoes");
+        throw std::runtime_error("Error on listen --socket");
 }

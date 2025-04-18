@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/03/27 18:57:08 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 20:03:57 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
 #include "../Models/Server.hpp"
 
 /* 
-    CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
-    ONDE EXISTE MAIS COM O OBJETIVO DE GUARDAR DADOS
-    DO QUE PROPRIAMENTE EXECUTAR E/OU TER LOGICAS COMPLEXAS    
+    CLASS FOR MODELING/DTO (DATA TRANSFER OBJECT),
+    WHICH EXISTS MORE FOR THE PURPOSE OF STORING DATA
+    RATHER THAN EXECUTING AND/OR HAVING COMPLEX LOGIC    
 */
 class User
 {
@@ -28,7 +28,7 @@ public:
     User(int fd);
     ~User();
 
-    // ENUM PARA CLASSIFICAR AUTHENTICACAO
+    // ENUM FOR AUTHENTICATION STATUS
     enum Status
     {
         CONNECTED,
@@ -39,7 +39,6 @@ public:
     };
 
     //SETTER
-    void setPass();
     void setNick(std::string nickname);
     void setStatus(Status status);
     void setUser(std::string username);

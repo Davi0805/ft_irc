@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageContent.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: davi <davi@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:16:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/12 01:24:21 by davi             ###   ########.fr       */
+/*   Updated: 2025/04/18 20:01:33 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 
 
 /* 
-    STRUCT COM OBJETIVO DE SIMPLIFICAR LOGICA DE TRANSMISSAO DE INFORMACOES,
-    ONDE NA PRATICA E UTILIZADA EM TODA A EXECUCAO DE COMANDOS, POSSUINDO UM
-    VETOR DE STRINGS COM TOKENS E MENSAGEM SEM TOKENIZACAO PARA PRESERVAR OS 
-    ESPACOS NATURAIS DA MENSAGEM
+    STRUCT WITH THE PURPOSE OF SIMPLIFYING THE LOGIC OF INFORMATION TRANSMISSION,
+    WHICH IN PRACTICE IS USED THROUGHOUT THE EXECUTION OF COMMANDS, HAVING A 
+    VECTOR OF STRINGS WITH TOKENS AND A MESSAGE WITHOUT TOKENIZATION TO PRESERVE 
+    THE NATURAL SPACES OF THE MESSAGE.
 
-    OBS: A MENSAGEM JA POSSUI ':'(DOIS PONTOS) DO RFC 
+    NOTE: THE MESSAGE ALREADY CONTAINS ':' (COLON) FROM THE RFC 
 */
 struct MessageContent
 {

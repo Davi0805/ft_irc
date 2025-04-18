@@ -5,13 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 18:35:41 by lebarbos         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/04/18 20:37:59 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Events.hpp"
 
+#include "Events.hpp"
 
 Events* Events::_instance = NULL;
 
@@ -21,9 +21,7 @@ Events::Events(int socketFd)
     setupPollContext();
 }
 
-Events::~Events()
-{
-}
+Events::~Events() {}
 
 Events* Events::getInstance(int socketFd)
 {
@@ -59,7 +57,7 @@ void Events::runPollLoop()
         */
         int pollCount = poll(&_pfds[0], _pfds.size(), -1);
         if (pollCount == -1) {
-            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; // todo exception
+            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; 
             continue;
         }
 
@@ -80,8 +78,8 @@ void Events::runPollLoop()
                 if (clientSock < 0) 
                 {
                     if (errno == EAGAIN || errno == EWOULDBLOCK)
-                        break ;
-                    std::cerr << "Error accepting connection" << std::endl; // todo DEBUG message or actually meaningful?
+                        break ; // no more connections queued
+                    std::cerr << "Error accepting connection" << std::endl;
                     continue;
                 }
 
@@ -90,11 +88,11 @@ void Events::runPollLoop()
                 struct pollfd newClientPollfd;
                 newClientPollfd.fd = clientSock;
                 newClientPollfd.events = POLLIN;
-                _pfds.push_back(newClientPollfd); 
-
+                _pfds.push_back(newClientPollfd);
+                
+                // create new user instance for this connection
                 _msgHandler.CreateEvent(clientSock);
 
-                std::cout << "New client connected: " << clientSock << std::endl;
             }
         }
         
@@ -121,9 +119,12 @@ bool Events::setNonBlock(int targetFd)
         return false;
     }
 
+    // REUSE FCNTL TO SET THE EXISTING FLAGS PLUS NONBLOCK
+    // NONBLOCK, AS I UNDERSTAND IT, IS TO PREVENT THE PROGRAM FROM FREEZING
+    // DUE TO SOME ISSUE IN THE CONNECTION OR EVENT PROCESSING
     if (fcntl(targetFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
     {
-        std::cerr << "FATAL: Error setting NONBLOCK on socket" << std::endl;
+        std::cerr << "FATAL: Error setting to nonblock" << std::endl;
         close(targetFd);
         return (false);
     }
@@ -138,18 +139,19 @@ void Events::readAndPrintFd(int fd)
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
     if (bytesRead < 0)
     {
-        std::cerr << "FATAL: Error reading from file descriptor" << std::endl;
+        std::cerr << "FATAL: Error reading from fd" << std::endl;
         return;
     }
     
     if (bytesRead <= 0) 
     {
-        std::cerr << "Cliente desconectado: " << fd << std::endl;
+        std::cerr << "Client disconnected: " << fd << std::endl;
         removeClient(fd);
         return;
     }
 
     buffer[bytesRead] = '\0';
+
 }
 
 void Events::removeClient(int fd)
@@ -157,7 +159,7 @@ void Events::removeClient(int fd)
     std::cout << "Removing client " << fd << " from poll..." << std::endl;
     for (size_t i = 0; i < _pfds.size(); i++) {
         if (_pfds[i].fd == fd) {
-            _pfds.erase(_pfds.begin() + i); // remove cliente da lista
+            _pfds.erase(_pfds.begin() + i); // remove client from list
             break;
         }
     }

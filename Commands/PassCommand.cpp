@@ -6,20 +6,16 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:32:23 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/27 19:00:36 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 19:42:56 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PassCommand.hpp"
 #include "../Core/Events.hpp"
 
-PassCommand::PassCommand()
-{
-}
+PassCommand::PassCommand() {}
 
-PassCommand::~PassCommand()
-{
-}
+PassCommand::~PassCommand() {}
 
 /**
  *? valid

@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:19:22 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:38:16 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,18 @@
 #include "../Models/Channel.hpp"
 #include "../Utils/ServerMessages.hpp"
 
-// unordered map faz parte do c++ 11
-// #include <unordered_map>
 #include <map>
 #include <iostream>
 
 /* 
-    ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
-    TODAS OS CANAIS DO PROGRAMA, ONDE TEM COMO OBJETIVO, SEPARAR E/OU
-    DESACOPLAR AS LOGICAS PARA MAIS ESCALABILIDADE, FACIL MANUTENCAO E 
-    VERSATILIDADE NA HORA DE CRIAR NOVOS COMANDOS OU IMPLEMENTAR NOVAS 
-    FEATURES
+    THIS CLASS HAS THE PURPOSE OF MANAGING AND IMPLEMENTING METHODS FOR
+    ALL THE CHANNELS OF THE PROGRAM, WITH THE OBJECTIVE OF SEPARATING AND/OR
+    DECOUPLING THE LOGIC FOR GREATER SCALABILITY, EASY MAINTENANCE, AND 
+    VERSATILITY WHEN CREATING NEW COMMANDS OR IMPLEMENTING NEW FEATURES.
 
-    USE CASES: AO CRIAR UM COMANDO, TODOS COMANDOS POSSUEM PONTEIROS PARA
-    ESSA CLASSE, ONDE VOCE PODE SIMPLESMENTE REUTILIZAR OS METODOS E/OU 
-    IMPLEMENTAR NOVOS QUE IRAO FACILITAR/SIMPLICAR LOGICAS FUTURAS
+    USE CASES: WHEN CREATING A COMMAND, ALL COMMANDS HAVE POINTERS TO
+    THIS CLASS, WHERE YOU CAN SIMPLY REUSE THE METHODS AND/OR 
+    IMPLEMENT NEW ONES THAT WILL FACILITATE/SIMPLIFY FUTURE LOGIC.
  */
 
 class ChannelService
