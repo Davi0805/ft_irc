@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 19:25:57 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:18:47 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,20 @@ bool ChannelService::isUserPartOfChannel(int fd, std::string channelName)
     return false;
 }
 
+void ChannelService::broadcastSingleModeChange(Channel* channel, User* user, int fd, char mode, bool addMode, const std::string& param)
+{
+    std::stringstream msg;
+    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host MODE " << channel->getChannelName()
+        << " " << (addMode ? "+" : "-") << mode;
+
+    if (!param.empty())
+        msg << " " << param;
+
+    msg << "\r\n";
+    send(fd, msg.str().c_str(), msg.str().size(), 0);
+    channel->broadcastMessageTemp(msg.str(), fd);
+}
+
 void ChannelService::handleModeChange(User *user, int fd, const std::string &channelName, const std::string &modeString, std::vector<std::string> &params)
 {
     Channel *channel = findChannel(channelName);
@@ -169,25 +183,23 @@ void ChannelService::handleModeChange(User *user, int fd, const std::string &cha
             continue;
         }
 
-        if (applyMode(channel, mode, addMode, params, paramIndex, fd))
-            modeApplied = true;
+        applyMode(channel, mode, addMode, params, paramIndex, fd, user);
     }
-
-    if (modeApplied)
-        broadcastModeChange(channel, user, fd, modeString, params, paramIndex);
 }
 
 
-bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::vector<std::string> &params, size_t &paramIndex, int fd)
+bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::vector<std::string> &params, size_t &paramIndex, int fd, User* user)
 {
     switch (mode)
     {
     case 'i':
         channel->setInviteOnly(addMode);
+        broadcastSingleModeChange(channel, user, fd, mode, addMode, "");
         return true;
 
     case 't':
         channel->setRestrictedTopic(addMode);
+        broadcastSingleModeChange(channel, user, fd, mode, addMode, "");
         return true;
 
     case 'k':
@@ -203,11 +215,14 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                 ServerMessages::SendErrorMessage(fd, ERR_KEYSET, channel->getChannelName());
                 return false;
             }
-            channel->setRequiresPassword(params[paramIndex++]);
+            std::string password = params[paramIndex++];
+            channel->setRequiresPassword(password);
+            broadcastSingleModeChange(channel, user, fd, mode, addMode, password);
         }
         else
         {
             channel->removePassword();
+            broadcastSingleModeChange(channel, user, fd, mode, addMode, "");
         }
         return true;
 
@@ -226,10 +241,12 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                 return false;
             }
             channel->setUserLimit(limit);
+            broadcastSingleModeChange(channel, user, fd, mode, addMode, std::to_string(limit));
         }
         else
         {
             channel->removeUserLimit();
+            broadcastSingleModeChange(channel, user, fd, mode, addMode, "");
         }
         return true;
 
@@ -261,6 +278,8 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                     channel->promoteToOperator(nick);
                 else
                     channel->demoteOperator(nick);
+
+                broadcastSingleModeChange(channel, user, fd, mode, addMode, nick);
                 applied = true;
             }
             return applied;
@@ -271,6 +290,7 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
         return false;
     }
 }
+
 
 
 void ChannelService::broadcastModeChange(Channel *channel, User *user, int fd, const std::string &modeString, std::vector<std::string> &params, size_t paramIndex)
