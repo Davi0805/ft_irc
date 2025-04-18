@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:03 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 18:55:56 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:59:18 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@
 
 
 /* 
-    CLASSE COM OBJETIVO DE DAR HANDLE DOS EVENTOS,
-    SEJA CRIAR UM EVENTO (CRIAR USER E ARMAZENAR FD E DADOS DO USUARIO),
-    HANDLE DE MENSAGENS CHAMANDO SERVICES E LOGICAS DE PARSING E TOKENIZACAO
-    E REGISTRO DE COMANDOS
+    CLASS WITH THE PURPOSE OF HANDLING EVENTS,
+    WHETHER CREATING AN EVENT (CREATING A USER AND STORING FD AND USER DATA),
+    HANDLING MESSAGES BY CALLING SERVICES AND LOGIC FOR PARSING AND TOKENIZATION,
+    AND REGISTERING COMMANDS
 */
 class MessageHandler
 {
@@ -77,7 +77,7 @@ public:
 
     void ProcessCommand(MessageContent messageContent, int clientFd);
 
-    enum CommandType { // todo check if used
+    enum CommandType { 
         PASS,
         NICK,
         USER

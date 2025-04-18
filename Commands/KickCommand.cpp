@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   KickCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:05:26 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/26 14:34:15 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:41:04 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "KickCommand.hpp"
 
-KickCommand::KickCommand()
-{}
+KickCommand::KickCommand() {}
 
 KickCommand::~KickCommand() {}
 
@@ -26,7 +25,6 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTREGISTERED, user->getNick());
 		return;
 	}
-	std::cout << "[DEBUG] Executing KICK command" << std::endl;
 	if (messageContent.tokens.size() < 3) // Pelo menos 3 parâmetros: KICK <channel> <user>
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_NEEDMOREPARAMS, "KICK");
@@ -83,13 +81,13 @@ void KickCommand::execute(MessageContent messageContent, int clientFd)
 			continue;
 		}
 
-		// Enviar mensagem de KICK para todos no canal
+		// Send KICK message to everyone on the channel
 		std::stringstream kickMessage;
 		kickMessage << ":" << user->getNick() << " KICK " << channelName << " " << targetNick << " :" << reason << "\r\n";
 		send(clientFd, kickMessage.str().c_str(), kickMessage.str().size(), 0);
 		channel->broadcastMessageTemp(kickMessage.str(), clientFd);
 
-		// Remover o usuário do canal
+		// Remove user from channel
 		channel->removeUser(targetUser->getFd());
 	}
 }

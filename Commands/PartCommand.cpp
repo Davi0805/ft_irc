@@ -3,32 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   PartCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:10:56 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/26 14:30:17 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:42:44 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PartCommand.hpp"
 
 
-PartCommand::PartCommand()
-{
-}
+PartCommand::PartCommand() {}
 
-PartCommand::~PartCommand()
-{
-}
+PartCommand::~PartCommand() {}
 
 void PartCommand::execute(MessageContent messageContent, int fd)
 {
-    //(void)_userService;
-    //(void)_channelService;
-    (void)messageContent;
-    //(void)fd;
-    
-    std::cout << "[DEBUG]: COMANDO PART SENDO CHAMADO" << std::endl;
     User* user = UserService::getInstance().findUserByFd(fd);
     
     for (size_t i = 1; i < messageContent.tokens.size(); i++)
@@ -42,5 +32,4 @@ void PartCommand::execute(MessageContent messageContent, int fd)
         } else
             ServerMessages::SendErrorMessage(fd, 442, user->getNick(), ""); 
     }
-    
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/03/25 18:30:01 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:00:55 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,31 @@
 #include <sys/socket.h>
 
 /* 
-    CLASSE PARA MODELAGEM/DTO (DATA TRANSFER OBJECT),
-    ONDE EXISTE MAIS COM O OBJETIVO DE GUARDAR DADOS
-    DO QUE PROPRIAMENTE EXECUTAR E/OU TER LOGICAS COMPLEXAS    
+    CLASS FOR MODELING/DTO (DATA TRANSFER OBJECT),
+    MAINLY EXISTS TO STORE DATA RATHER THAN
+    EXECUTE OR CONTAIN COMPLEX LOGIC    
 */
 
 
 
 /* 
-    SETA NOME DO CANAL AO CONSTRUIR TAL OBJETO
-    E INICIA O TOPICO DO CANAL COMO DEFAULT,
-    PODENDO DEPOIS SER MODIFICADO UTILIZANDO
-    UM SIMPLES SETTER QUE NAO EXISTE POR ENQUANTO,
-    POIS NAO EXISTE TAL COMANDO TBM
+    SETS THE CHANNEL NAME WHEN CREATING THE OBJECT
+    AND INITIALIZES THE CHANNEL TOPIC AS DEFAULT,
+    WHICH CAN LATER BE MODIFIED USING
+    A SIMPLE SETTER THAT DOES NOT EXIST YET,
+    AS THERE IS NO SUCH COMMAND EITHER
  */
 Channel::Channel(std::string ChannelName)
-    : topic("Default topic"), _channelName(ChannelName), _password(""), _userLimit(0), _inviteOnly(false), _restrictedTopic(false), _requiresPassword(false), _limitedUsers(false)
-{
-}
+    : topic("Default topic"), _channelName(ChannelName), _password(""), _userLimit(0), _inviteOnly(false), _restrictedTopic(false), _requiresPassword(false), _limitedUsers(false) {}
 
-Channel::~Channel()
-{
-}
+Channel::~Channel() {}
 
 /* 
-    ADICIONA PONTEIRO DE USUARIO AO VETOR
-    DE USUARIOS QUE FAZEM PARTE DO CANAL
+    ADDS A POINTER TO A USER TO THE VECTOR
+    OF USERS THAT ARE PART OF THE CHANNEL
 
-    OBS: TALVEZ MODIFICAR PARA REFERENCIA
-    O ARG DESSE METODO, PARA CODIGO MAIS SAFE
-
-    MIGRAR PARA CHANNELSERVICE?
+    NOTE: MAYBE MODIFY TO REFERENCE
+    THE ARGUMENT OF THIS METHOD FOR SAFER CODE
  */
 void Channel::AddUser(User* user)
 {
@@ -54,7 +48,6 @@ void Channel::AddUser(User* user)
         _operators.insert(user->getFd());
 }
 
-// OPERADOR PODE SER REMOVIDO?
 void Channel::removeUser(User* user)
 {
     for (size_t i = 0; i < _users.size(); i++)
@@ -79,7 +72,6 @@ void Channel::removeUser(int fd)
     }
 }
 
-//JA EXISTE EM CHANNELSERVICE
 bool Channel::isUserInChannel(int fd) const
 {
     for (size_t i = 0; i < _users.size(); i++)
@@ -136,11 +128,11 @@ std::string Channel::getChannelTopic() const
 
 
 /* 
-    IMPLEMENTADO PARA SER UTILIZADO NO SERVER MESSAGES
-    PARA FACILMENTE RETORNAR UMA STRING COM TODOS USERS
-    DE DETERMINANDO CANAL, DEIXANDO O SERVER MESSAGES
-    UM POUCO MAIS CLEAN, SENDO QUE JA ESTA MUITO FEIO
-    AQUELA PARTE DO CODIGO
+    IMPLEMENTED TO BE USED IN SERVER MESSAGES
+    TO EASILY RETURN A STRING WITH ALL USERS
+    OF A GIVEN CHANNEL, MAKING SERVER MESSAGES
+    A BIT CLEANER, AS THAT PART OF THE CODE
+    IS ALREADY VERY MESSY
  */
 std::string Channel::getAllUserString() const
 {
@@ -256,7 +248,7 @@ std::string Channel::getModeParameters(bool showPassword) const
 {
     std::stringstream params;
 
-    if (showPassword && !_password.empty())  // Só mostra se permitido
+    if (showPassword && !_password.empty())  // Only shows if allowed
         params << _password << " ";
     if (_userLimit > 0)
         params << _userLimit;
@@ -280,8 +272,6 @@ std::string Channel::getModeString() const
     return (modes.size() > 1) ? modes : "";
 }
 
-
-// TEMPORARIA - MIGRAR PARA SERVER MESSAGES???
 void Channel::broadcastMessageTemp(const std::string& message, int senderFd)
 {
     for (size_t i = 0; i < _users.size(); ++i)

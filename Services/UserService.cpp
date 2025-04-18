@@ -6,7 +6,7 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 21:06:28 by davi              #+#    #+#             */
-/*   Updated: 2025/03/27 21:16:16 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 20:08:31 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,28 @@
 #include <cerrno>
 #include <cstring>
 
-// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
 UserService* UserService::_instance = NULL;
-
 /* 
-    ESSA CLASSE TEM O PROPOSITO DE GERENCIAR E IMPLEMENTAR METHODOS PARA
-    TODAS OS USUARIOS DO PROGRAMA, ONDE TEM COMO OBJETIVO, SEPARAR E/OU
-    DESACOPLAR AS LOGICAS PARA MAIS ESCALABILIDADE, FACIL MANUTENCAO E 
-    VERSATILIDADE NA HORA DE CRIAR NOVOS COMANDOS OU IMPLEMENTAR NOVAS 
-    FEATURES
+    THIS CLASS AIMS TO MANAGE AND IMPLEMENT METHODS FOR
+    ALL USERS OF THE PROGRAM, WITH THE OBJECTIVE OF SEPARATING AND/OR
+    DECOUPLING THE LOGIC FOR GREATER SCALABILITY, EASY MAINTENANCE, AND 
+    VERSATILITY WHEN CREATING NEW COMMANDS OR IMPLEMENTING NEW 
+    FEATURES.
 
-    USE CASES: AO CRIAR UM COMANDO, TODOS COMANDOS POSSUEM PONTEIROS PARA
-    ESSA CLASSE, ONDE VOCE PODE SIMPLESMENTE REUTILIZAR OS METODOS E/OU 
-    IMPLEMENTAR NOVOS QUE IRAO FACILITAR/SIMPLICAR LOGICAS FUTURAS
+    USE CASES: WHEN CREATING A COMMAND, ALL COMMANDS HAVE POINTERS TO
+    THIS CLASS, WHERE YOU CAN SIMPLY REUSE THE METHODS AND/OR 
+    IMPLEMENT NEW ONES THAT WILL FACILITATE/SIMPLIFY FUTURE LOGIC.
  */
 
-UserService::UserService()
-{
-}
+UserService::UserService() {}
 
-UserService::~UserService()
-{
-}
+UserService::~UserService() {}
 
 
 /* 
-    QUANDO UM NOVO CLIENT CONECTA, ELE APENAS ALOCA UM NOVO USUARIO
-    E ATRIBUI NO MAP <FD, USER*>. ONDE SEU FD FICA REGISTRADO, POIS 
-    O NICKNAME SERA ATRIBUIDO SOMENTE AO UTILIZAR COMANDO NICK
+    WHEN A NEW CLIENT CONNECTS, IT SIMPLY ALLOCATES A NEW USER
+    AND ASSIGNS IT TO THE MAP <FD, USER*>. WHERE ITS FD IS REGISTERED, 
+    SINCE THE NICKNAME WILL ONLY BE ASSIGNED WHEN USING THE NICK COMMAND
  */
 void UserService::CreateUserByFd(int fd)
 {
@@ -63,8 +57,8 @@ UserService& UserService::getInstance()
 
 
 /* 
-    METHODO PARA DELETAR INSTANCIA DO USUARIO, FECHAR O FD DA CONEXAO
-    E APAGAR REFERENCIA NO MAP DO FD E NO MAP DE NICKNAME, CASO EXISTA
+    METHOD TO DELETE A USER INSTANCE, CLOSE THE CONNECTION FD,
+    AND REMOVE REFERENCES IN THE FD MAP AND NICKNAME MAP, IF THEY EXIST
  */
 void UserService::RemoveUserByFd(int fd)
 {
@@ -74,7 +68,7 @@ void UserService::RemoveUserByFd(int fd)
     it = _usersByFd.find(fd);
     
 
-    // Apaga ambos maps e deleta User
+    // Erase both maps and delete the User
     if (it != _usersByFd.end())
     {
         itNick = _userByNick.find(it->second->getNick());
@@ -84,15 +78,15 @@ void UserService::RemoveUserByFd(int fd)
             delete it->second;
         _usersByFd.erase(it);
     }
-    close(fd); // fecha fd do user desconectado
+    close(fd); // close user socket
     
 
 }
 
 /* 
-    METHODO PARA DELETAR INSTANCIA DO USUARIO, FECHAR O FD DA CONEXAO
-    E APAGAR REFERENCIA NO MAP DO NICK NAME E SUBSEQUENTEMENTE DO MAP
-    DO FD
+    METHOD TO DELETE A USER INSTANCE, CLOSE THE CONNECTION FD,
+    AND REMOVE REFERENCES IN THE NICKNAME MAP AND SUBSEQUENTLY 
+    IN THE FD MAP
  */
 void UserService::RemoveUserByNick(std::string nickname)
 {
@@ -112,9 +106,9 @@ void UserService::RemoveUserByNick(std::string nickname)
 }
 
 /* 
-    METHOD DE BUSCA DE USUARIO UTILIZANDO FD.
-    SE EXISTIR, RETORNA UM PONTEIRO PARA A INSTANCIA DO USUARIO
-    CASO NAO, RETORNA NULL
+    METHOD TO SEARCH FOR A USER USING FD.
+    IF IT EXISTS, RETURNS A POINTER TO THE USER INSTANCE.
+    IF NOT, RETURNS NULL.
  */
 User* UserService::findUserByFd(int fd)
 {
@@ -128,9 +122,9 @@ User* UserService::findUserByFd(int fd)
 }
 
 /* 
-    METHOD DE BUSCA DE USUARIO UTILIZANDO NICKNAME.
-    SE EXISTIR, RETORNA UM PONTEIRO PARA A INSTANCIA DO USUARIO
-    CASO NAO, RETORNA NULL
+    METHOD TO SEARCH FOR A USER USING NICKNAME.
+    IF IT EXISTS, RETURNS A POINTER TO THE USER INSTANCE.
+    IF NOT, RETURNS NULL.
  */
 User* UserService::findUserByNickname(std::string nickname)
 {
@@ -144,7 +138,7 @@ User* UserService::findUserByNickname(std::string nickname)
 }
 
 /* 
-    METODO PARA SETAR O NICKNAME DE ALGUM USUARIO APENAS PELO FD,
+    METHOD TO SET THE NICKNAME OF A USER USING ONLY THE FD
  */
 void UserService::SetNickByFd(std::string nickname, int fd)
 {
@@ -167,7 +161,7 @@ void UserService::SetNickByFd(std::string nickname, int fd)
 }
 
 /* 
-    METODO PARA SETAR O NICKNAME DE ALGUM USUARIO APENAS PELO FD,
+    METHOD TO SET THE NICKNAME OF A USER USING ONLY THE FD,
  */
 void UserService::SetUserByFd(std::string username, int fd)
 {
@@ -194,7 +188,6 @@ void UserService::SetRealNameByFd(std::string realName, int fd)
 }
 
 
-// TEMPORARY SENDMESSAGE TO IMPLEMENT INVITE COMMAND
 void UserService::sendMessage(int fd, const std::string &message)
 {
     if (fd < 0)
@@ -210,14 +203,8 @@ void UserService::sendMessage(int fd, const std::string &message)
     {
         std::cerr << "[ERROR]: Failed to send message to fd " << fd << ": " << strerror(errno) << std::endl;
     }
-    else
-    {
-        std::cout << "[DEBUG]: Sent message to fd " << fd << ": " << message << std::endl;
-    }
 }
 
-
-// TESTE UNITARIO
 
 // c++ -Wall -Wextra -Werror -std=c++98 UserService.cpp ../Models/User.cpp 
 
@@ -225,7 +212,6 @@ void UserService::sendMessage(int fd, const std::string &message)
 /* int main(void)
 {
 
-    // TESTE - CRIAR E ATRIBUIR NICK
     UserService service;
 
     service.CreateUserByFd(1);
@@ -236,7 +222,6 @@ void UserService::sendMessage(int fd, const std::string &message)
     service.SetNickByFd("TIGRINHO2", 2);
     service.SetUserByFd("TIGRINHO2_USER", 2);
 
-    // TESTE FIND POR FD
 
     std::cout << "TESTES COM RESULTADO POSITIVO-------------" << std::endl << std::endl;
 

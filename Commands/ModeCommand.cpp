@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ModeCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/26 14:24:35 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:17:28 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include <sstream> // For formatting messages
 #include <cstdlib> // For atoi
 
-ModeCommand::ModeCommand()
-{}
+ModeCommand::ModeCommand() {}
 
 ModeCommand::~ModeCommand() {}
 
@@ -39,8 +38,6 @@ ModeCommand::~ModeCommand() {}
  */
 void ModeCommand::execute(MessageContent messageContent, int fd)
 {
-    std::cout << "[DEBUG]: MODE COMMAND CALLED" << std::endl;
-
     User* user = UserService::getInstance().findUserByFd(fd);
     if (!user) return;
 
@@ -70,7 +67,6 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
         response << "\r\n";
 
         send(fd, response.str().c_str(), response.str().size(), 0);
-        std::cout << "[DEBUG] Sent channel modes: " << response.str();
         return;
     }
 

@@ -3,22 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/03 13:25:45 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:39:36 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "JoinCommand.hpp"
 
-JoinCommand::JoinCommand()
-{
-}
+JoinCommand::JoinCommand() {}
 
-JoinCommand::~JoinCommand()
-{
-}
+JoinCommand::~JoinCommand() {}
 
 //            ERR_NEEDMOREPARAMS              RPL_CHANNELMODEIS
 //            ERR_CHANOPRIVSNEEDED            ERR_NOSUCHNICK
@@ -32,15 +28,13 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
 {
     User * user = UserService::getInstance().findUserByFd(fd);
     if (!user->isAuthenticated()){
-        std::cout << "[DEBUG]: User is not authenticated" << std::endl;
         ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
-        return ; // TODO: EXCEPTION
+        return ;
     }
     if (messageContent.tokens.size() < 2)
     {
-        std::cout << "[DEBUG]: Invalid number of arguments" << std::endl;
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
-        return ; // TODO: EXCEPTION
+        return ;
     }
 
     std::vector<std::string> channels = commaTokenizer(messageContent.tokens[1]);
@@ -52,40 +46,25 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     {
         Channel* channel = ChannelService::getInstance().get_or_createChannel(channels[i]);
         if (channel->isUserInChannel(fd)){
-            std::cout << "[DEBUG]: User is already in the channel " << channels[i] << std::endl;
             ServerMessages::SendErrorMessage(fd, ERR_USERONCHANNEL, user->getNick());
-            return ; // TODO: EXCEPTION
+            return ;
         }
         else if (channel->hasUserLimit() && channel->getUsers().size() >= channel->getUserLimit())
         {
-            std::cout << "[DEBUG]: Channel " << channels[i] << " has reached its user limit." << std::endl;
             ServerMessages::SendErrorMessage(fd, ERR_CHANNELISFULL, user->getNick());
             return ; 
         }
         else if (channel->isInviteOnly() && !channel->isUserInvited(user)) 
         {
-            std::cout << "[DEBUG]: User is not invited to channel " << channels[i] << std::endl;
             ServerMessages::SendErrorMessage(fd, ERR_INVITEONLYCHAN, user->getNick());
             return ;
         }
-        /* else if (channel->hasPassword() && messageContent.tokens.size() < 3)
+        else if (channel->hasPassword() && passwords[i] != channel->getPassword())
         {
-    
-            std::cout << "[DEBUG]: Channel " << channels[i] << " requires a password." << std::endl;
-            ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
-            return ; 
-        } */
-        else if (channel->hasPassword() && passwords[i] != channel->getPassword()) // TODO: PASSWORDS MAYBE UNSAFE
-        {
-            std::cout << "[DEBUG]: Incorrect password for channel " << channels[i] << std::endl;
             ServerMessages::SendErrorMessage(fd, ERR_BADCHANNELKEY, user->getNick());
             return ; 
         }
         channel->AddUser(user);
-        std::cout << "[DEBUG]: User joined channel " << channels[i] << std::endl;
-        std::cout << "[DEBUG]: Number of users in channel: " << channel->getUsers().size() << std::endl;
-        std::cout << "[DEBUG]: User limit of channel: " << channel->getUserLimit() << std::endl;
-    
         ServerMessages::JoinedChannel(user, channel);   
     }
 }
@@ -103,10 +82,7 @@ std::vector<std::string> JoinCommand::commaTokenizer(std::string target)
     std::string temp;
 
     while (std::getline(ss, temp, ','))
-    {
-        std::cout << "TOKENIZER: " << temp << std::endl;
         tokens.push_back(temp);
-    }
     
     return tokens;
 }

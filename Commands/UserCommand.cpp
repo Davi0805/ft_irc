@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   UserCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 13:55:58 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/03/31 13:12:12 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:48:12 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,7 @@ bool UserCommand::ValidateUserCharset(const std::string &newNick) const
 
 
 // USER <username> <hostname> <servername> :<realName>
-// hostname e server name nao serão explorados no âmbito deste projeto então eu vou deixar para quem quiser implementar xd
 
-// portanto o prototipo do comando será do tipo:
-// USER <username> :<realName>
-
-// USER SO PODE SER MANDADO UMA VEZ
 // 462 ERR_ALREADYREGISTRED :Unauthorized command (already registered)
 // 451 ERR_NOTREGISTERED :You may not reregister
 // 461 ERR_NEEDMOREPARAMS : bad params
@@ -102,7 +97,6 @@ void UserCommand::execute(MessageContent messageContent, int fd)
     if (!user->getNick().empty() && !user->getUser().empty())
     {
         user->setStatus(User::AUTHENTICATED);
-        // RESPOSTAs DE SUCESSO NA AUTENTICACAO
         ServerMessages::SendWelcomeMessage(fd, UserService::getInstance().findUserByFd(fd)->getNick());
     }
 }

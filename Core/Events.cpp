@@ -3,20 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/04/02 10:54:59 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:19:21 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Events.hpp"
 
-
-// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
 Events* Events::_instance = NULL;
-
-//! CODIGO BASEADO NA DOCUMENTACAO - MAN EPOLL
 
 Events::Events(int socketFd)
 {
@@ -24,9 +20,7 @@ Events::Events(int socketFd)
     setupPollContext();
 }
 
-Events::~Events()
-{
-}
+Events::~Events() {}
 
 Events* Events::getInstance(int socketFd)
 {
@@ -40,8 +34,6 @@ Events* Events::getInstance()
     return _instance;
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
-// TODO: ERROR CHECKING ?
 bool Events::setupPollContext()
 {
     struct pollfd pfd;
@@ -53,7 +45,6 @@ bool Events::setupPollContext()
     return true;
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 void Events::runPollLoop()
 {
     for(;;) 
@@ -65,7 +56,7 @@ void Events::runPollLoop()
         */
         int pollCount = poll(&_pfds[0], _pfds.size(), -1);
         if (pollCount == -1) {
-            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; // todo exception
+            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; 
             continue;
         }
 
@@ -87,7 +78,7 @@ void Events::runPollLoop()
                 {
                     if (errno == EAGAIN || errno == EWOULDBLOCK)
                         break ; // no more connections queued
-                    std::cerr << "Error accepting connection" << std::endl; // todo DEBUG message or actually meaningful?
+                    std::cerr << "Error accepting connection" << std::endl;
                     continue;
                 }
 
@@ -97,12 +88,11 @@ void Events::runPollLoop()
                 struct pollfd newClientPollfd;
                 newClientPollfd.fd = clientSock;
                 newClientPollfd.events = POLLIN;
-                _pfds.push_back(newClientPollfd); //todo error check?
+                _pfds.push_back(newClientPollfd);
                 
                 // create new user instance for this connection
                 _msgHandler.CreateEvent(clientSock);
 
-                std::cout << "New client connected: " << clientSock << std::endl;
             }
         }
         
@@ -120,10 +110,8 @@ void Events::runPollLoop()
     }
 }
 
-// TODO: RESOLVER REDUNDANCIA POIS UTILIZADO EM SOCKET E EVENTS
 bool Events::setNonBlock(int targetFd)
 {
-    // UTILIZA O FCNTL PARA PEGAR CONFIGURACOES/FLAGS JA EXISTENTES DO SOCKET
     int flags = fcntl(targetFd, F_GETFL, 0);
     if (flags < 0)
     {
@@ -132,12 +120,12 @@ bool Events::setNonBlock(int targetFd)
         return false;
     }
 
-    // REUTILIZA O FCNTL PARA SETAR AS FLAGS JA EXISTENTES MAIS O NONBLOCK
-    // NONBLOCK PELO QUE ENTENDI, E PARA EVITAR QUE O PROGRAMA TRAVE O PROCESSAMENTO
-    // DEVIDO HA ALGUMA ISSUE NA CONEXAO OU PROCESSAMENTO DE EVENTO
+    // REUSE FCNTL TO SET THE EXISTING FLAGS PLUS NONBLOCK
+    // NONBLOCK, AS I UNDERSTAND IT, IS TO PREVENT THE PROGRAM FROM FREEZING
+    // DUE TO SOME ISSUE IN THE CONNECTION OR EVENT PROCESSING
     if (fcntl(targetFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
     {
-        std::cerr << "FATAL: Erro ao setar o NONBLOCK no socket" << std::endl;
+        std::cerr << "FATAL: Error setting to nonblock" << std::endl;
         close(targetFd);
         return (false);
     }
@@ -145,7 +133,6 @@ bool Events::setNonBlock(int targetFd)
     return true;
 }
 
-// ! DEBUG PURPOSES
 void Events::readAndPrintFd(int fd)
 {
     char buffer[512];
@@ -153,30 +140,26 @@ void Events::readAndPrintFd(int fd)
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
     if (bytesRead < 0)
     {
-        std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
+        std::cerr << "FATAL: Error reading from fd" << std::endl;
         return;
     }
     
     if (bytesRead <= 0) 
     {
-        std::cerr << "Cliente desconectado: " << fd << std::endl;
+        std::cerr << "Client disconnected: " << fd << std::endl;
         removeClient(fd);
         return;
     }
 
     buffer[bytesRead] = '\0';
 
-    // std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
-
-    // _msgHandler.ircTokenizer(std::string(buffer));
 }
 
 void Events::removeClient(int fd)
 {
     for (size_t i = 0; i < _pfds.size(); i++) {
         if (_pfds[i].fd == fd) {
-            _pfds.erase(_pfds.begin() + i); // remove cliente da lista
-            std::cout << "Cliente removido da poll" << std::endl;
+            _pfds.erase(_pfds.begin() + i); // remove client from list
             break;
         }
     }

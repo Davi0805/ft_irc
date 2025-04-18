@@ -6,14 +6,14 @@
 /*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/03/27 19:26:54 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 19:29:59 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
 
+// it is what it is
 const std::string Bot::_botServerPass = "d082dc29b65ed2e80db4ef542ca7ee8c4d3971043cbe214090f61b238493893f";
-
 
 //Default Constructor
 Bot::Bot( void ) :_botName("UselessBot") 

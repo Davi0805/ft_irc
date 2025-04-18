@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   InviteCommand.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:05:45 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/03/26 14:27:33 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:33:56 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InviteCommand.hpp"
 
-InviteCommand::InviteCommand()
-{}
+InviteCommand::InviteCommand() {}
 
 InviteCommand::~InviteCommand() {}
 
@@ -37,7 +36,6 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 	Channel *channel = ChannelService::getInstance().findChannel(channelName);
 	if (!channel) // Channel does not exist
 	{
-		// _userService->sendMessage(clientFd, ERR_NOSUCHCHANNEL(user->getNick(), channelName));
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
 		return;
 	}
@@ -45,28 +43,24 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 	User *targetUser = UserService::getInstance().findUserByNickname(targetNick);
 	if (!targetUser) // Target user does not exist
 	{
-		// _userService->sendMessage(clientFd, ERR_NOSUCHNICK(user->getNick(), targetNick));
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOSUCHNICK, user->getNick(), targetNick);
 		return;
 	}
 
 	if (!channel->isUserInChannel(clientFd)) // Inviter must be on the channel
 	{
-		// _userService->sendMessage(clientFd, ERR_NOTONCHANNEL(user->getNick(), channelName));
 		ServerMessages::SendErrorMessage(clientFd, ERR_NOTONCHANNEL, user->getNick(), channelName);
 		return;
 	}
 
 	if (channel->isUserInvited(targetUser) || channel->isUserInChannel(targetUser->getFd())) // Check if already invited
 	{
-		// _userService->sendMessage(clientFd, ERR_USERONCHANNEL(user->getNick(), targetNick, channelName));
 		ServerMessages::SendErrorMessage(clientFd, ERR_USERONCHANNEL, user->getNick(), channelName);
 		return;
 	}
 
 	if (!channel->isOperator(clientFd)) // Check if the user has operator privileges
 	{
-		// _userService->sendMessage(clientFd, ERR_CHANOPRIVSNEEDED(user->getNick(), channelName));
 		ServerMessages::SendErrorMessage(clientFd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
 		return;
 	}
@@ -76,8 +70,5 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 	UserService::getInstance().sendMessage(targetUser->getFd(),
     ":" + user->getNick() + "!~" + user->getUser() + "@host" + 
     " INVITE " + targetNick + " " + channelName + "\r\n");
-	
-
-	std::cout << "[DEBUG]: User " << targetUser->getNick() << " invited to channel " << channel->getChannelName() << std::endl;
 }
 
