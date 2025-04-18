@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/18 18:41:02 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 18:47:40 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,6 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
             ServerMessages::SendErrorMessage(fd, ERR_INVITEONLYCHAN, user->getNick());
             return ;
         }
-        /* else if (channel->hasPassword() && messageContent.tokens.size() < 3)
-        {
-    
-            std::cout << "[DEBUG]: Channel " << channels[i] << " requires a password." << std::endl;
-            ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
-            return ; 
-        } */
         else if (channel->hasPassword() && passwords[i] != channel->getPassword()) // TODO: PASSWORDS MAYBE UNSAFE
         {
             std::cout << "[DEBUG]: Incorrect password for channel " << channels[i] << std::endl;
