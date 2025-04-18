@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:18:47 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:21:05 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,6 @@ void ChannelService::handleModeChange(User *user, int fd, const std::string &cha
     bool addMode = true;
     size_t paramIndex = 0;
     std::string validModes = "itkol";
-    bool modeApplied = false;
 
     for (size_t i = 0; i < modeString.size(); i++)
     {
