@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/03 13:36:23 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:16:54 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,9 +180,11 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
     case 'i':
         channel->setInviteOnly(addMode);
         break;
+
     case 't':
         channel->setRestrictedTopic(addMode);
         break;
+
     case 'k':
         if (addMode)
         {
@@ -199,8 +201,11 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
             channel->setRequiresPassword(params[paramIndex++]);
         }
         else
+        {
             channel->removePassword();
+        }
         break;
+
     case 'l':
         if (addMode)
         {
@@ -218,32 +223,43 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
             channel->setUserLimit(limit);
         }
         else
+        {
             channel->removeUserLimit();
+        }
         break;
+
     case 'o':
-    {
         if (paramIndex >= params.size())
         {
             ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "MODE", "Not enough parameters");
             return;
         }
-        User *target = UserService::getInstance().findUserByNickname(params[paramIndex]);
-        if (!target)
+
+        // Suporte a múltiplos usuários separados por vírgula
         {
-            ServerMessages::SendErrorMessage(fd, ERR_NOSUCHNICK, params[paramIndex]);
-            return;
+            std::stringstream ss(params[paramIndex++]);
+            std::string nick;
+            while (std::getline(ss, nick, ','))
+            {
+                User *target = UserService::getInstance().findUserByNickname(nick);
+                if (!target)
+                {
+                    ServerMessages::SendErrorMessage(fd, ERR_NOSUCHNICK, nick);
+                    continue;
+                }
+                if (!channel->isUserInChannel(target->getFd()))
+                {
+                    ServerMessages::SendErrorMessage(fd, ERR_USERNOTINCHANNEL, nick, channel->getChannelName());
+                    continue;
+                }
+                if (addMode)
+                    channel->promoteToOperator(nick);
+                else
+                    channel->demoteOperator(nick);
+            }
         }
-        if (!channel->isUserInChannel(target->getFd()))
-        {
-            ServerMessages::SendErrorMessage(fd, ERR_USERNOTINCHANNEL, params[paramIndex], channel->getChannelName());
-            return;
-        }
-        if (addMode)
-            channel->promoteToOperator(params[paramIndex++]);
-        else
-            channel->demoteOperator(params[paramIndex++]);
         break;
-    }
+
     default:
         ServerMessages::SendErrorMessage(fd, ERR_UNKNOWNMODE, std::string(1, mode), "is unknown mode char to me");
         return;
