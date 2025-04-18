@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:24:16 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:33:03 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,12 +211,12 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                 ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "MODE", "Not enough parameters");
                 return false;
             }
+            std::string password = params[paramIndex++];
             if (channel->hasPassword())
             {
                 ServerMessages::SendErrorMessage(fd, ERR_KEYSET, channel->getChannelName());
-                return false;
+                return true;
             }
-            std::string password = params[paramIndex++];
             channel->setRequiresPassword(password);
             broadcastSingleModeChange(channel, user, fd, mode, addMode, password);
         }
