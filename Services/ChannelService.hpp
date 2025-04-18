@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelService.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:53 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 17:33:10 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:26:08 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,6 @@ public:
 
 
     void handleModeChange(User* user, int fd, const std::string& channelName, const std::string& modeString, std::vector<std::string>& params);
-    void applyMode(Channel* channel, char mode, bool addMode, std::vector<std::string>& params, size_t& paramIndex, int fd);
+    bool applyMode(Channel* channel, char mode, bool addMode, std::vector<std::string>& params, size_t& paramIndex, int fd);
     void broadcastModeChange(Channel* channel, User* user, int fd, const std::string& modeString, std::vector<std::string>& params, size_t paramIndex);
 };

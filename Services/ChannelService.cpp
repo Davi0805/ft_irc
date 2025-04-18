@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 19:16:54 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 19:25:57 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ void ChannelService::handleModeChange(User *user, int fd, const std::string &cha
 
     bool addMode = true;
     size_t paramIndex = 0;
-    std::string validModes = "itkol"; // Modos válidos
+    std::string validModes = "itkol";
+    bool modeApplied = false;
 
     for (size_t i = 0; i < modeString.size(); i++)
     {
@@ -168,22 +169,26 @@ void ChannelService::handleModeChange(User *user, int fd, const std::string &cha
             continue;
         }
 
-        applyMode(channel, mode, addMode, params, paramIndex, fd);
+        if (applyMode(channel, mode, addMode, params, paramIndex, fd))
+            modeApplied = true;
     }
-    broadcastModeChange(channel, user, fd, modeString, params, paramIndex);
+
+    if (modeApplied)
+        broadcastModeChange(channel, user, fd, modeString, params, paramIndex);
 }
 
-void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::vector<std::string> &params, size_t &paramIndex, int fd)
+
+bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::vector<std::string> &params, size_t &paramIndex, int fd)
 {
     switch (mode)
     {
     case 'i':
         channel->setInviteOnly(addMode);
-        break;
+        return true;
 
     case 't':
         channel->setRestrictedTopic(addMode);
-        break;
+        return true;
 
     case 'k':
         if (addMode)
@@ -191,12 +196,12 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
             if (paramIndex >= params.size())
             {
                 ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "MODE", "Not enough parameters");
-                return;
+                return false;
             }
             if (channel->hasPassword())
             {
                 ServerMessages::SendErrorMessage(fd, ERR_KEYSET, channel->getChannelName());
-                return;
+                return false;
             }
             channel->setRequiresPassword(params[paramIndex++]);
         }
@@ -204,7 +209,7 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
         {
             channel->removePassword();
         }
-        break;
+        return true;
 
     case 'l':
         if (addMode)
@@ -212,13 +217,13 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
             if (paramIndex >= params.size())
             {
                 ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "MODE", "Not enough parameters");
-                return;
+                return false;
             }
             int limit = std::atoi(params[paramIndex++].c_str());
             if (limit <= 0)
             {
                 ServerMessages::SendErrorMessage(fd, ERR_UNKNOWNMODE, "l", "Invalid limit value");
-                return;
+                return false;
             }
             channel->setUserLimit(limit);
         }
@@ -226,19 +231,19 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
         {
             channel->removeUserLimit();
         }
-        break;
+        return true;
 
     case 'o':
         if (paramIndex >= params.size())
         {
             ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "MODE", "Not enough parameters");
-            return;
+            return false;
         }
 
-        // Suporte a múltiplos usuários separados por vírgula
         {
             std::stringstream ss(params[paramIndex++]);
             std::string nick;
+            bool applied = false;
             while (std::getline(ss, nick, ','))
             {
                 User *target = UserService::getInstance().findUserByNickname(nick);
@@ -256,15 +261,17 @@ void ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                     channel->promoteToOperator(nick);
                 else
                     channel->demoteOperator(nick);
+                applied = true;
             }
+            return applied;
         }
-        break;
 
     default:
         ServerMessages::SendErrorMessage(fd, ERR_UNKNOWNMODE, std::string(1, mode), "is unknown mode char to me");
-        return;
+        return false;
     }
 }
+
 
 void ChannelService::broadcastModeChange(Channel *channel, User *user, int fd, const std::string &modeString, std::vector<std::string> &params, size_t paramIndex)
 {
