@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/03 13:25:45 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/18 18:41:02 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     if (!user->isAuthenticated()){
         std::cout << "[DEBUG]: User is not authenticated" << std::endl;
         ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
-        return ; // TODO: EXCEPTION
+        return ;
     }
     if (messageContent.tokens.size() < 2)
     {
         std::cout << "[DEBUG]: Invalid number of arguments" << std::endl;
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");
-        return ; // TODO: EXCEPTION
+        return ;
     }
 
     std::vector<std::string> channels = commaTokenizer(messageContent.tokens[1]);
@@ -54,7 +54,7 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
         if (channel->isUserInChannel(fd)){
             std::cout << "[DEBUG]: User is already in the channel " << channels[i] << std::endl;
             ServerMessages::SendErrorMessage(fd, ERR_USERONCHANNEL, user->getNick());
-            return ; // TODO: EXCEPTION
+            return ;
         }
         else if (channel->hasUserLimit() && channel->getUsers().size() >= channel->getUserLimit())
         {

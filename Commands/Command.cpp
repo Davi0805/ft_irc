@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Command.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:14:43 by davi              #+#    #+#             */
-/*   Updated: 2025/03/15 18:34:41 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 18:39:02 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 Command::Command()
 {}
 
-/* Command::Command(UserService& userService, ChannelService& channelService)
-                 : _userService(&userService), _channelService(&channelService)
-{
-} */
 
 Command::~Command()
 {}
