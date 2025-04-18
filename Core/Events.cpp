@@ -3,20 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/04/02 10:54:59 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/18 18:35:41 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Events.hpp"
 
 
-// INICIANDO A VARIAVEL INSTANCE DO SINGLETON
 Events* Events::_instance = NULL;
-
-//! CODIGO BASEADO NA DOCUMENTACAO - MAN EPOLL
 
 Events::Events(int socketFd)
 {
@@ -40,20 +37,17 @@ Events* Events::getInstance()
     return _instance;
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
-// TODO: ERROR CHECKING ?
 bool Events::setupPollContext()
 {
     struct pollfd pfd;
     pfd.fd = this->_listensocket; 
-    pfd.events = POLLIN;            // will monitor incoming data
+    pfd.events = POLLIN;          // listen for incoming connections
     pfd.revents = 0;                // no events initially
 
     this->_pfds.push_back(pfd);     // add this pollfd to the vector of pollfds
     return true;
 }
 
-// TODO: TALVEZ ADICIONAR EXCEPTIONS PERSONALIZADAS PARA SO UTILIZAR TRY/CATCH NO CONSTRUTOR
 void Events::runPollLoop()
 {
     for(;;) 
@@ -74,7 +68,7 @@ void Events::runPollLoop()
          * and since this is a special fd if it is notified with POLLIN it means it had a new connetion
          * and we should accept new connections and then check for the fds we data toq be recved
         */
-        if (_pfds[0].revents & POLLIN) // this will check the socketFd for new connections
+        if (_pfds[0].revents & POLLIN)
         {
             for (;;)
             {
@@ -83,23 +77,21 @@ void Events::runPollLoop()
                 struct sockaddr_in addr;
                 socklen_t addrlen = sizeof(addr);
                 int clientSock = accept(_listensocket, (struct sockaddr*)&addr, &addrlen);
-                if (clientSock < 0) // error on new connection
+                if (clientSock < 0) 
                 {
                     if (errno == EAGAIN || errno == EWOULDBLOCK)
-                        break ; // no more connections queued
+                        break ;
                     std::cerr << "Error accepting connection" << std::endl; // todo DEBUG message or actually meaningful?
                     continue;
                 }
 
-                setNonBlock(clientSock); // O_NONBLOCK everytime
+                setNonBlock(clientSock); 
                 
-                // new fd for poll to track
                 struct pollfd newClientPollfd;
                 newClientPollfd.fd = clientSock;
                 newClientPollfd.events = POLLIN;
-                _pfds.push_back(newClientPollfd); //todo error check?
-                
-                // create new user instance for this connection
+                _pfds.push_back(newClientPollfd); 
+
                 _msgHandler.CreateEvent(clientSock);
 
                 std::cout << "New client connected: " << clientSock << std::endl;
@@ -111,8 +103,7 @@ void Events::runPollLoop()
         {
             if (_pfds[i].revents & POLLIN) // this will check the fds and only handle those with events
             {
-                // todo pensar se é melhor remover o cliente aqui ou no HandleEvent, passar pollfds* e dar pop?
-                // Se a função retornar false, significa que o cliente desconectou
+            
                 if (!_msgHandler.HandleEvent(_pfds[i].fd))
                     removeClient(_pfds[i].fd);
             }
@@ -120,24 +111,19 @@ void Events::runPollLoop()
     }
 }
 
-// TODO: RESOLVER REDUNDANCIA POIS UTILIZADO EM SOCKET E EVENTS
 bool Events::setNonBlock(int targetFd)
 {
-    // UTILIZA O FCNTL PARA PEGAR CONFIGURACOES/FLAGS JA EXISTENTES DO SOCKET
     int flags = fcntl(targetFd, F_GETFL, 0);
     if (flags < 0)
     {
-        std::cerr << "FATAL: Deu merda federal ao tentar dar get das flags setadas no socket" << std::endl;
+        std::cerr << "FATAL: Failed to retrieve the current flags set on the socket" << std::endl;
         close(targetFd);
         return false;
     }
 
-    // REUTILIZA O FCNTL PARA SETAR AS FLAGS JA EXISTENTES MAIS O NONBLOCK
-    // NONBLOCK PELO QUE ENTENDI, E PARA EVITAR QUE O PROGRAMA TRAVE O PROCESSAMENTO
-    // DEVIDO HA ALGUMA ISSUE NA CONEXAO OU PROCESSAMENTO DE EVENTO
     if (fcntl(targetFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
     {
-        std::cerr << "FATAL: Erro ao setar o NONBLOCK no socket" << std::endl;
+        std::cerr << "FATAL: Error setting NONBLOCK on socket" << std::endl;
         close(targetFd);
         return (false);
     }
@@ -145,7 +131,6 @@ bool Events::setNonBlock(int targetFd)
     return true;
 }
 
-// ! DEBUG PURPOSES
 void Events::readAndPrintFd(int fd)
 {
     char buffer[512];
@@ -153,7 +138,7 @@ void Events::readAndPrintFd(int fd)
     bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
     if (bytesRead < 0)
     {
-        std::cerr << "FATAL: Erro ao ler do descritor de arquivo" << std::endl;
+        std::cerr << "FATAL: Error reading from file descriptor" << std::endl;
         return;
     }
     
@@ -165,18 +150,14 @@ void Events::readAndPrintFd(int fd)
     }
 
     buffer[bytesRead] = '\0';
-
-    // std::cout << "Recebido do fd " << fd << ": " << buffer << std::endl;
-
-    // _msgHandler.ircTokenizer(std::string(buffer));
 }
 
 void Events::removeClient(int fd)
 {
+    std::cout << "Removing client " << fd << " from poll..." << std::endl;
     for (size_t i = 0; i < _pfds.size(); i++) {
         if (_pfds[i].fd == fd) {
             _pfds.erase(_pfds.begin() + i); // remove cliente da lista
-            std::cout << "Cliente removido da poll" << std::endl;
             break;
         }
     }
