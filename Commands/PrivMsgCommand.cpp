@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/03/27 21:42:08 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 18:36:30 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,7 @@ PrivMsgCommand::~PrivMsgCommand()
 
 void PrivMsgCommand::execute(MessageContent messageContent, int fd)
 {
-    //(void)_userService;
-    //(void)_channelService;
-    //(void)messageContent;
-    //(void)fd;
-    
-    std::cout << "[DEBUG]: COMANDO PRIVMSG SENDO CHAMADO" << std::endl;
 
-    // TODO: VERIFICACOES PARA EVITAR CRASHES
     User* sender = UserService::getInstance().findUserByFd(fd);
     if (!sender) return ;
 
@@ -40,7 +33,7 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
 
         send(receiver->getFd(), fullMsg.c_str(), fullMsg.size(), 0);
     }
-    else if (messageContent.tokens[1][0] == '#') // Se for um channel publico, comeca com # (jogo da velha no inicio)
+    else if (messageContent.tokens[1][0] == '#')
     {
         if (ChannelService::getInstance().isUserPartOfChannel(fd, messageContent.tokens[1]))
         {

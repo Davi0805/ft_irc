@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ServerMessages.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 21:43:04 by davi              #+#    #+#             */
-/*   Updated: 2025/03/31 22:42:26 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/18 18:38:38 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerMessages.hpp"
-
-
-/* 
-    CLASSE COM OBJETIVO DE ADICIONAR METODOS ESTATICOS
-    COM PROPOSITO DE FORMATAR E/OU MANDAR MENSAGEMS PARA OS CLIENTES
-    SEGUINDO AS NORMAS DOCUMENTADAS NO RFC DO IRC    
-*/
 
 ServerMessages::ServerMessages()
 {
@@ -27,12 +20,6 @@ ServerMessages::~ServerMessages()
 {
 }
 
-/* 
-    APOS AUTENTICAR, DE ACORDO COM MINHAS PESQUISAS O SERVIDOR
-    COSTUMA MANDAR AS RESPOSTAS COM CODIGO DE 001 A 005
-    CONTENDO INFORMCAOES PERTINENTES DO SERVIDOR, QUE CLARAMENTE
-    O NOSSO NAO TEM, POR SER UM SERVIDOR DESENVOLVIDO PARA APRENDIZAGEM    
-*/
 
 void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
 {
@@ -88,34 +75,27 @@ void ServerMessages::SendWelcomeMessage(int fd, std::string nickname)
     return;
 }
 
-/* 
-    O MESMO QUE FOI CITADO ACIMA, POREM PARA QUANDO SE JUNTA EM UM CANAL
-*/
+
 void ServerMessages::JoinedChannel(User* user, Channel* channel)
 {
     std::ostringstream stream;
 
     std::cout << "[DEUBG] JOINED CHANNEL CALLED LALALAL" << std::endl;
 
-    // RFC E SEUS CODIGOS DE RESPOSTA
-    // APENAS MENSAGEM DIZENDO QUE DEU JOIN NO SERVER COM SUCESSO
     stream << ":" << user->getNick() << "!~user@host JOIN " << channel->getChannelName() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     channel->broadcastMessageTemp(stream.str(), user->getFd());
     stream.str("");
 
-    // 332 - CONTENDO O TOPICO DO CANAL
     stream << ":" << Server::getInstance().getServerName() << " 332 " << user->getNick() << " " << channel->getChannelName() << " : " << channel->getChannelTopic() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
 
-    // 353 - LISTA DE USUARIOS DO CANAL
     stream << ":" << Server::getInstance().getServerName() << " 353 " << user->getNick() << " = " << channel->getChannelName() << " :" << channel->getAllUserString() << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
     stream.str("");
     std::cout << "USERS: " << channel->getAllUserString() << std::endl;
 
-    // 366 - CODIGO QUE NOTIFICA FIM DA LISTA
     stream << ":" << Server::getInstance().getServerName() << " 366 " << user->getNick() << " " << channel->getChannelName() << " :" << "End of /NAMES list" << "\r\n";
     send(user->getFd(), stream.str().c_str(), stream.str().size(), 0);
 
@@ -124,12 +104,6 @@ void ServerMessages::JoinedChannel(User* user, Channel* channel)
 }
 
 
-/* 
-    DIFERENTE DOS METODOS ANTERIORES, ESSE METODO E PARA FORMATACAO.
-    OU SEJA, ELE NAO ENVIA NADA, POIS NESSE CASO ESSE METODO SERA UTILIZADO
-    MAJORITARIAMENTE EM BROADCAST DE MENSAGEM, SENDO MELHOR TER A LOGICA DE BROADCAST
-    SEPARADA DA CLASSE SERVER MESSAGE    
-*/
 std::string ServerMessages::PrivMsgFormatter(User* user, Channel* channel, std::string message)
 {
     std::ostringstream stream;
@@ -158,12 +132,7 @@ std::string ServerMessages::ConvertMessageContentToA(MessageContent content)
         result.append(" ");
     }
     result.append(content.message);
-    result.append("\r\n"); // indiferente, porem boa pratica
-                        // apararentemente n funciona ao fazer
-                        // por outros computadores pois o protocolo
-                        // precisa de acesso a port forwarding
-                        // via rede privada
-                        // e provavelmente o vitor deve ter bloqueado
+    result.append("\r\n");
     return result;
 }
 
@@ -184,8 +153,6 @@ std::string ServerMessages::WhoReply(User* user, Channel* channel)
 }
 
 /** 
- * TODO DOXYGEN PLS
- * 
  * @brief Sends error code and a message associated with that error code
  * @param fd client fd to send error message to
  * @param errorCode error number identifier
@@ -198,18 +165,14 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
     (void)param2;
     std::ostringstream stream;
 
-    // Adiciona o prefixo do servidor e o código do erro
     stream << ":" << Server::getInstance().getServerName() << " " << errorCode;
     
     if (!nickname.empty())
         stream << " " << nickname;
 
-    // TODO implementar cada parametro corretamente para cada erro? quem se chega a frente? kkkkkk
-    // Se houver um alvo (ex: um canal ou usuário específico), adicionamos
     if (!param1.empty())
         stream << " " << param1;
 
-    // Associa o código de erro à mensagem correspondente
     switch (errorCode)
     {
         case ERR_NOSUCHNICK: stream << " :No such nick/channel"; break;
@@ -242,10 +205,9 @@ void ServerMessages::SendErrorMessage(int fd, int errorCode, const std::string& 
         default:  stream << " :Unknown error"; break;
     }
 
-    stream << "\r\n";  // IRC requer a terminação \r\n
+    stream << "\r\n";
 
     std::cout << stream.str() << std::endl;
-    // Envia a mensagem ao cliente
     send(fd, stream.str().c_str(), stream.str().size(), 0);
 }
 
