@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:21:05 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:22:28 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,15 +139,17 @@ bool ChannelService::isUserPartOfChannel(int fd, std::string channelName)
 void ChannelService::broadcastSingleModeChange(Channel* channel, User* user, int fd, char mode, bool addMode, const std::string& param)
 {
     std::stringstream msg;
-    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host MODE " << channel->getChannelName()
-        << " " << (addMode ? "+" : "-") << mode;
+    msg << ":" << user->getNick() << "!~" << user->getUser() << "@host MODE " 
+        << channel->getChannelName() << " " << (addMode ? "+" : "-") << mode;
 
     if (!param.empty())
         msg << " " << param;
 
     msg << "\r\n";
-    send(fd, msg.str().c_str(), msg.str().size(), 0);
-    channel->broadcastMessageTemp(msg.str(), fd);
+
+    std::string finalMsg = msg.str();
+    send(fd, finalMsg.c_str(), finalMsg.size(), 0);
+    channel->broadcastMessageTemp(finalMsg, fd);
 }
 
 void ChannelService::handleModeChange(User *user, int fd, const std::string &channelName, const std::string &modeString, std::vector<std::string> &params)
