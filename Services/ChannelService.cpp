@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:22:28 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/18 20:24:16 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
         }
         return true;
 
-    case 'l':
+        case 'l':
         if (addMode)
         {
             if (paramIndex >= params.size())
@@ -242,15 +242,17 @@ bool ChannelService::applyMode(Channel *channel, char mode, bool addMode, std::v
                 return false;
             }
             channel->setUserLimit(limit);
-            broadcastSingleModeChange(channel, user, fd, mode, addMode, std::to_string(limit));
+    
+            std::stringstream ss;
+            ss << limit;
+            broadcastSingleModeChange(channel, user, fd, mode, addMode, ss.str());
         }
         else
         {
             channel->removeUserLimit();
             broadcastSingleModeChange(channel, user, fd, mode, addMode, "");
         }
-        return true;
-
+        return true;    
     case 'o':
         if (paramIndex >= params.size())
         {
