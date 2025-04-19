@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot_main.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:57:49 by fang              #+#    #+#             */
-/*   Updated: 2025/04/18 19:29:30 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 13:25:37 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 #include <iostream> 
 #include <cerrno>
 #include <cstring>
-#include <poll.h> // poll
-#include <fcntl.h> //fcntl
 #include <limits>
 #include <exception>
 

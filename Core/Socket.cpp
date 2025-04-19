@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 19:11:14 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 19:53:15 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 13:25:03 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ void Socket::setNonBlock()
     /*
      * - fcntl is a general-purpose interface for manipulating file descriptors.
      * - We use the cmd F_GETFL to fetch the current active flags on the socket fd for later usage
+     * THEY DONT WANT TO USE GETFL FOR SOME REASON 
     */
-    int flags = fcntl(_socketFd, F_GETFL);
-    if (flags < 0)
-        throw std::runtime_error("Deu merda federal ao tentar dar get das flags setadas no socket");
+    // int flags = fcntl(_socketFd, F_GETFL);
+    // if (flags < 0)
+    //     throw std::runtime_error("Deu merda federal ao tentar dar get das flags setadas no socket");
 
     /*
      * - Here we use fnctl to add to the existing flags the O_NONBLOCK with the F_SETFL cmd
@@ -85,7 +86,7 @@ void Socket::setNonBlock()
      * immediately instead of blocking if data isn't available or there is an issue.
      * - If there is no data available for reading or writing, they will return -1 with errno set to EAGAIN or EWOULDBLOCK.
     */
-    if (fcntl(_socketFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
+    if (fcntl(_socketFd, F_SETFL, O_NONBLOCK, 0) < 0)
         throw std::runtime_error("Erro ao setar o NONBLOCK no socket");
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 20:56:17 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:19:21 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 13:24:27 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,19 @@ void Events::runPollLoop()
 
 bool Events::setNonBlock(int targetFd)
 {
-    int flags = fcntl(targetFd, F_GETFL, 0);
-    if (flags < 0)
-    {
-        std::cerr << "FATAL: Deu merda federal ao tentar dar get das flags setadas no socket" << std::endl;
-        close(targetFd);
-        return false;
-    }
+    // THEY DONT LIKE THIS FOR SOMEREASON LOL GO FIGURE IT OUT
+    // int flags = fcntl(targetFd, F_GETFL, 0);
+    // if (flags < 0)
+    // {
+    //     std::cerr << "FATAL: Deu merda federal ao tentar dar get das flags setadas no socket" << std::endl;
+    //     close(targetFd);
+    //     return false;
+    // }
 
     // REUSE FCNTL TO SET THE EXISTING FLAGS PLUS NONBLOCK
     // NONBLOCK, AS I UNDERSTAND IT, IS TO PREVENT THE PROGRAM FROM FREEZING
     // DUE TO SOME ISSUE IN THE CONNECTION OR EVENT PROCESSING
-    if (fcntl(targetFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
+    if (fcntl(targetFd, F_SETFL, O_NONBLOCK, 0) < 0)
     {
         std::cerr << "FATAL: Error setting to nonblock" << std::endl;
         close(targetFd);
