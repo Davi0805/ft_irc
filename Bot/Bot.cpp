@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 21:56:29 by fang              #+#    #+#             */
-/*   Updated: 2025/04/18 19:29:59 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 18:29:12 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,9 +147,10 @@ void Bot::TokenizeCommand(std::string &cmd) const
     if (ircCMD == "INVITE")
     {
         std::string channel = tokens[3];
+        std::cout << tokens[3] << std::endl;
         if (*channel.begin() != '#') return ;
             
-        std::string joinCmd = std::string("JOIN ") + channel;
+        std::string joinCmd = std::string("JOIN ") + channel + "\r\n";
         send(_botSocketFd, joinCmd.c_str(), joinCmd.size(), 0);
     }
     else if (ircCMD == "PRIVMSG")
