@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/04/19 13:22:02 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/19 13:48:50 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,6 @@ bool MessageHandler::HandleEvent(int fd)
         TOKENIZATION METHOD, REQUIRING THE COMMANDS TO BE SEPARATED
         FOR PROPER EXECUTION
     */
-    
-    
     if (buf.find("\r\n") != std::string::npos) // hexchat ends it in \r\n
     {
         std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
@@ -111,8 +109,25 @@ bool MessageHandler::HandleEvent(int fd)
     }
     else
     {
-        messageContent = ircTokenizer(buf);    
-        ProcessCommand(messageContent, fd); 
+        if (buf.find("\n") == std::string::npos) // ncat ends it in \n
+        {
+            // append msg content to something
+            std::string& testebuf = UserService::getInstance().findUserByFd(fd)->getBuf();
+            testebuf.append(buf);
+        }
+        else
+        {
+            if (!UserService::getInstance().findUserByFd(fd)->getBuf().empty())
+            {
+                std::string& testebuf = UserService::getInstance().findUserByFd(fd)->getBuf();
+                testebuf.append(buf);
+                buf = testebuf;
+                testebuf.clear();
+            }
+            messageContent = ircTokenizer(buf);    
+            ProcessCommand(messageContent, fd);
+            // clear do msg content
+        }
     }
     return true;
 }
