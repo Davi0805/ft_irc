@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PartCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:10:56 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/18 19:42:44 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 12:29:39 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ PartCommand::~PartCommand() {}
 void PartCommand::execute(MessageContent messageContent, int fd)
 {
     User* user = UserService::getInstance().findUserByFd(fd);
+
+    if (!user->isAuthenticated())
+        return ;
     
     for (size_t i = 1; i < messageContent.tokens.size(); i++)
     {
