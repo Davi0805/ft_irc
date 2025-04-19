@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:33:30 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/04/18 20:37:24 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/19 12:37:52 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
 {
     User* user = UserService::getInstance().findUserByFd(fd);
     if (!user) return;
+    if (!user->isAuthenticated()) return;
 
         if (messageContent.tokens.size() < 2)
         {
