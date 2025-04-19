@@ -6,7 +6,7 @@
 /*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/04/19 13:48:50 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/19 18:31:49 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,76 +60,38 @@ void MessageHandler::CreateEvent(int fd)
 */
 bool MessageHandler::HandleEvent(int fd)
 {
-    MessageContent messageContent;
-    char buffer[512];
-    std::string buf;
-
-    while (true)
-    {
-        ssize_t bytesRead = recv(fd, buffer, sizeof(buffer), 0);
-        if (bytesRead > 0)
-        {
-            buf.append(buffer, bytesRead);
-            continue;
-        }
-
-        if (bytesRead == 0) // Disconect
-        {
-            std::cerr << "INFO: User disconnected" << std::endl;
-            _channelService.quitFromAllChannels(_userService.findUserByFd(fd), "Disconnect");
-            _userService.RemoveUserByFd(fd);
-            return false;
-        }
-
-        if (errno == EAGAIN || errno == EWOULDBLOCK)
-            break; // No more data, normal stop
-
-        std::cerr << "FATAL: " << std::strerror(errno) << std::endl;
+    User* user = _userService.findUserByFd(fd);
+    if (!user) {
+        std::cerr << "ERROR: User not found for fd: " << fd << std::endl;
         return false;
-    }
-
-
-    /* 
-        IF/ELSE, BECAUSE UNLIKE NCAT, HEXCHAT SENDS ALL
-        CREDENTIALS AT ONCE, MAKING IT NECESSARY TO USE ANOTHER
-        TOKENIZATION METHOD, REQUIRING THE COMMANDS TO BE SEPARATED
-        FOR PROPER EXECUTION
-    */
-    if (buf.find("\r\n") != std::string::npos) // hexchat ends it in \r\n
-    {
-        std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
-        for (size_t i = 0; i < splittedCommands.size(); i++)
-        {
-            messageContent = ircTokenizer(splittedCommands[i]);
-            if (!_userService.findUserByFd(fd))
+    }    char buffer[512];
+    ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);    if (bytesRead <= 0) {
+        if (bytesRead == 0) {
+            std::cerr << "INFO: User disconnected\n";
+        } else if (errno != EAGAIN && errno != EWOULDBLOCK) {
+            std::cerr << "ERROR: recv failed: " << std::strerror(errno) << std::endl;
+        }
+        _channelService.quitFromAllChannels(user, "Disconnect");
+        _userService.RemoveUserByFd(fd);
+        return false;
+    }    buffer[bytesRead] = '\0';    // Accumulate into user's buffer
+    std::string& userBuffer = user->getBuf();
+    userBuffer.append(buffer);    // Normalize \r\n to \n
+    size_t rpos;
+    while ((rpos = userBuffer.find("\r\n")) != std::string::npos) {
+        userBuffer.replace(rpos, 2, "\n");
+    }    // Process complete lines
+    size_t newlinePos;
+    while ((newlinePos = userBuffer.find('\n')) != std::string::npos) {
+        std::string message = userBuffer.substr(0, newlinePos);
+        userBuffer.erase(0, newlinePos + 1);        if (!message.empty()) {
+            MessageContent messageContent = ircTokenizer(message);
+            if (!_userService.findUserByFd(fd)) {
                 return false;
-            
-            ProcessCommand(messageContent, fd);
-        }
-    }
-    else
-    {
-        if (buf.find("\n") == std::string::npos) // ncat ends it in \n
-        {
-            // append msg content to something
-            std::string& testebuf = UserService::getInstance().findUserByFd(fd)->getBuf();
-            testebuf.append(buf);
-        }
-        else
-        {
-            if (!UserService::getInstance().findUserByFd(fd)->getBuf().empty())
-            {
-                std::string& testebuf = UserService::getInstance().findUserByFd(fd)->getBuf();
-                testebuf.append(buf);
-                buf = testebuf;
-                testebuf.clear();
             }
-            messageContent = ircTokenizer(buf);    
             ProcessCommand(messageContent, fd);
-            // clear do msg content
         }
-    }
-    return true;
+    }    return true;
 }
 
 
