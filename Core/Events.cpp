@@ -6,9 +6,10 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/18 20:37:59 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/19 15:06:58 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 
 #include "Events.hpp"
@@ -111,18 +112,19 @@ void Events::runPollLoop()
 
 bool Events::setNonBlock(int targetFd)
 {
-    int flags = fcntl(targetFd, F_GETFL, 0);
-    if (flags < 0)
-    {
-        std::cerr << "FATAL: Failed to retrieve the current flags set on the socket" << std::endl;
-        close(targetFd);
-        return false;
-    }
+    // THEY DONT LIKE THIS FOR SOMEREASON LOL GO FIGURE IT OUT
+    // int flags = fcntl(targetFd, F_GETFL, 0);
+    // if (flags < 0)
+    // {
+    //     std::cerr << "FATAL: Deu merda federal ao tentar dar get das flags setadas no socket" << std::endl;
+    //     close(targetFd);
+    //     return false;
+    // }
 
     // REUSE FCNTL TO SET THE EXISTING FLAGS PLUS NONBLOCK
     // NONBLOCK, AS I UNDERSTAND IT, IS TO PREVENT THE PROGRAM FROM FREEZING
     // DUE TO SOME ISSUE IN THE CONNECTION OR EVENT PROCESSING
-    if (fcntl(targetFd, F_SETFL, flags | O_NONBLOCK, 0) < 0)
+    if (fcntl(targetFd, F_SETFL, O_NONBLOCK, 0) < 0)
     {
         std::cerr << "FATAL: Error setting to nonblock" << std::endl;
         close(targetFd);

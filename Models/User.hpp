@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 23:07:39 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:03:57 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/19 13:42:44 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ public:
     int getFd() const;
     std::string getUser() const;
     std::string getRealName() const;
+    std::string& getBuf();
 
     bool checkPassword(std::string &pass) const;
     bool checkBotPassword(std::string &pass) const;
@@ -60,6 +61,7 @@ private:
     std::string _nickname;
     std::string _username;
     std::string _realName;
+    std::string _buf;
     Status _status;
 };
 
