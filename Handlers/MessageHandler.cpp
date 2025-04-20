@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/04/20 11:15:53 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/20 17:42:15 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,36 +60,45 @@ void MessageHandler::CreateEvent(int fd)
 */
 bool MessageHandler::HandleEvent(int fd)
 {
-    User* user = _userService.findUserByFd(fd);
-    if (!user) {
-        std::cerr << "ERROR: User not found for fd: " << fd << std::endl;
-        return false;
-    }
+    MessageContent messageContent;
     char buffer[512];
+    std::string buf;
+    
     ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);
-    if (bytesRead <= 0) {
-        if (bytesRead == 0) {
-            std::cerr << "INFO: User disconnected\n";
-        } else {
-            std::cerr << "ERROR: recv failed: " << std::strerror(errno) << std::endl;
-        }
-        _channelService.quitFromAllChannels(user, "Disconnect");
-        _userService.RemoveUserByFd(fd);
-        return false;
+    if (bytesRead > 0) {
+        buf.append(buffer, bytesRead);
     }
-    buffer[bytesRead] = '\0';
-    std::string& userBuffer = user->getBuf();
-    userBuffer.append(buffer);
-    size_t pos;
-    while ((pos = userBuffer.find('\n')) != std::string::npos) {
-        std::string message = userBuffer.substr(0, pos);
-        userBuffer.erase(0, pos + 1);
-        if (!message.empty() && message[message.length() - 1] == '\r') {
-            message.erase(message.length() - 1);
+    if (bytesRead == 0) {
+        std::cerr << "INFO: User disconnected\n";
+        _channelService.quitFromAllChannels(_userService.findUserByFd(fd), "Disconnect");
+        _userService.RemoveUserByFd(fd);
+        close(fd);
+        return false;
+    } 
+    if (buf.empty())
+        return true;
+
+    // Process multiple commands if there are any
+    if (buf.find("\r\n") != std::string::npos)
+    {
+        std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
+        for (size_t i = 0; i < splittedCommands.size(); i++)
+        {
+            messageContent = ircTokenizer(splittedCommands[i]);
+            if (!_userService.findUserByFd(fd))
+                return false;
+            ProcessCommand(messageContent, fd);
         }
-        std::cerr << "RECEIVED > " << message << std::endl;
-        MessageContent messageContent = ircTokenizer(message);
-        ProcessCommand(messageContent, fd);
+        buf.clear();  // Clear the buffer after processing commands
+    }
+    else
+    {
+        if (!buf.empty())
+        {
+            messageContent = ircTokenizer(buf);
+            ProcessCommand(messageContent, fd);
+            buf.clear();  // Clear the buffer after processing the command
+        }
     }
     return true;
 }
