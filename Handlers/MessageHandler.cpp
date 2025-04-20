@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/04/19 18:31:49 by artuda-s         ###   ########.fr       */
+/*   Updated: 2025/04/20 11:15:53 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,34 +64,34 @@ bool MessageHandler::HandleEvent(int fd)
     if (!user) {
         std::cerr << "ERROR: User not found for fd: " << fd << std::endl;
         return false;
-    }    char buffer[512];
-    ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);    if (bytesRead <= 0) {
+    }
+    char buffer[512];
+    ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);
+    if (bytesRead <= 0) {
         if (bytesRead == 0) {
             std::cerr << "INFO: User disconnected\n";
-        } else if (errno != EAGAIN && errno != EWOULDBLOCK) {
+        } else {
             std::cerr << "ERROR: recv failed: " << std::strerror(errno) << std::endl;
         }
         _channelService.quitFromAllChannels(user, "Disconnect");
         _userService.RemoveUserByFd(fd);
         return false;
-    }    buffer[bytesRead] = '\0';    // Accumulate into user's buffer
+    }
+    buffer[bytesRead] = '\0';
     std::string& userBuffer = user->getBuf();
-    userBuffer.append(buffer);    // Normalize \r\n to \n
-    size_t rpos;
-    while ((rpos = userBuffer.find("\r\n")) != std::string::npos) {
-        userBuffer.replace(rpos, 2, "\n");
-    }    // Process complete lines
-    size_t newlinePos;
-    while ((newlinePos = userBuffer.find('\n')) != std::string::npos) {
-        std::string message = userBuffer.substr(0, newlinePos);
-        userBuffer.erase(0, newlinePos + 1);        if (!message.empty()) {
-            MessageContent messageContent = ircTokenizer(message);
-            if (!_userService.findUserByFd(fd)) {
-                return false;
-            }
-            ProcessCommand(messageContent, fd);
+    userBuffer.append(buffer);
+    size_t pos;
+    while ((pos = userBuffer.find('\n')) != std::string::npos) {
+        std::string message = userBuffer.substr(0, pos);
+        userBuffer.erase(0, pos + 1);
+        if (!message.empty() && message[message.length() - 1] == '\r') {
+            message.erase(message.length() - 1);
         }
-    }    return true;
+        std::cerr << "RECEIVED > " << message << std::endl;
+        MessageContent messageContent = ircTokenizer(message);
+        ProcessCommand(messageContent, fd);
+    }
+    return true;
 }
 
 
