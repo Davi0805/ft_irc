@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/18 20:36:52 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:59:59 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
     for (size_t i = 0; i < channels.size(); i++)
     {
         Channel* channel = ChannelService::getInstance().get_or_createChannel(channels[i]);
+        if (!channel)
+        {
+            ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, user->getNick(), channels[i]);
+            return ;
+        }
         if (channel->isUserInChannel(fd)){
             ServerMessages::SendErrorMessage(fd, ERR_USERONCHANNEL, user->getNick());
             return ;

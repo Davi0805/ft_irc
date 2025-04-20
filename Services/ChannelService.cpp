@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:38:11 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:48:57 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,26 +54,22 @@ void ChannelService::quitFromAllChannels(User *user, std::string message)
     CLASS WITH THE OBJECTIVE OF RETURNING AN EXISTING CHANNEL OR CREATING A CHANNEL
     WHEN SUCH CHANNEL DOES NOT EXIST YET, SIMILAR TO THE IRC JOIN COMMAND
  */
-Channel *ChannelService::get_or_createChannel(std::string channelName)
-{
-    std::map<std::string, Channel *>::iterator it;
-
-    if (channelName[0] != '#')
-        channelName.insert(0, "#");
-
-    it = _channels.find(channelName);
-
-    // If it exists, return the channel
-    // If not, create a new channel
-    if (it != _channels.end())
-        return it->second;
-    else
-    {
-        _channels[channelName] = new Channel(channelName);
-
-        return _channels[channelName];
-    }
-}
+ Channel* ChannelService::get_or_createChannel(std::string channelName)
+ {
+     if (channelName.empty() || channelName[0] != '#')
+         return NULL; // Reject invalid channel names
+ 
+     std::map<std::string, Channel*>::iterator it = _channels.find(channelName);
+ 
+     if (it != _channels.end())
+         return it->second;
+ 
+     Channel* newChannel = new Channel(channelName);
+     _channels[channelName] = newChannel;
+ 
+     return newChannel;
+ }
+ 
 
 /*
     METHOD TO FIND A CHANNEL WITHOUT CREATING IT, IN CASE IT IS NOT FOUND,

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 01:09:26 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:00:55 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/20 18:42:34 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,19 @@ void Channel::AddUser(User* user)
 
 void Channel::removeUser(User* user)
 {
+    int fd = user->getFd();
+
     for (size_t i = 0; i < _users.size(); i++)
     {
-        if (_users[i]->getFd() == user->getFd())
+        if (_users[i]->getFd() == fd)
         {
             _users.erase(_users.begin() + i);
             break;
         }
     }
+
+    _operators.erase(fd);
+    _invitedUsers.erase(fd);
 }
 
 void Channel::removeUser(int fd)
@@ -70,7 +75,11 @@ void Channel::removeUser(int fd)
             break;
         }
     }
+
+    _operators.erase(fd);
+    _invitedUsers.erase(fd);
 }
+
 
 bool Channel::isUserInChannel(int fd) const
 {
