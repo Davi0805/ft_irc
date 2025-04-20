@@ -6,7 +6,7 @@
 /*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 01:04:45 by davi              #+#    #+#             */
-/*   Updated: 2025/04/20 18:48:57 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/20 19:05:00 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,8 @@ void ChannelService::quitFromAllChannels(User *user, std::string message)
 Channel *ChannelService::findChannel(std::string channelName)
 {
     std::map<std::string, Channel *>::iterator it;
-    if (channelName[0] != '#')
-        channelName.insert(0, "#");
+    // if (channelName[0] != '#')
+    //     channelName.insert(0, "#");
 
     it = _channels.find(channelName);
     if (it != _channels.end())
