@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   InviteCommand.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 10:05:45 by lebarbos          #+#    #+#             */
-/*   Updated: 2025/04/18 19:33:56 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/20 18:29:38 by lebarbos         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 
 	if (!channel->isUserInChannel(clientFd)) // Inviter must be on the channel
 	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_NOTONCHANNEL, user->getNick(), channelName);
+		ServerMessages::SendErrorMessage(clientFd, ERR_NOTONCHANNEL, user->getNick());
 		return;
 	}
 
-	if (channel->isUserInvited(targetUser) || channel->isUserInChannel(targetUser->getFd())) // Check if already invited
+	if (channel->isUserInChannel(targetUser->getFd()))
 	{
-		ServerMessages::SendErrorMessage(clientFd, ERR_USERONCHANNEL, user->getNick(), channelName);
+		ServerMessages::SendErrorMessage(clientFd, ERR_USERONCHANNEL, user->getNick(), targetUser->getNick(), "");
 		return;
 	}
 
