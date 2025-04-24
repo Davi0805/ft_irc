@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+         #
+#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/03/31 18:50:48 by artuda-s         ###   ########.fr        #
+#    Updated: 2025/04/24 21:18:47 by fang             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME = ircserv
 
 # Compiler
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c++98
 
 # Files
 SRC = main.cpp \
@@ -92,6 +92,30 @@ $(BOT_OBJ_DIR)/%.o: Bot/%.cpp | $(BOT_OBJ_DIR)
 $(BOT_OBJ_DIR):
 	@mkdir -p $@
 
+
+
+############################################################################################################################################
+############################################################################################################################################
+############################################################################################################################################
+# Test compilation details
+TEST_NAME = integration_test
+TEST_SRC = Tests/Integration.cpp
+TEST_OBJ = $(addprefix $(OBJ_DIR)/, $(TEST_SRC:.cpp=.o))
+
+# Rule for compiling
+test: $(TEST_OBJ) $(filter-out $(OBJ_DIR)/main.o, $(OBJ))
+	$(CC) $^ -o $(TEST_NAME)
+
+# Rule to compile test object files without flags
+# fucking c++98 xD
+$(OBJ_DIR)/Tests/%.o: Tests/%.cpp | $(OBJ_DIR)/Tests
+	@mkdir -p $(@D)
+	@$(CC) -c $< -o $@
+
+# Create test object directory
+$(OBJ_DIR)/Tests:
+	@mkdir -p $@
+
 # Update clean and fclean to handle bot
 clean:
 	@if [ -d "$(OBJ_DIR)" ]; then \
@@ -105,6 +129,9 @@ fclean: clean
 	fi
 	@if [ -f "$(BOT_NAME)" ]; then \
 		rm -f $(BOT_NAME); \
+	fi
+		@if [ -f "$(TEST_NAME)" ]; then \
+		rm -f $(TEST_NAME); \
 		echo "${RED}➾ Fully cleaned the workspace${RES}"; \
 	fi
 
