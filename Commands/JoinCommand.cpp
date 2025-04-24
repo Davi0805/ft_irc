@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   JoinCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 17:42:18 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/20 18:59:59 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:08:57 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void JoinCommand::execute(MessageContent messageContent, int fd)
         ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
         return ;
     }
+    
     if (messageContent.tokens.size() < 2)
     {
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "JOIN");

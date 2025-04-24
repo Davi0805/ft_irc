@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WhoCommand.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 14:53:53 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/18 19:48:35 by fang             ###   ########.fr       */
+/*   Updated: 2025/04/24 13:12:42 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,17 @@ void WhoCommand::execute(MessageContent messageContent, int fd)
     User* sender = UserService::getInstance().findUserByFd(fd);
     if (!sender)
         return ;
+        
+    if (!sender->isAuthenticated()){
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, sender->getNick());
+        return ;
+    }
+
+    if (messageContent.tokens.size() < 2)
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "WHO");
+        return ;
+    }
 
     if (messageContent.tokens.size() > 1 && messageContent.tokens[1][0] == '#')
     {

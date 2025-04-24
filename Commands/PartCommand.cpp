@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:10:56 by dmelo-ca          #+#    #+#             */
-/*   Updated: 2025/04/19 12:29:39 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:12:49 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,16 @@ void PartCommand::execute(MessageContent messageContent, int fd)
 {
     User* user = UserService::getInstance().findUserByFd(fd);
 
-    if (!user->isAuthenticated())
+    if (!user->isAuthenticated()){
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
         return ;
+    }
+
+    if (messageContent.tokens.size() < 2)
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "PART");
+        return ;
+    }
     
     for (size_t i = 1; i < messageContent.tokens.size(); i++)
     {

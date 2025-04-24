@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/04/18 20:37:43 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:13:40 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
 {
     User* sender = UserService::getInstance().findUserByFd(fd);
     if (!sender) return ;
+    
+    if (!sender->isAuthenticated())
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, sender->getNick());
+        return ;
+    }
+
+    if (messageContent.tokens.size() < 2)
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "PRIVMSG");
+        return ;
+    }
 
     if (messageContent.tokens.size() == 2 && messageContent.message.find(":DCC") == 0)
     {
