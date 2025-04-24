@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PingCommand.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fang <fang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 18:51:17 by artuda-s          #+#    #+#             */
-/*   Updated: 2025/04/24 13:00:02 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/24 20:29:30 by fang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,6 @@ std::string PingCommand::getToken() const
 
 void PingCommand::execute(MessageContent messageContent, int fd)
 {
-    if (UserService::getInstance().findUserByFd(fd)->getStatus() != User::AUTHENTICATED)
-        return ;
-        
     if (messageContent.tokens.size() == 2)
     {
         std::string svName = Server::getInstance().getServerName();
