@@ -17,15 +17,15 @@ void commandsRegister(std::vector<std::string> &commands)
     //commands.push_back("NICK");
     //commands.push_back("USER");
     
-    commands.push_back("JOIN");
-    commands.push_back("PRIVMSG"); // todo: find out why core dumped when no args
-    commands.push_back("WHO");
-    commands.push_back("MODE");
-    commands.push_back("INVITE");
-    commands.push_back("PART");
-    commands.push_back("KICK");
-    commands.push_back("TOPIC");
-    commands.push_back("PING");
+    commands.push_back("JOIN\r\n");
+    commands.push_back("PRIVMSG\r\n"); // todo: find out why core dumped when no args
+    commands.push_back("WHO\r\n");
+    commands.push_back("MODE\r\n");
+    commands.push_back("INVITE\r\n");
+    commands.push_back("PART\r\n");
+    commands.push_back("KICK\r\n");
+    commands.push_back("TOPIC\r\n");
+    commands.push_back("PING\r\n");
 
     // remove events from poll will crash the tester cause im simulating
     //commands.push_back("QUIT");
@@ -136,6 +136,9 @@ int main(void)
             // PRIVMSG
             {"PRIVMSG no such nick", "PRIVMSG nosuchnick :hello\r\n", "401"}, // ERR_NOSUCHNICK
             {"PRIVMSG valid self", "PRIVMSG davi20 :hi\r\n", "PRIVMSG"},
+            { "PRIVMSG with no recipient", "PRIVMSG :hello\r\n", "461" }, // ERR_NOTENOUGHPARAMETERS
+            { "PRIVMSG with no text", "PRIVMSG davi20\r\n", "412" }, // ERR_NOTEXTTOSEND
+
     
             // WHO
             {"WHO test channel", "WHO #testchannel\r\n", "352"}, // RPL_WHOREPLY
@@ -146,6 +149,9 @@ int main(void)
             // PART
             {"PART not on channel", "PART #notjoined\r\n", "403"}, // ERR_NOTONCHANNEL
             {"PART valid channel", "PART #testchannel\r\n", "PART"},
+            { "PART with no channel", "PART\r\n", "461" }, // ERR_NEEDMOREPARAMS
+            { "PART unknown channel", "PART #ghost\r\n", "403" }, // ERR_NOSUCHCHANNEL
+
     
             // KICK
             {"KICK not in channel", "KICK #testchannel nosuchnick\r\n", "401"}, // ERR_USERNOTINCHANNEL
