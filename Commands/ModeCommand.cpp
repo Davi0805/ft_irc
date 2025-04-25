@@ -70,9 +70,9 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
                 response << " " << modeParams;
             response << "\r\n";
 
-        send(fd, response.str().c_str(), response.str().size(), 0);
-        return;
-    }
+            send(fd, response.str().c_str(), response.str().size(), 0);
+            return;
+        }
 
         if (!ChannelService::getInstance().isUserPartOfChannel(fd, channelName))
         {
@@ -90,4 +90,4 @@ void ModeCommand::execute(MessageContent messageContent, int fd)
         std::vector<std::string> params(messageContent.tokens.begin() + 3, messageContent.tokens.end());
 
         ChannelService::getInstance().handleModeChange(user, fd, channelName, modeString, params);
-    }
+}

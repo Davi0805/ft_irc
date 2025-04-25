@@ -21,59 +21,68 @@ void TopicCommand::execute(MessageContent messageContent, int fd)
     User *user = UserService::getInstance().findUserByFd(fd);
     if (!user) return;
 
-    // Checks if user is registred
+    // Checks if user is registered
     if (user->getStatus() < User::AUTHENTICATED)
     {
-        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, "TOPIC");
+        ServerMessages::SendErrorMessage(fd, ERR_NOTREGISTERED, user->getNick());
         return;
     }
 
-    // Checks is command has at least the name of the channel
+    // Checks if command has at least the name of the channel
     if (messageContent.tokens.size() < 2)
     {
-        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "TOPIC");
+        ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, user->getNick(), "TOPIC");
         return;
     }
 
     std::string channelName = messageContent.tokens[1];
     Channel *channel = ChannelService::getInstance().findChannel(channelName);
 
-    // Channel exits?
+    // Channel exists?
     if (!channel)
     {
-        ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, channelName);
+        ServerMessages::SendErrorMessage(fd, ERR_NOSUCHCHANNEL, user->getNick(), channelName);
         return;
     }
 
     // Verifies if the user is in the channel
     if (!channel->isUserInChannel(fd))
     {
-        ServerMessages::SendErrorMessage(fd, ERR_NOTONCHANNEL, channelName);
+        ServerMessages::SendErrorMessage(fd, ERR_NOTONCHANNEL, user->getNick(), channelName);
         return;
     }
 
-    // if the message is empty, returns the actual topic of the channel
+    // if no topic message is provided, return the current topic
     if (messageContent.message.empty())
     {
-        if (channel->getChannelTopic().empty())
-            ServerMessages::SendErrorMessage(fd, RPL_NOTOPIC, channelName, "No topic is set");
+        std::string currentTopic = channel->getChannelTopic();
+        if (currentTopic.empty())
+        {
+            // Send "No topic is set" if the topic is empty
+            std::string response = ":" + std::string(SERVER_NAME) + " 331 " + user->getNick() + " " + channelName + " :No topic is set\r\n";
+            send(fd, response.c_str(), response.size(), 0);
+        }
         else
-            ServerMessages::SendErrorMessage(fd, RPL_TOPIC, channelName, channel->getChannelTopic());
+        {
+            // Send the current topic
+            std::string response = ":" + std::string(SERVER_NAME) + " 332 " + user->getNick() + " " + channelName + " :" + currentTopic + "\r\n";
+            send(fd, response.c_str(), response.size(), 0);
+        }
         return;
     }
 
     // If the channel has the +t mode, only operators can change the topic
-    if (channel->isRestrictedTopic() && !channel->isOperator(user->getFd()))
+    if (channel->isRestrictedTopic() && !channel->isOperator(fd))
     {
-        ServerMessages::SendErrorMessage(fd, ERR_CHANOPRIVSNEEDED, channelName);
+        ServerMessages::SendErrorMessage(fd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
         return;
     }
 
-    // Defines new topic
+    // Define new topic
     std::string newTopic = messageContent.message;
     channel->setChannelTopic(newTopic);
-
-    // Notifies all channel members about the change in the topic change
-    std::string topicMessage = ":" + user->getNick() + " TOPIC " + channelName + " :" + newTopic + "\r\n";
+    // Notify all channel members about the change in the topic
+    std::string topicMessage = ":" + user->getNick() + " TOPIC " + channelName + " " + newTopic + "\r\n";
+    send(fd, topicMessage.c_str(), topicMessage.size(), 0);
     channel->broadcastMessageTemp(topicMessage, fd);
 }
