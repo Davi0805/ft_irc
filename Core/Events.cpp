@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Events.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lebarbos <lebarbos@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/04/19 15:06:58 by lebarbos         ###   ########.fr       */
+/*   Updated: 2025/04/25 15:44:00 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,6 @@ void Events::readAndPrintFd(int fd)
 
 void Events::removeClient(int fd)
 {
-    std::cout << "Removing client " << fd << " from poll..." << std::endl;
     for (size_t i = 0; i < _pfds.size(); i++) {
         if (_pfds[i].fd == fd) {
             _pfds.erase(_pfds.begin() + i); // remove client from list

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageHandler.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 12:04:19 by davi              #+#    #+#             */
-/*   Updated: 2025/04/25 15:18:07 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/25 15:44:06 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,41 +79,20 @@ bool MessageHandler::HandleEvent(int fd)
         return true;
 
     std::string& userBuf = UserService::getInstance().findUserByFd(fd)->getBuf();
-    
-    std::cout << "BUFFER GERAL ANTES - " << buf << std::endl;
-    std::cout << "BUFFER DO USUARIO - " << userBuf << std::endl;
-    if (buf.find("\r\n") != std::string::npos && !userBuf.empty())    
-    {
-        buf.insert(0, userBuf);        
-        userBuf.clear();
-    }
-    
-    // Process multiple commands if there are any
-    if (buf.find("\r\n") != std::string::npos && userBuf.empty())
-    {
-        std::cout << "ENTRANDO NO PROCESS MULTI COMMANDS - " << buf << std::endl;
-        std::vector<std::string> splittedCommands = splitDeVariosComandos(buf);
-        for (size_t i = 0; i < splittedCommands.size(); i++)
-        {
-            messageContent = ircTokenizer(splittedCommands[i]);
-            if (!_userService.findUserByFd(fd))
-                return false;
-            ProcessCommand(messageContent, fd);
-        }
-        buf.clear();  // Clear the buffer after processing commands
-    }
-    else
-    {
-        if (!buf.empty())
-        {
-            if (buf.find("\r\n") == std::string::npos)
-            {
-                userBuf.append(buf);
-            }
-            messageContent = ircTokenizer(buf);
-            ProcessCommand(messageContent, fd);
-            buf.clear();  // Clear the buffer after processing the command
-        }
+ 
+    // Append new data to the user's buffer
+    userBuf.append(buf);
+
+    // Process complete commands in the buffer
+    size_t pos;
+    while ((pos = userBuf.find("\r\n")) != std::string::npos) {
+        std::string command = userBuf.substr(0, pos); // Extract the command
+        userBuf.erase(0, pos + 2);                   // Remove the processed command
+        messageContent = ircTokenizer(command);
+        if (!_userService.findUserByFd(fd))
+            return false;
+        
+        ProcessCommand(messageContent, fd);
     }
     return true;
 }
