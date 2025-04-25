@@ -59,7 +59,7 @@ void InviteCommand::execute(MessageContent messageContent, int clientFd)
 		return;
 	}
 
-	if (!channel->isOperator(clientFd)) // Check if the user has operator privileges
+	if (channel->isInviteOnly() && !channel->isOperator(clientFd)) // Check if the user has operator privileges
 	{
 		ServerMessages::SendErrorMessage(clientFd, ERR_CHANOPRIVSNEEDED, user->getNick(), channelName);
 		return;
