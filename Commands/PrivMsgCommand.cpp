@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/04/24 13:13:40 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/25 13:44:05 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
     {
         User* receiver = UserService::getInstance().findUserByNickname(messageContent.tokens[1]);
         if (receiver == NULL)
+        {
+            ServerMessages::SendErrorMessage(fd, 401, messageContent.tokens[1]);
             return ;
+        }
 
         std::string formattedMsg = ServerMessages::PrivMsgFormatter(sender, receiver, messageContent.message);
         
