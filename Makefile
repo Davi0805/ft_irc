@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fang <fang@student.42.fr>                  +#+  +:+       +#+         #
+#    By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/10 16:02:17 by artuda-s          #+#    #+#              #
-#    Updated: 2025/04/24 21:18:47 by fang             ###   ########.fr        #
+#    Updated: 2025/04/25 13:41:11 by dmelo-ca         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -104,7 +104,7 @@ TEST_OBJ = $(addprefix $(OBJ_DIR)/, $(TEST_SRC:.cpp=.o))
 
 # Rule for compiling
 test: $(TEST_OBJ) $(filter-out $(OBJ_DIR)/main.o, $(OBJ))
-	$(CC) $^ -o $(TEST_NAME)
+	$(CC) $(CFLAGS) $^ -o $(TEST_NAME)
 
 # Rule to compile test object files without flags
 # fucking c++98 xD
