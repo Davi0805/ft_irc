@@ -6,7 +6,7 @@
 /*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/04/25 13:44:05 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/25 14:03:01 by dmelo-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
     {
         ServerMessages::SendErrorMessage(fd, ERR_NEEDMOREPARAMS, "PRIVMSG");
         return ;
+    }
+
+    if (messageContent.message.empty())
+    {
+        ServerMessages::SendErrorMessage(fd, ERR_NOTEXTTOSEND, "PRIVMSG");
+        return;
     }
 
     if (messageContent.tokens.size() == 2 && messageContent.message.find(":DCC") == 0)
