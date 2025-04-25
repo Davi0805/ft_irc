@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PrivMsgCommand.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmelo-ca <dmelo-ca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: artuda-s <artuda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 20:17:12 by davi              #+#    #+#             */
-/*   Updated: 2025/04/25 14:03:01 by dmelo-ca         ###   ########.fr       */
+/*   Updated: 2025/04/25 15:43:44 by artuda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ void PrivMsgCommand::execute(MessageContent messageContent, int fd)
                 if (users[i]->getFd() != sender->getFd())
                     send(users[i]->getFd(), formattedMsg.c_str(), formattedMsg.size(), 0);
             }
+        }
+        else
+        {
+            ServerMessages::SendErrorMessage(fd, ERR_CANNOTSENDTOCHAN, messageContent.tokens[1]);
+            return ;
         }
     }
     else
