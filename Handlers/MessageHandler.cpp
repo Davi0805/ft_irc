@@ -18,7 +18,7 @@
 // PRIVMSG Friend123 :Hi, how are you?
 
 
-/* 
+/*
     CLASS WITH THE PURPOSE OF HANDLING EVENTS,
     WHETHER CREATING AN EVENT (CREATING USER AND STORING FD AND USER DATA),
     HANDLING MESSAGES BY CALLING SERVICES AND LOGIC FOR PARSING AND TOKENIZATION,
@@ -27,14 +27,14 @@
 
 
 
-MessageHandler::MessageHandler() 
+MessageHandler::MessageHandler()
         : _userService(UserService::getInstance()), _channelService(ChannelService::getInstance())
 {
     RegisterCommands();
 }
 
 // SEEMS IRRELEVANT IN A WAY, AS IT NEVER REACHES HERE
-// HOWEVER, IT IS IMPLEMENTED IN CASE YOU WANT TO HAVE A COMMAND TO 
+// HOWEVER, IT IS IMPLEMENTED IN CASE YOU WANT TO HAVE A COMMAND TO
 // SHUT DOWN THE SERVER
 MessageHandler::~MessageHandler()
 {
@@ -42,7 +42,7 @@ MessageHandler::~MessageHandler()
 }
 
 
-/* 
+/*
     RECEIVE FD AFTER ACCEPTING TCP CONNECTION AND CREATE USER
     REFERENCING THE FD THAT WILL BE USED THROUGHOUT THE PROGRAM
     TO RECEIVE AND SEND MESSAGES
@@ -53,7 +53,7 @@ void MessageHandler::CreateEvent(int fd)
 }
 
 
-/* 
+/*
     METHOD TO HANDLE EVENTS, WHERE IT READS THE FD
     AND ASSIGNS IT TO A BUFFER THAT WILL BE PROCESSED
     AND EXECUTED USING TOKENIZATION AND PARSING METHODS
@@ -63,7 +63,7 @@ bool MessageHandler::HandleEvent(int fd)
     MessageContent messageContent;
     char buffer[512];
     std::string buf;
-    
+
     ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, MSG_DONTWAIT);
     if (bytesRead > 0) {
         buf.append(buffer, bytesRead);
@@ -74,12 +74,12 @@ bool MessageHandler::HandleEvent(int fd)
         _userService.RemoveUserByFd(fd);
         close(fd);
         return false;
-    } 
+    }
     if (buf.empty())
-        return true;
+    return true;
 
     std::string& userBuf = UserService::getInstance().findUserByFd(fd)->getBuf();
- 
+
     // Append new data to the user's buffer
     userBuf.append(buf);
 
@@ -89,16 +89,17 @@ bool MessageHandler::HandleEvent(int fd)
         std::string command = userBuf.substr(0, pos); // Extract the command
         userBuf.erase(0, pos + 2);                   // Remove the processed command
         messageContent = ircTokenizer(command);
-        if (!_userService.findUserByFd(fd))
-            return false;
-        
+
         ProcessCommand(messageContent, fd);
+        if (!UserService::getInstance().findUserByFd(fd))
+            return false;
     }
+
     return true;
 }
 
 
-/* 
+/*
     METHOD TO EXECUTE THE REGISTERED COMMANDS
 */
 void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
@@ -116,7 +117,7 @@ void MessageHandler::ProcessCommand(MessageContent messageContent, int clientFd)
 }
 
 
-/* 
+/*
     METHOD TO REGISTER ALL COMMANDS, WHERE THEY ARE ALWAYS ALLOCATED
     WITH REFERENCES TO THE SERVICES (USERSERVICE AND CHANNELSERVICE)
 */
@@ -138,7 +139,7 @@ void MessageHandler::RegisterCommands()
 }
 
 
-/* 
+/*
     TOKENIZER FUNCTION TO EXTRACT THE ENTIRE MESSAGE/COMMAND,
     SPLIT IT INTO TOKENS AND MESSAGE, AND ASSIGN IT TO THE MESSAGECONTENT STRUCT.
 
@@ -152,7 +153,7 @@ MessageContent MessageHandler::ircTokenizer(std::string &buffer)
 
     std::vector<std::string> tokens;
     std::string message;
-    
+
     while (stream >> tempToken)
     {
         if (tempToken[0] == ':') // Everything after the : is the message
@@ -162,13 +163,13 @@ MessageContent MessageHandler::ircTokenizer(std::string &buffer)
         }
         tokens.push_back(tempToken); // Store command token
     }
-    
+
     MessageContent messageContent;
     messageContent.tokens = tokens;
     messageContent.message = message;
     return messageContent;
 }
-/* 
+/*
     METHOD TO EXTRACT MESSAGE WITHOUT TOKENIZATION, WHERE IT RECEIVES A DIRECT
     REFERENCE TO THE BUFFER AND AN ITERATOR OF WHERE THE MESSAGE STARTS, RETURNING
     THE ISOLATED MESSAGE
@@ -178,13 +179,13 @@ std::string MessageHandler::getMessage(std::string& buffer, std::size_t it)
     std::string result;
 
     result.append(buffer, it);
-    
+
     // clear the \r\n feed by conventional clients like hexchat
     if (result[result.size() - 1] == '\n') // same as back()
         result.erase(result.size() - 1, 1); // same as pop_back()
     if (result[result.size() - 1] == '\r')
         result.erase(result.size() - 1, 1);
-    
+
     return result;
 }
 
@@ -195,7 +196,7 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string &buff
 {
     std::vector<std::string> result;
     size_t it;
-    
+
     it = buffer.find_first_of("\r\n");
     while (it != std::string::npos)
     {
@@ -207,7 +208,7 @@ std::vector<std::string> MessageHandler::splitDeVariosComandos(std::string &buff
 }
 
 // SEEMS IRRELEVANT IN A WAY, AS IT NEVER REACHES HERE
-// HOWEVER, IT IS IMPLEMENTED IN CASE YOU WANT TO HAVE A COMMAND TO 
+// HOWEVER, IT IS IMPLEMENTED IN CASE YOU WANT TO HAVE A COMMAND TO
 // SHUT DOWN THE SERVER
 void MessageHandler::FreeCommands()
 {
@@ -215,5 +216,3 @@ void MessageHandler::FreeCommands()
         delete (it->second);
     _commands.clear(); // not necessary i think
 }
-
-

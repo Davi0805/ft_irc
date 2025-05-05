@@ -39,7 +39,7 @@ Events* Events::getInstance()
 bool Events::setupPollContext()
 {
     struct pollfd pfd;
-    pfd.fd = this->_listensocket; 
+    pfd.fd = this->_listensocket;
     pfd.events = POLLIN;          // listen for incoming connections
     pfd.revents = 0;                // no events initially
 
@@ -49,7 +49,7 @@ bool Events::setupPollContext()
 
 void Events::runPollLoop()
 {
-    for(;;) 
+    for(;;)
     {
         /*
          * poll will listen for events and notify with the return value how many fds had events
@@ -58,7 +58,7 @@ void Events::runPollLoop()
         */
         int pollCount = poll(&_pfds[0], _pfds.size(), -1);
         if (pollCount == -1) {
-            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl; 
+            std::cerr << "Poll error: " << /* strerror(errno) << */ std::endl;
             continue;
         }
 
@@ -72,11 +72,11 @@ void Events::runPollLoop()
             for (;;)
             {
                 pollCount--; // new connection
-                
+
                 struct sockaddr_in addr;
                 socklen_t addrlen = sizeof(addr);
                 int clientSock = accept(_listensocket, (struct sockaddr*)&addr, &addrlen);
-                if (clientSock < 0) 
+                if (clientSock < 0)
                 {
                     if (errno == EAGAIN || errno == EWOULDBLOCK)
                         break ; // no more connections queued
@@ -84,25 +84,24 @@ void Events::runPollLoop()
                     continue;
                 }
 
-                setNonBlock(clientSock); 
-                
+                setNonBlock(clientSock);
+
                 struct pollfd newClientPollfd;
                 newClientPollfd.fd = clientSock;
                 newClientPollfd.events = POLLIN;
                 _pfds.push_back(newClientPollfd);
-                
+
                 // create new user instance for this connection
                 _msgHandler.CreateEvent(clientSock);
 
             }
         }
-        
+
         // Handleing data events now
-        for (size_t i = 0; i < _pfds.size() && pollCount > 0; i++) 
+        for (size_t i = 0; i < _pfds.size() && pollCount > 0; i++)
         {
             if (_pfds[i].revents & POLLIN) // this will check the fds and only handle those with events
             {
-            
                 if (!_msgHandler.HandleEvent(_pfds[i].fd))
                     removeClient(_pfds[i].fd);
             }
@@ -132,28 +131,6 @@ bool Events::setNonBlock(int targetFd)
     }
 
     return true;
-}
-
-void Events::readAndPrintFd(int fd)
-{
-    char buffer[512];
-    ssize_t bytesRead;
-    bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
-    if (bytesRead < 0)
-    {
-        std::cerr << "FATAL: Error reading from fd" << std::endl;
-        return;
-    }
-    
-    if (bytesRead <= 0) 
-    {
-        std::cerr << "Client disconnected: " << fd << std::endl;
-        removeClient(fd);
-        return;
-    }
-
-    buffer[bytesRead] = '\0';
-
 }
 
 void Events::removeClient(int fd)

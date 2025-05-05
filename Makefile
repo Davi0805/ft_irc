@@ -15,7 +15,7 @@ NAME = ircserv
 
 # Compiler
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -std=c++98
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address,undefined -fno-omit-frame-pointer -O1
 
 # Files
 SRC = main.cpp \
@@ -42,7 +42,7 @@ SRC = main.cpp \
 	Services/UserService.cpp \
 	Services/ChannelService.cpp \
 	Utils/ServerMessages.cpp \
-	Utils/Utils.cpp 
+	Utils/Utils.cpp
 
 OBJ_DIR = obj
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
@@ -50,7 +50,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 # Rules
 all: $(NAME)
 
-$(NAME): $(OBJ) 
+$(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) -o $@
 	@printf "$(GRN)➾ Compilation progress: $$(echo "$(shell find $(OBJ_DIR) -name "*.o" | wc -l) $(TOTAL_FILES)" | awk '{printf "%.2f", $$1/$$2 * 100}')%% $(RES)\r"
 	@echo "\n$(GRN)➾ [ ${NAME} ] created$(RES)"
@@ -152,4 +152,3 @@ MAG = \033[0;35m
 CYN = \033[0;36m
 WHT = \033[0;37m
 RES = \033[0m
-
